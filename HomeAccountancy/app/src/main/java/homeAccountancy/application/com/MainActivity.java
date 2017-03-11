@@ -3,6 +3,8 @@ package homeAccountancy.application.com;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import homeAccountancy.application.com.Data.AccountancyContract;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
