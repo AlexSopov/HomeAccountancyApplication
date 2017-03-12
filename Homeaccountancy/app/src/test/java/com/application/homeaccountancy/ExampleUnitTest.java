@@ -1,4 +1,4 @@
-package homeAccountancy.application.com;
+package com.application.homeaccountancy;
 
 import org.junit.Test;
 

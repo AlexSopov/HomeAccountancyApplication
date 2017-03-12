@@ -1,4 +1,4 @@
-package homeAccountancy.application.com.Data;
+package com.application.homeaccountancy.Data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

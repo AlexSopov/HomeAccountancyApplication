@@ -1,4 +1,4 @@
-package homeAccountancy.application.com.Data;
+package com.application.homeaccountancy.Data;
 
 import android.provider.BaseColumns;
 
@@ -36,6 +36,7 @@ public final class AccountancyContract {
         public static final String TABLE_NAME = "Accounts";
         public static final String COLUMN_NAME_TITLE = "title";
         public static final String COLUMN_NAME_SUBTITLE = "subtitle";
+        public static final String COLUMN_NAME_ICON_ID = "icon";
         //public static final String COLUMN_NAME_TYPE = "type";
     }
 
@@ -68,5 +69,4 @@ public final class AccountancyContract {
     private static final String SQLITE_DELETE_TRANSACTIONS = DROP_TABLE + Transaction.TABLE_NAME;
     private static final String SQLITE_DELETE_CATEGORIES = DROP_TABLE + Category.TABLE_NAME;
     private static final String SQLITE_DELETE_ACCOUNTS = DROP_TABLE + Account.TABLE_NAME;
-
 }
