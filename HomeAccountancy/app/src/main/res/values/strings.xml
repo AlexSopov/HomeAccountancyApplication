@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Home accountancy</string>
     <string name="icon">app icon</string>
+    <string name="text_date">Дата</string>
+    <string name="text_sum">Сумма</string>
+    <string name="text_description">Заметка</string>
+    <string name="transaction_category">Категория</string>
+    <string name="transaction_hint">Введиите заметку</string>
 </resources>

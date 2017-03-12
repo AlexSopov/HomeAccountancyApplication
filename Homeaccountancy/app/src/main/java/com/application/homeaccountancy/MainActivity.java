@@ -1,5 +1,6 @@
 package com.application.homeaccountancy;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 
@@ -33,23 +37,31 @@ public class MainActivity extends AppCompatActivity {
         AdapterView.OnItemClickListener itemListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-
                 // получаем выбранный пункт
                 Transaction selectedTransaction = (Transaction)parent.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(), "Был выбран пункт " + selectedTransaction.Sum,
+                Toast.makeText(getApplicationContext(), "Был выбран пункт " + selectedTransaction.getSum(),
                         Toast.LENGTH_SHORT).show();
             }
         };
         transList.setOnItemClickListener(itemListener);
     }
     private void setInitialData(){
+        for (int i = 0; i < 5; i++) {
+            transactions.add(new Transaction(i * 100, new GregorianCalendar(2017, i + 5, i + 7),
+                    "Description dfsafsd fdsa afsdaf fdsaf fdas " + i, R.drawable.argentina));
+            transactions.add(new Transaction(i * 100, new GregorianCalendar(2017, i + 5, i + 7),
+                    "Description dfsafsd afsdaf fdsaf fdas " + i, R.drawable.brazilia));
+            transactions.add(new Transaction(i * 100, new GregorianCalendar(2017, i + 5, i + 7),
+                    "Description dfsafsd afsdaf fdsaf fdas " + i, R.drawable.columbia));
+            transactions.add(new Transaction(i * 100, new GregorianCalendar(2017, i + 5, i + 7),
+                    "Descrip fdsa tion dfsafsdafsdaf fdsaf fdas " + i, R.drawable.chile));
+            transactions.add(new Transaction(i * 100, new GregorianCalendar(2017, i + 5, i + 7),
+                    "Description dfsafsdafsdaf fdsaf fdas " + i, R.drawable.uruguai));
+        }
+    }
 
-        transactions.add(new Transaction(1000, "1dfsafadsnfkldashflkfdafdsafdsafdsafdsafd safdsafdsafdasfad sfadsfasdfadsfasdfadsfas " +
-                "fdsafdasfadsfadsfdsafass",
-                "2017-01-01", R.drawable.argentina));
-        transactions.add(new Transaction(1100, "gfsdbvxcbtssgfsg sfgsfdgsd", "2017-01-02", R.drawable.uruguai));
-        transactions.add(new Transaction(1200, "gfsdgsfdgsfdgfdgfsdg", "2017-01-03", R.drawable.columbia));
-        transactions.add(new Transaction(1300, "gfdsgsdfg fgsdgfds fgsdg sfd", "2017-01-04", R.drawable.brazilia));
-        transactions.add(new Transaction(1400, "5325gfds gfdsg fdsg", "2017-01-05", R.drawable.chile));
+    public void addNewTransaction(View view) {
+        Intent intent = new Intent(getApplicationContext(), TransactionActivity.class);
+        startActivity(intent);
     }
 }

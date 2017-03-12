@@ -1,6 +1,7 @@
 package com.application.homeaccountancy;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,35 +9,57 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
-public class TransactionAdapter extends ArrayAdapter<Transaction> {
+class TransactionAdapter extends ArrayAdapter<Transaction> {
 
     private LayoutInflater inflater;
-    private int layout;
     private List<Transaction> transactions;
+    private int layout;
 
-    public TransactionAdapter(Context context, int resource, List<Transaction> transactions) {
+    TransactionAdapter(Context context, int resource, List<Transaction> transactions) {
         super(context, resource, transactions);
         this.transactions = transactions;
         this.layout = resource;
         this.inflater = LayoutInflater.from(context);
     }
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View view = inflater.inflate(this.layout, parent, false);
 
-        ImageView icon = (ImageView) view.findViewById(R.id.icon);
-        TextView description = (TextView) view.findViewById(R.id.description);
-        TextView sum = (TextView) view.findViewById(R.id.sum);
-        TextView date = (TextView) view.findViewById(R.id.date);
+    @NonNull
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+        ViewHolder viewHolder;
+
+        if(convertView == null) {
+            convertView = inflater.inflate(this.layout, parent, false);
+            viewHolder = new ViewHolder(convertView);
+            convertView.setTag(viewHolder);
+        }
+        else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
 
         Transaction transaction = transactions.get(position);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
-        icon.setImageResource(transaction.FlagResource);
-        description.setText(transaction.Description);
-        sum.setText(String.valueOf(transaction.Sum));
-        date.setText(transaction.Date);
+        viewHolder.iconView.setImageResource(transaction.getFlagResource());
+        viewHolder.descriptionView.setText(transaction.getDescriptionShort());
+        viewHolder.sumView.setText(String.valueOf(transaction.getSum()));
+        viewHolder.dateView.setText(dateFormat.format(transaction.getDate().getTime()));
 
-        return view;
+        return convertView;
+    }
+
+    private class ViewHolder {
+        final ImageView iconView;
+        final TextView descriptionView, sumView, dateView;
+
+        ViewHolder(View view){
+            iconView = (ImageView)view.findViewById(R.id.icon);
+            descriptionView = (TextView) view.findViewById(R.id.description);
+            sumView = (TextView) view.findViewById(R.id.sum);
+            dateView = (TextView) view.findViewById(R.id.date);
+        }
     }
 }
