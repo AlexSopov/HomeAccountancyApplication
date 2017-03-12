@@ -40,7 +40,7 @@ public final class AccountancyContract {
         //public static final String COLUMN_NAME_TYPE = "type";
     }
 
-    private static final String SQLITE_CREATE_TRANSACTIONS = CREATE_TABLE +
+    public static final String SQLITE_CREATE_TRANSACTIONS = CREATE_TABLE +
             Transaction.TABLE_NAME + " (" +
             Transaction._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA_SEPARATOR +
             Transaction.COLUMN_NAME_DATE + TEXT_TYPE + NOT_NULL + COMMA_SEPARATOR +
@@ -49,24 +49,24 @@ public final class AccountancyContract {
             Transaction.COLUMN_NAME_CATEGORY_ID + INTEGER_TYPE + COMMA_SEPARATOR +
             Transaction.COLUMN_NAME_NOTE + TEXT_TYPE + COMMA_SEPARATOR +
             "FOREIGN KEY(" + Transaction.COLUMN_NAME_ACCOUNT_ID + ") " +
-            "REFERENCES " + Account.TABLE_NAME + "(_id)" +
+            "REFERENCES " + Account.TABLE_NAME + "(_id)" + COMMA_SEPARATOR +
             "FOREIGN KEY(" + Transaction.COLUMN_NAME_CATEGORY_ID + ") " +
             "REFERENCES " + Category.TABLE_NAME + "(_id)" + ")";
 
-    private static final String SQLITE_CREATE_CATEGORIES = CREATE_TABLE +
+    public static final String SQLITE_CREATE_CATEGORIES = CREATE_TABLE +
             Category.TABLE_NAME + " (" +
             Category._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA_SEPARATOR +
-            Category.COLUMN_NAME_TITLE + TEXT_TYPE + NOT_NULL +COMMA_SEPARATOR +
-            Category.COLUMN_NAME_SUBTITLE + TEXT_TYPE + COMMA_SEPARATOR + ")";
+            Category.COLUMN_NAME_TITLE + TEXT_TYPE + NOT_NULL + COMMA_SEPARATOR +
+            Category.COLUMN_NAME_SUBTITLE + TEXT_TYPE + ")";
 
-    private static final String SQLITE_CREATE_ACCOUNTS = CREATE_TABLE +
+    public static final String SQLITE_CREATE_ACCOUNTS = CREATE_TABLE +
             Account.TABLE_NAME + " (" +
             Account._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA_SEPARATOR +
             Account.COLUMN_NAME_TITLE + TEXT_TYPE + NOT_NULL + COMMA_SEPARATOR +
-            Account.COLUMN_NAME_SUBTITLE + TEXT_TYPE + COMMA_SEPARATOR + ")";
+            Account.COLUMN_NAME_SUBTITLE + TEXT_TYPE + ")";
 
 
-    private static final String SQLITE_DELETE_TRANSACTIONS = DROP_TABLE + Transaction.TABLE_NAME;
-    private static final String SQLITE_DELETE_CATEGORIES = DROP_TABLE + Category.TABLE_NAME;
-    private static final String SQLITE_DELETE_ACCOUNTS = DROP_TABLE + Account.TABLE_NAME;
+    public static final String SQLITE_DELETE_TRANSACTIONS = DROP_TABLE + Transaction.TABLE_NAME;
+    public static final String SQLITE_DELETE_CATEGORIES = DROP_TABLE + Category.TABLE_NAME;
+    public static final String SQLITE_DELETE_ACCOUNTS = DROP_TABLE + Account.TABLE_NAME;
 }

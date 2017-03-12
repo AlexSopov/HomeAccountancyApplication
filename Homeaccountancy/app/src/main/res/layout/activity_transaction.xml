@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:id="@+id/transaction_categoty" />
+            android:id="@+id/transaction_category" />
 
         <Button
             android:text="Button"
@@ -65,7 +65,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Снять со счёта"
+            android:text="@string/transactions_from_account"
             android:textSize="@dimen/transaction_field"
             android:layout_marginEnd="10dp"/>
 
@@ -95,5 +95,21 @@
             android:hint="@string/transaction_hint"
             android:id="@+id/editText" />
     </TableRow>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/transaction_add_keep" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/transaction_add"/>
+    </LinearLayout>
 
 </TableLayout>

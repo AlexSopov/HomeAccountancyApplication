@@ -5,5 +5,10 @@
     <string name="text_sum">Сумма</string>
     <string name="text_description">Заметка</string>
     <string name="transaction_category">Категория</string>
-    <string name="transaction_hint">Введиите заметку</string>
+    <string name="transaction_hint">Введите заметку</string>
+    <string name="add_new_transaction">Добавить</string>
+    <string name="transaction_back">Отмена</string>
+    <string name="transaction_add_keep">Сохранить и продолжить</string>
+    <string name="transaction_add">Сохранить</string>
+    <string name="transactions_from_account">Снять со счёта</string>
 </resources>
