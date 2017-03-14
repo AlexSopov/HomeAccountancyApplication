@@ -21,7 +21,7 @@ public class TransactionAdapter extends ArrayAdapter<Transaction> {
     private List<Transaction> transactions;
     private int layout;
 
-    TransactionAdapter(Context context, int resource, List<Transaction> transactions) {
+    public TransactionAdapter(Context context, int resource, List<Transaction> transactions) {
         super(context, resource, transactions);
         this.transactions = transactions;
         this.layout = resource;

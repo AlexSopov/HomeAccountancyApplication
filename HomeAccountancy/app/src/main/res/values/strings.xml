@@ -18,4 +18,8 @@
     <string name="transaction_add_keep">Сохранить и продолжить</string>
     <string name="transaction_add">Сохранить</string>
     <string name="transactions_from_account">Снять со счёта</string>
+    <string name="all_transactions">Все транзакции</string>
+    <string name="spending">Расходы</string>
+    <string name="incoming">Доходы</string>
+    <string name="categories">Категории</string>
 </resources>

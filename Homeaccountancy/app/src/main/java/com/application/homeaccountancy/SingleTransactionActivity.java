@@ -3,7 +3,6 @@ package com.application.homeaccountancy;
 import android.app.DatePickerDialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
@@ -17,7 +16,7 @@ import com.application.homeaccountancy.Data.SQLiteHandler;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class TransactionViewActivity extends AppCompatActivity {
+public class SingleTransactionActivity extends ActivityIncludeMenu {
     TextView currentDateTime;
     Spinner categoriesSpinner;
 
@@ -30,8 +29,7 @@ public class TransactionViewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transaction);
+        super.onCreate(savedInstanceState, R.layout.single_transaction_activity);
 
         date = Calendar.getInstance();
 
