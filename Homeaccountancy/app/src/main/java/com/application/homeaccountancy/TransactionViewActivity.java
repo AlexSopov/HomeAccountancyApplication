@@ -17,7 +17,7 @@ import com.application.homeaccountancy.Data.SQLiteHandler;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class Trans extends AppCompatActivity {
+public class TransactionViewActivity extends AppCompatActivity {
     TextView currentDateTime;
     Spinner categoriesSpinner;
 

@@ -17,6 +17,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.application.homeaccountancy.Data.Adapter.TransactionAdapter;
+import com.application.homeaccountancy.Data.Entity.Transaction;
+
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -148,7 +151,7 @@ public class TransactionsActivity extends AppCompatActivity
     }
 
     public void addNewTransaction(View view) {
-        Intent intent = new Intent(TransactionsActivity.this, Trans.class);
+        Intent intent = new Intent(TransactionsActivity.this, TransactionViewActivity.class);
         startActivity(intent);
     }
 }
