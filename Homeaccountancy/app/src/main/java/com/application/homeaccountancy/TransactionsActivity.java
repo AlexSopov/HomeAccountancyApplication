@@ -12,6 +12,7 @@ import com.application.homeaccountancy.Data.Adapter.TransactionAdapter;
 import com.application.homeaccountancy.Data.Entity.Transaction;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -67,16 +68,18 @@ public class TransactionsActivity extends IncludeMenuActivity {
     }
 
     private void setInitialData(){
+        Date d = new Date();
+        long f = d.getTime();
         for (int i = 0; i < 5; i++) {
-            transactions.add(new Transaction(i * 100, new GregorianCalendar(2017, i + 5, i + 7),
+            transactions.add(new Transaction(i * 100, f,
                     "Description dfsafsd fdsa afsdaf fdsaf fdas " + i, R.drawable.argentina));
-            transactions.add(new Transaction(i * 100, new GregorianCalendar(2017, i + 5, i + 7),
+            transactions.add(new Transaction(i * 100, f,
                     "Description dfsafsd afsdaf fdsaf fdas " + i, R.drawable.brazilia));
-            transactions.add(new Transaction(i * 100, new GregorianCalendar(2017, i + 5, i + 7),
+            transactions.add(new Transaction(i * 100, f,
                     "Description dfsafsd afsdaf fdsaf fdas " + i, R.drawable.columbia));
-            transactions.add(new Transaction(i * 100, new GregorianCalendar(2017, i + 5, i + 7),
+            transactions.add(new Transaction(i * 100, f,
                     "Descrip fdsa tion dfsafsdafsdaf fdsaf fdas " + i, R.drawable.chile));
-            transactions.add(new Transaction(i * 100, new GregorianCalendar(2017, i + 5, i + 7),
+            transactions.add(new Transaction(i * 100, f,
                     "Description dfsafsdafsdaf fdsaf fdas " + i, R.drawable.uruguai));
         }
     }

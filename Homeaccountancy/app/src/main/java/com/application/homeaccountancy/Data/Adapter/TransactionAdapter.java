@@ -47,7 +47,7 @@ public class TransactionAdapter extends ArrayAdapter<Transaction> {
         viewHolder.iconView.setImageResource(transaction.getFlagResource());
         viewHolder.descriptionView.setText(transaction.getDescriptionShort());
         viewHolder.sumView.setText(String.valueOf(transaction.getSum()));
-        viewHolder.dateView.setText(dateFormat.format(transaction.getDate().getTime()));
+        viewHolder.dateView.setText(dateFormat.format(transaction.getDate()));
 
         return convertView;
     }

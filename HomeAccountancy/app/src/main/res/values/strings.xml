@@ -22,4 +22,9 @@
     <string name="spending">Расходы</string>
     <string name="incoming">Доходы</string>
     <string name="categories">Категории</string>
+    <string name="single_outgo_date_time">Дата и время</string>
+    <string name="transaction_sum">Сумма</string>
+    <string name="transaction_categoty">Категория</string>
+    <string name="title_activity_test">test</string>
+    <string name="title_activity_single_transaction">SingleTransactionActivity</string>
 </resources>

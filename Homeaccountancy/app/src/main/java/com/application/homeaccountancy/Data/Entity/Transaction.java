@@ -6,12 +6,12 @@ import java.util.GregorianCalendar;
 
 public class Transaction {
     private int sum;
-    private Calendar date;
+    private long date;
     private String description;
     private int flagResource;
 
 
-    public Transaction(int sum, GregorianCalendar date, String description, int flagResource){
+    public Transaction(int sum, long date, String description, int flagResource){
         this.sum = sum;
         this.date = date;
         this.description = description;
@@ -25,11 +25,10 @@ public class Transaction {
         this.sum = sum;
     }
 
-
-    public Calendar getDate() {
+    public long getDate() {
         return date;
     }
-    public void setDate(Calendar date) {
+    public void setDate(int date) {
         this.date = date;
     }
 
