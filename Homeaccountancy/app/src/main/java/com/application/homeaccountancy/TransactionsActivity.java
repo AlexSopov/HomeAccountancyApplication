@@ -2,13 +2,10 @@ package com.application.homeaccountancy;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.application.homeaccountancy.Data.Adapter.TransactionAdapter;
@@ -18,7 +15,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class TransactionsActivity extends ActivityIncludeMenu {
+public class TransactionsActivity extends IncludeMenuActivity {
 
     private List<Transaction> transactions = new ArrayList<>();
     ListView transList;
@@ -27,10 +24,31 @@ public class TransactionsActivity extends ActivityIncludeMenu {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.transactions_activity);
 
+
+        TabHost tabHost = (TabHost) findViewById(R.id.tabs_transactions);
+        tabHost.setup();
+
+        TabHost.TabSpec tabSpec = tabHost.newTabSpec("tabs_transactions_tab1");
+        tabSpec.setIndicator("Все");
+        tabSpec.setContent(R.id.tabs_transactions_tab1);
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec("tabs_transactions_tab2");
+        tabSpec.setIndicator("Пополнения");
+        tabSpec.setContent(R.id.tabs_transactions_tab2);
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec("tabs_transactions_tab3");
+        tabSpec.setIndicator("Затраты");
+        tabSpec.setContent(R.id.tabs_transactions_tab3);
+        tabHost.addTab(tabSpec);
+
+        tabHost.setCurrentTab(0);
+
         // начальная инициализация списка
         setInitialData();
         // получаем элемент ListView
-        transList = (ListView) findViewById(R.id.transactionsList);
+        transList = (ListView) findViewById(R.id.all_transactions_list);
         // создаем адаптер
         TransactionAdapter transactionAdapter = new TransactionAdapter(this, R.layout.transaction_list_item, transactions);
         // устанавливаем адаптер

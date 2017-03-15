@@ -16,7 +16,7 @@ import com.application.homeaccountancy.Data.SQLiteHandler;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class SingleTransactionActivity extends ActivityIncludeMenu {
+public class SingleTransactionActivity extends IncludeMenuActivity {
     TextView currentDateTime;
     Spinner categoriesSpinner;
 

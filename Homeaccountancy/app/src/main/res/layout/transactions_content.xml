@@ -1,30 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TabHost
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_transactions"
+    android:id="@+id/tabs_transactions"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.application.homeaccountancy.TransactionsActivity" >
+    app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-
-    <ListView android:id="@+id/transactionsList"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button android:id="@+id/btn_new_transaction"
-        android:text="@string/add_new_transaction"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="addNewTransaction" />
-</RelativeLayout>
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.design.widget.CoordinatorLayout
+                android:id="@+id/tabs_transactions_tab1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ListView android:id="@+id/all_transactions_list"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:layout_height="0dp" />
+
+                </LinearLayout>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="bottom|end"/>
+
+            </android.support.design.widget.CoordinatorLayout>
+
+            <LinearLayout
+                android:id="@+id/tabs_transactions_tab2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tabs_transactions_tab3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+</TabHost>

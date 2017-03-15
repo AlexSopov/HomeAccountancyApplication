@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class ActivityIncludeMenu extends AppCompatActivity
+public class IncludeMenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     protected void onCreate(Bundle savedInstanceState, int layoutIndex) {
