@@ -1,30 +1,39 @@
 package com.application.homeaccountancy;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
 import android.widget.Toast;
 
-import com.application.homeaccountancy.Data.Adapter.TransactionAdapter;
+import com.application.homeaccountancy.Data.AccountancyContract;
+//import com.application.homeaccountancy.Data.Adapter.TransactionAdapter;
 import com.application.homeaccountancy.Data.Entity.Transaction;
+import com.application.homeaccountancy.Data.SQLiteHandler;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class TransactionsActivity extends IncludeMenuActivity {
+    ListView transactionsList;
 
-    private List<Transaction> transactions = new ArrayList<>();
-    ListView transList;
+    SQLiteHandler sqLiteHandler;
+    SQLiteDatabase db;
+    Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.transactions_activity);
 
+        transactionsList = (ListView) findViewById(R.id.all_transactions_list);
+        sqLiteHandler = new SQLiteHandler(getApplicationContext());
+        db = sqLiteHandler.getReadableDatabase();
 
         TabHost tabHost = (TabHost) findViewById(R.id.tabs_transactions);
         tabHost.setup();
@@ -45,44 +54,57 @@ public class TransactionsActivity extends IncludeMenuActivity {
         tabHost.addTab(tabSpec);
 
         tabHost.setCurrentTab(0);
-
-        // начальная инициализация списка
-        setInitialData();
-        // получаем элемент ListView
-        transList = (ListView) findViewById(R.id.all_transactions_list);
-        // создаем адаптер
-        TransactionAdapter transactionAdapter = new TransactionAdapter(this, R.layout.transaction_list_item, transactions);
-        // устанавливаем адаптер
-        transList.setAdapter(transactionAdapter);
-        // слушатель выбора в списке
-        AdapterView.OnItemClickListener itemListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                // получаем выбранный пункт
-                Transaction selectedTransaction = (Transaction)parent.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(), "Был выбран пункт " + selectedTransaction.getSum(),
-                        Toast.LENGTH_SHORT).show();
-            }
-        };
-        transList.setOnItemClickListener(itemListener);
     }
 
-    private void setInitialData(){
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SimpleCursorAdapter transactionsCursorAdapter;
+
+        //TODO Create multy query
+        cursor =  db.rawQuery("SELECT * FROM "+ AccountancyContract.Transaction.TABLE_NAME, null);
+        String[] from = new String[] {
+                AccountancyContract.Transaction.COLUMN_NAME_CATEGORY_ID,
+                AccountancyContract.Transaction.COLUMN_NAME_DATE,
+                AccountancyContract.Transaction.COLUMN_NAME_AMOUNT,
+                AccountancyContract.Transaction.COLUMN_NAME_NOTE
+        };
+
+        int[] to = new int[] {
+                R.id.transaction_list_item_icon,
+                R.id.transaction_list_item_date,
+                R.id.transaction_list_item_sum,
+                R.id.transaction_list_item_description
+        };
+
+        transactionsCursorAdapter = new SimpleCursorAdapter(this, R.layout.transaction_list_item, cursor, from, to, 0);
+        transactionsList.setAdapter(transactionsCursorAdapter);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+
+        db.close();
+        cursor.close();
+    }
+
+    /*private void setInitialData(){
         Date d = new Date();
         long f = d.getTime();
         for (int i = 0; i < 5; i++) {
             transactions.add(new Transaction(i * 100, f,
-                    "Description dfsafsd fdsa afsdaf fdsaf fdas " + i, R.drawable.argentina));
+                    "Description dfsafsd fdsa afsdaf fdsaf fdas " + i, R.drawable.auto));
             transactions.add(new Transaction(i * 100, f,
-                    "Description dfsafsd afsdaf fdsaf fdas " + i, R.drawable.brazilia));
+                    "Description dfsafsd afsdaf fdsaf fdas " + i, R.drawable.food));
             transactions.add(new Transaction(i * 100, f,
-                    "Description dfsafsd afsdaf fdsaf fdas " + i, R.drawable.columbia));
+                    "Description dfsafsd afsdaf fdsaf fdas " + i, R.drawable.house));
             transactions.add(new Transaction(i * 100, f,
-                    "Descrip fdsa tion dfsafsdafsdaf fdsaf fdas " + i, R.drawable.chile));
+                    "Descrip fdsa tion dfsafsdafsdaf fdsaf fdas " + i, R.drawable.fuel));
             transactions.add(new Transaction(i * 100, f,
-                    "Description dfsafsdafsdaf fdsaf fdas " + i, R.drawable.uruguai));
+                    "Description dfsafsdafsdaf fdsaf fdas " + i, R.drawable.debt));
         }
-    }
+    }*/
 
     public void addNewTransaction(View view) {
         Intent intent = new Intent(TransactionsActivity.this, SingleTransactionActivity.class);

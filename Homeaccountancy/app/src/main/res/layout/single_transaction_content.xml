@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,11 +9,13 @@
     tools:context="com.application.homeaccountancy.SingleTransactionActivity"
     tools:showIn="@layout/single_transaction_activity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -169,7 +170,7 @@
                     android:textSize="@dimen/transaction_text_size"/>
 
                 <EditText
-                    android:id="@+id/remark"
+                    android:id="@+id/transaction_note"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
@@ -183,22 +184,23 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
+        android:layout_height="wrap_content">
 
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textSize="14sp"
-            android:text="Сохранить и новый"/>
+            android:text="Сохранить и новый"
+            android:onClick="saveTransaction"/>
 
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textSize="14sp"
-            android:text="Сохранить"/>
+            android:text="Сохранить"
+            android:onClick="saveTransactionCloseActivity"/>
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

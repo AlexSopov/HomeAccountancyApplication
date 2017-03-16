@@ -1,4 +1,4 @@
-package com.application.homeaccountancy.Data.Adapter;
+/*package com.application.homeaccountancy.Data.Adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -63,4 +63,4 @@ public class TransactionAdapter extends ArrayAdapter<Transaction> {
             dateView = (TextView) view.findViewById(R.id.date);
         }
     }
-}
+}*/

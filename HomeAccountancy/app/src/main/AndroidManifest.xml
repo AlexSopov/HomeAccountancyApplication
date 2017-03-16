@@ -19,18 +19,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SingleTransactionActivity1"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".test"
-            android:label="@string/title_activity_test"
-            android:parentActivityName=".TransactionsActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.application.homeaccountancy.TransactionsActivity" />
-        </activity>
-        <activity
             android:name=".SingleTransactionActivity"
             android:label="@string/title_activity_single_transaction"
             android:parentActivityName=".TransactionsActivity"
