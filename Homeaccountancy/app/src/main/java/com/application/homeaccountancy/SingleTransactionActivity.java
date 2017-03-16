@@ -1,11 +1,10 @@
 package com.application.homeaccountancy;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -13,15 +12,18 @@ import android.widget.DatePicker;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.Data.SQLiteHandler;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class SingleTransactionActivity extends AppCompatActivity {
-    TextView currentDateTime;
+    TextView currentDate, currentTime;
     Spinner categoriesSpinner;
 
     SQLiteHandler handler;
@@ -29,36 +31,46 @@ public class SingleTransactionActivity extends AppCompatActivity {
     SimpleCursorAdapter adapter;
     Cursor cursor;
     DatePickerDialog.OnDateSetListener onDateSetListener;
-    Calendar date;
+    TimePickerDialog.OnTimeSetListener onTimeSetListener;
+
+    Calendar dateTime;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_transaction_activity);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        date = Calendar.getInstance();
-
         categoriesSpinner = (Spinner)findViewById(R.id.transaction_category);
-        currentDateTime = (TextView)findViewById(R.id.transaction_date);
+        currentDate = (TextView)findViewById(R.id.transaction_date);
+        currentTime = (TextView)findViewById(R.id.transaction_time);
+
+        dateTime = Calendar.getInstance();
         handler = new SQLiteHandler(getApplicationContext());
+
+        onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                dateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                dateTime.set(Calendar.MINUTE, minute);
+                setInitialDateTime();
+            }
+        };
 
         onDateSetListener = new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                date.set(Calendar.YEAR, year);
-                date.set(Calendar.MONTH, monthOfYear);
-                date.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                dateTime.set(Calendar.YEAR, year);
+                dateTime.set(Calendar.MONTH, monthOfYear);
+                dateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 setInitialDateTime();
             }
         };
 
         setInitialDateTime();
     }
-
 
     @Override
     protected void onResume() {
@@ -80,14 +92,20 @@ public class SingleTransactionActivity extends AppCompatActivity {
     }
 
     private void setInitialDateTime() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        currentDateTime.setText(dateFormat.format(date.getTime()));
+        currentDate.setText(String.format("%td.%tm.%tY", dateTime, dateTime, dateTime));
+        currentTime.setText(String.format("%tH:%tM", dateTime, dateTime));
     }
 
     public void setDate(View view) {
         new DatePickerDialog(this, onDateSetListener,
-                date.get(Calendar.YEAR),
-                date.get(Calendar.MONTH),
-                date.get(Calendar.DAY_OF_MONTH)).show();
+                dateTime.get(Calendar.YEAR),
+                dateTime.get(Calendar.MONTH),
+                dateTime.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    public void setTime(View view) {
+        new TimePickerDialog(this, onTimeSetListener,
+                dateTime.get(Calendar.HOUR_OF_DAY),
+                dateTime.get(Calendar.MINUTE), true).show();
     }
 }
