@@ -12,8 +12,8 @@ import com.application.homeaccountancy.R;
 import org.xmlpull.v1.XmlPullParser;
 
 public class SQLiteHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 8;
-    private static final String DATABASE_NAME = "Accountancy.db";
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "Accountancy6.db";
     private Context context;
 
     public SQLiteHandler(Context context) {

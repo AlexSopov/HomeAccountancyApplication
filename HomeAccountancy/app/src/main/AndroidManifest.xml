@@ -27,6 +27,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.application.homeaccountancy.TransactionsActivity" />
         </activity>
+        <activity android:name=".CategoriesActivity"></activity>
     </application>
 
 </manifest>

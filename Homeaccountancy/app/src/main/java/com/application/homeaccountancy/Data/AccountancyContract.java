@@ -14,7 +14,7 @@ public final class AccountancyContract {
     private static final String REFERENCES= " REFERENCES ";
     private static final String DROP_TABLE = "DROP TABLE IF EXISTS ";
     private static final String INTEGER_PRIMARY_KEY_AUTOINCREMENT = " INTEGER PRIMARY KEY AUTOINCREMENT";
-    private static final String COMMA_SEPARATOR = ",";
+    public static final String COMMA_SEPARATOR = ",";
 
     // To prevent someone from accidentally instantiating the contract class,
     // give it an empty constructor.
@@ -30,7 +30,7 @@ public final class AccountancyContract {
     }
 
     public static class Category implements BaseColumns {
-        public static final String TABLE_NAME = "Categories";
+        public static final String TABLE_NAME = "CategoriesActivity";
         public static final String COLUMN_NAME_TITLE = "title";
         public static final String COLUMN_NAME_IS_OUTGO = "is_outgo";
         public static final String COLUMN_NAME_ICON = "icon";

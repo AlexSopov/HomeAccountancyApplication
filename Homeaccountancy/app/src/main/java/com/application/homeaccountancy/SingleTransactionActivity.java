@@ -39,6 +39,7 @@ public class SingleTransactionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_transaction_activity);
+        setTitle("");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -121,9 +122,10 @@ public class SingleTransactionActivity extends AppCompatActivity {
 
     public void saveTransactionCloseActivity(View view) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(AccountancyContract.Transaction.COLUMN_NAME_DATE, dateTime.getTime().getTime());
+        contentValues.put(AccountancyContract.Transaction.COLUMN_NAME_DATE, getTimeString());
         contentValues.put(AccountancyContract.Transaction.COLUMN_NAME_AMOUNT,
                 Integer.parseInt(transactionSum.getText().toString()));
+
         contentValues.put(AccountancyContract.Transaction.COLUMN_NAME_ACCOUNT_ID, accountsSpinner.getSelectedItemId());
         contentValues.put(AccountancyContract.Transaction.COLUMN_NAME_CATEGORY_ID, categoriesSpinner.getSelectedItemId());
         contentValues.put(AccountancyContract.Transaction.COLUMN_NAME_NOTE, note.getText().toString());
@@ -133,5 +135,10 @@ public class SingleTransactionActivity extends AppCompatActivity {
     }
 
     public void saveTransaction(View view) {
+    }
+
+    private String getTimeString() {
+        return String.format("%tY-%tm-%td %tH:%tM",
+                dateTime, dateTime, dateTime, dateTime, dateTime);
     }
 }

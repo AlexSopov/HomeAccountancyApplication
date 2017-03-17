@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <categories>
-    <record title="Прочее" is_outgo="1" icon="others" />
-    <record title="Прочее" is_outgo="0" icon="others" />
+    <record title="Прочие затраты" is_outgo="1" icon="others" />
+    <record title="Прочие доходы" is_outgo="0" icon="others" />
     <record title="Автомобиль" is_outgo="1" icon="auto" />
     <record title="Бизнес" is_outgo="0" icon="business" />
     <record title="Долги" is_outgo="1" icon="debt" />
