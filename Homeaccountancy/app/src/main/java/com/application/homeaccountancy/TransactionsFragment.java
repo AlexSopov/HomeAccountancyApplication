@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -18,6 +21,7 @@ import com.application.homeaccountancy.Data.SQLiteHandler;
 
 public class TransactionsFragment extends Fragment {
     ListView transactionsList;
+    FloatingActionButton floatingActionButton;
 
     SQLiteHandler sqLiteHandler;
     SQLiteDatabase db;
@@ -27,9 +31,19 @@ public class TransactionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.transactions_content, container, false);
 
+        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.add_new_transaction);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewTransaction(v);
+            }
+        });
+
+
         transactionsList = (ListView) view.findViewById(R.id.all_transactions_list);
         sqLiteHandler = new SQLiteHandler(getActivity().getApplicationContext());
         db = sqLiteHandler.getReadableDatabase();
+        setHasOptionsMenu(true);
 
         TabHost tabHost = (TabHost) view.findViewById(R.id.tabs_transactions);
         tabHost.setup();
@@ -40,12 +54,12 @@ public class TransactionsFragment extends Fragment {
         tabHost.addTab(tabSpec);
 
         tabSpec = tabHost.newTabSpec("tabs_transactions_tab2");
-        tabSpec.setIndicator("Затраты");
+        tabSpec.setIndicator("Траты");
         tabSpec.setContent(R.id.tabs_transactions_tab2);
         tabHost.addTab(tabSpec);
 
         tabSpec = tabHost.newTabSpec("tabs_transactions_tab3");
-        tabSpec.setIndicator("Доходы");
+        tabSpec.setIndicator("Пополнения");
         tabSpec.setContent(R.id.tabs_transactions_tab3);
         tabHost.addTab(tabSpec);
 
@@ -104,6 +118,24 @@ public class TransactionsFragment extends Fragment {
 
         db.close();
         cursor.close();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_filter, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.filter) {
+            Intent intent = new Intent(getActivity().getApplicationContext(), FilterActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void addNewTransaction(View view) {
