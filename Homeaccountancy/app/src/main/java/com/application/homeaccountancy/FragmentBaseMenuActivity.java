@@ -1,8 +1,10 @@
 package com.application.homeaccountancy;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -11,27 +13,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-public class IncludeMenuActivity extends AppCompatActivity
+public class FragmentBaseMenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    int layoutIndex;
-
-    protected void onCreate(Bundle savedInstanceState, int layoutIndex) {
-        super.onCreate(savedInstanceState);
-        setContentView(layoutIndex);
-        this.layoutIndex = layoutIndex;
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-    }
-
     @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.base_menu_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -41,6 +31,18 @@ public class IncludeMenuActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        Fragment transactionsFragment = new TransactionsFragment();
+
+        if (savedInstanceState == null) {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.container, transactionsFragment, "TAG_1");
+            fragmentTransaction.commit();
+        }
     }
 
     @Override
@@ -70,24 +72,31 @@ public class IncludeMenuActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
         if (id == R.id.menu_transactions) {
-            Intent intent = new Intent(this, TransactionsActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
+            TransactionsFragment transactionsFragment = new TransactionsFragment();
+            fragmentTransaction.replace(R.id.container, transactionsFragment, "TAG_1");
+            fragmentTransaction.commit();
         }
         else if (id == R.id.menu_categories) {
-            Intent intent = new Intent(this, CategoriesActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
+            CategoriesFragment categoriesFragment = new CategoriesFragment();
+            fragmentTransaction.replace(R.id.container, categoriesFragment, "TAG_2");
+            fragmentTransaction.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void addNewTransaction(View view) {
+        Intent intent = new Intent(FragmentBaseMenuActivity.this, SingleTransactionActivity.class);
+        startActivity(intent);
     }
 }

@@ -9,9 +9,9 @@
     <ImageView android:id="@+id/transaction_list_item_icon"
         android:layout_width="50dp"
         android:layout_height="match_parent"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="10dp"
         android:contentDescription="@string/icon"
-        android:layout_marginRight="15dp" />
+        android:layout_marginRight="10dp" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -21,11 +21,13 @@
 
         <TextView android:id="@+id/transaction_list_item_category"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="#000"/>
 
         <TextView android:id="@+id/transaction_list_item_description"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:textColor="#000"/>
 
     </LinearLayout>
 
@@ -39,13 +41,15 @@
             android:textAlignment="viewEnd"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textColor="#000"/>
 
         <TextView android:id="@+id/transaction_list_item_date"
             android:textAlignment="viewEnd"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textColor="#000"/>
 
     </LinearLayout>
 

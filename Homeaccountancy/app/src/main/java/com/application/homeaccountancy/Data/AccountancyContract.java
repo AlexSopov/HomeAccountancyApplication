@@ -30,7 +30,7 @@ public final class AccountancyContract {
     }
 
     public static class Category implements BaseColumns {
-        public static final String TABLE_NAME = "CategoriesActivity";
+        public static final String TABLE_NAME = "Categories";
         public static final String COLUMN_NAME_TITLE = "title";
         public static final String COLUMN_NAME_IS_OUTGO = "is_outgo";
         public static final String COLUMN_NAME_ICON = "icon";

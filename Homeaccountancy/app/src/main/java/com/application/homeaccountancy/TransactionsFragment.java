@@ -1,10 +1,14 @@
 package com.application.homeaccountancy;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
@@ -12,7 +16,7 @@ import android.widget.TabHost;
 import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.Data.SQLiteHandler;
 
-public class TransactionsActivity extends IncludeMenuActivity {
+public class TransactionsFragment extends Fragment {
     ListView transactionsList;
 
     SQLiteHandler sqLiteHandler;
@@ -20,15 +24,14 @@ public class TransactionsActivity extends IncludeMenuActivity {
     Cursor cursor;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState, R.layout.transactions_activity);
-        setTitle("Транзакции");
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.transactions_content, container, false);
 
-        transactionsList = (ListView) findViewById(R.id.all_transactions_list);
-        sqLiteHandler = new SQLiteHandler(getApplicationContext());
+        transactionsList = (ListView) view.findViewById(R.id.all_transactions_list);
+        sqLiteHandler = new SQLiteHandler(getActivity().getApplicationContext());
         db = sqLiteHandler.getReadableDatabase();
 
-        TabHost tabHost = (TabHost) findViewById(R.id.tabs_transactions);
+        TabHost tabHost = (TabHost) view.findViewById(R.id.tabs_transactions);
         tabHost.setup();
 
         TabHost.TabSpec tabSpec = tabHost.newTabSpec("tabs_transactions_tab1");
@@ -47,10 +50,12 @@ public class TransactionsActivity extends IncludeMenuActivity {
         tabHost.addTab(tabSpec);
 
         tabHost.setCurrentTab(0);
+
+        return view;
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         SimpleCursorAdapter transactionsCursorAdapter;
 
@@ -88,7 +93,8 @@ public class TransactionsActivity extends IncludeMenuActivity {
                 R.id.transaction_list_item_description
         };
 
-        transactionsCursorAdapter = new SimpleCursorAdapter(this, R.layout.transaction_list_item, cursor, from, to, 0);
+        transactionsCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),
+                R.layout.transaction_list_item, cursor, from, to, 0);
         transactionsList.setAdapter(transactionsCursorAdapter);
     }
 
@@ -100,5 +106,8 @@ public class TransactionsActivity extends IncludeMenuActivity {
         cursor.close();
     }
 
-
+    public void addNewTransaction(View view) {
+        Intent intent = new Intent(getActivity().getApplicationContext(), SingleTransactionActivity.class);
+        startActivity(intent);
+    }
 }

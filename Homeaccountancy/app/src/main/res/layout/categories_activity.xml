@@ -18,7 +18,7 @@
         <include layout="@layout/app_bar" />
 
         <!--CONTENT-->
-        <include layout="@layout/transactions_content" />
+        <include layout="@layout/categories_content" />
 
     </android.support.design.widget.CoordinatorLayout>
 

@@ -80,11 +80,10 @@
                     android:id="@+id/transaction_sum"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
+                    android:inputType="numberSigned|numberDecimal"
                     android:textAlignment="viewEnd"
                     android:textSize="22sp"
-                    android:hint="Введите сумму"
-                    android:digits="2">
+                    android:hint="Введите сумму">
                     <requestFocus/>
                 </EditText>
 

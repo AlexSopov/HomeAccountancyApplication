@@ -12,11 +12,7 @@
             android:name=".TransactionsActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".SingleTransactionActivity"
@@ -27,7 +23,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.application.homeaccountancy.TransactionsActivity" />
         </activity>
-        <activity android:name=".CategoriesActivity"></activity>
+        <activity android:name=".CategoriesActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".FragmentBaseMenuActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

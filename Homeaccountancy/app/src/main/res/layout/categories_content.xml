@@ -23,7 +23,7 @@
             android:layout_height="match_parent">
 
             <android.support.design.widget.CoordinatorLayout
-                android:id="@+id/tabs_transactions_tab1"
+                android:id="@+id/tabs_categories_tab_1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -32,7 +32,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <ListView android:id="@+id/all_transactions_list"
+                    <ListView android:id="@+id/categories_outgo"
                         android:layout_width="match_parent"
                         android:layout_weight="1"
                         android:layout_height="0dp" />
@@ -43,19 +43,36 @@
                     android:layout_width="60dp"
                     android:layout_gravity="bottom|end"
                     android:layout_margin="20dp"
-                    android:onClick="addNewTransaction"
                     app:elevation="1dp"
                     android:layout_height="60dp" />
 
             </android.support.design.widget.CoordinatorLayout>
 
-            <LinearLayout
-                android:id="@+id/tabs_transactions_tab2"
+            <android.support.design.widget.CoordinatorLayout
+                android:id="@+id/tabs_categories_tab_2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ListView android:id="@+id/categories_income"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:layout_height="0dp" />
+
+                </LinearLayout>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:layout_width="60dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="20dp"
+                    app:elevation="1dp"
+                    android:layout_height="60dp" />
+
+            </android.support.design.widget.CoordinatorLayout>
 
         </FrameLayout>
     </LinearLayout>
