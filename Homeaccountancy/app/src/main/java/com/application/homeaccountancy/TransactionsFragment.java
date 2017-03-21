@@ -132,6 +132,7 @@ public class TransactionsFragment extends Fragment {
 
         if (id == R.id.filter) {
             Intent intent = new Intent(getActivity().getApplicationContext(), FilterActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }
 

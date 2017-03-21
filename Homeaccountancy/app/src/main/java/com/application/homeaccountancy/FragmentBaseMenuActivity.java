@@ -25,7 +25,7 @@ public class FragmentBaseMenuActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Транзакции");
+        setTitle("Журнал");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -84,15 +84,18 @@ public class FragmentBaseMenuActivity extends AppCompatActivity
             TransactionsFragment transactionsFragment = new TransactionsFragment();
             fragmentTransaction.replace(R.id.container, transactionsFragment, "TAG_1");
             fragmentTransaction.commit();
+            setTitle("Журнал");
         }
         else if (id == R.id.menu_categories) {
             CategoriesFragment categoriesFragment = new CategoriesFragment();
             fragmentTransaction.replace(R.id.container, categoriesFragment, "TAG_2");
             fragmentTransaction.commit();
+            setTitle("Категории");
         }
         else if (id == R.id.menu_accounts) {
             Intent intent = new Intent(getApplicationContext(), SingleAccountActivity.class);
             startActivity(intent);
+            setTitle("Счета");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
