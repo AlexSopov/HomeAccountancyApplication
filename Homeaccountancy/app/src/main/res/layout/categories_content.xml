@@ -2,6 +2,7 @@
 <TabHost
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tabs_categories"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,7 +16,9 @@
         <TabWidget
             android:id="@android:id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" >
+
+        </TabWidget>
 
         <FrameLayout
             android:id="@android:id/tabcontent"
@@ -40,11 +43,13 @@
                 </LinearLayout>
 
                 <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/add_new_category"
                     android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_gravity="bottom|end"
                     android:layout_margin="20dp"
-                    app:elevation="1dp"
-                    android:layout_height="60dp" />
+                    app:srcCompat="@drawable/ic_add_black_24dp"
+                    tools:ignore="UnusedAttribute" />
 
             </android.support.design.widget.CoordinatorLayout>
 
@@ -64,13 +69,6 @@
                         android:layout_height="0dp" />
 
                 </LinearLayout>
-
-                <android.support.design.widget.FloatingActionButton
-                    android:layout_width="60dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="20dp"
-                    app:elevation="1dp"
-                    android:layout_height="60dp" />
 
             </android.support.design.widget.CoordinatorLayout>
 

@@ -1,12 +1,15 @@
 package com.application.homeaccountancy;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
@@ -16,6 +19,7 @@ import com.application.homeaccountancy.Data.SQLiteHandler;
 
 public class CategoriesFragment extends Fragment {
     ListView categoriesOutgo, categoriesIncome;
+    FloatingActionButton buttonAddNewCategory;
 
     SQLiteHandler sqLiteHandler;
     SQLiteDatabase db;
@@ -27,6 +31,13 @@ public class CategoriesFragment extends Fragment {
 
         categoriesOutgo = (ListView)view.findViewById(R.id.categories_outgo);
         categoriesIncome = (ListView)view.findViewById(R.id.categories_income);
+        buttonAddNewCategory = (FloatingActionButton)view.findViewById(R.id.add_new_category);
+        buttonAddNewCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewCategory(v);
+            }
+        });
 
         sqLiteHandler = new SQLiteHandler(getActivity().getApplicationContext());
         db = sqLiteHandler.getReadableDatabase();
@@ -35,12 +46,12 @@ public class CategoriesFragment extends Fragment {
         tabHost.setup();
 
         TabHost.TabSpec tabSpec = tabHost.newTabSpec("tabs_categories_tab1");
-        tabSpec.setIndicator("Затраты");
+        tabSpec.setIndicator("Траты");
         tabSpec.setContent(R.id.tabs_categories_tab_1);
         tabHost.addTab(tabSpec);
 
         tabSpec = tabHost.newTabSpec("tabs_categories_tab2");
-        tabSpec.setIndicator("Доходы");
+        tabSpec.setIndicator("Пополнения");
         tabSpec.setContent(R.id.tabs_categories_tab_2);
         tabHost.addTab(tabSpec);
 
@@ -75,6 +86,19 @@ public class CategoriesFragment extends Fragment {
                         AccountancyContract.Category.COLUMN_NAME_ICON},
                 new int[]{R.id.category_list_item_title, R.id.category_list_item_icon}, 0);
         categoriesIncome.setAdapter(categoriesIncomesAdapter);
+
+        AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), SingleCategoryActivity.class);
+                intent.putExtra("id", id);
+                startActivity(intent);
+            }
+        };
+
+        categoriesOutgo.setOnItemClickListener(onItemClickListener);
+        categoriesIncome.setOnItemClickListener(onItemClickListener);
+
     }
 
     @Override
@@ -83,5 +107,10 @@ public class CategoriesFragment extends Fragment {
 
         db.close();
         cursor.close();
+    }
+
+    private void addNewCategory(View v) {
+        Intent intent = new Intent(getActivity().getApplicationContext(), SingleCategoryActivity.class);
+        startActivity(intent);
     }
 }

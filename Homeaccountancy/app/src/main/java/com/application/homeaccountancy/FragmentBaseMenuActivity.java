@@ -90,6 +90,10 @@ public class FragmentBaseMenuActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.container, categoriesFragment, "TAG_2");
             fragmentTransaction.commit();
         }
+        else if (id == R.id.menu_accounts) {
+            Intent intent = new Intent(getApplicationContext(), SingleAccountActivity.class);
+            startActivity(intent);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

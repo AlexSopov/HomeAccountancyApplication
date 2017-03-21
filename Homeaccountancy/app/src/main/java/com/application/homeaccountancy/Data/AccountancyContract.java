@@ -16,8 +16,6 @@ public final class AccountancyContract {
     private static final String INTEGER_PRIMARY_KEY_AUTOINCREMENT = " INTEGER PRIMARY KEY AUTOINCREMENT";
     public static final String COMMA_SEPARATOR = ",";
 
-    // To prevent someone from accidentally instantiating the contract class,
-    // give it an empty constructor.
     public AccountancyContract() {}
 
     public static class Transaction implements BaseColumns {
@@ -38,6 +36,7 @@ public final class AccountancyContract {
 
     public static class Account implements BaseColumns {
         public static final String TABLE_NAME = "Accounts";
+        public static final String COLUMN_NAME_START_BALANCE = "start_balance";
         public static final String COLUMN_NAME_TITLE = "title";
         public static final String COLUMN_NAME_SUBTITLE = "subtitle";
     }
@@ -66,7 +65,7 @@ public final class AccountancyContract {
             Account.TABLE_NAME + " (" +
             Account._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA_SEPARATOR +
             Account.COLUMN_NAME_TITLE + TEXT_TYPE + NOT_NULL + COMMA_SEPARATOR +
-            Account.COLUMN_NAME_SUBTITLE + TEXT_TYPE + ")";
+            Account.COLUMN_NAME_START_BALANCE + REAL_TYPE + NOT_NULL + COMMA_SEPARATOR + ")";
 
 
     public static final String SQLITE_DELETE_TRANSACTIONS = DROP_TABLE + Transaction.TABLE_NAME;

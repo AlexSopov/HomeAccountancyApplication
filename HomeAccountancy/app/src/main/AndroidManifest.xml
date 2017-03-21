@@ -9,21 +9,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".TransactionsActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".SingleTransactionActivity"
             android:label="@string/title_activity_single_transaction"
-            android:parentActivityName=".TransactionsActivity"
+            android:parentActivityName=".FragmentBaseMenuActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.application.homeaccountancy.TransactionsActivity" />
+                android:value="com.application.homeaccountancy.FragmentBaseMenuActivity" />
         </activity>
-        <activity
-            android:name=".CategoriesActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FragmentBaseMenuActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -37,6 +30,20 @@
             android:name=".FilterActivity"
             android:label="@string/title_activity_filter"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SingleAccountActivity"
+            android:label="@string/title_activity_account"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.application.homeaccountancy.FragmentBaseMenuActivity" />
+        </activity>
+        <activity
+            android:name=".SingleCategoryActivity"
+            android:label="@string/title_activity_single_category"
+            android:parentActivityName=".FragmentBaseMenuActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>
