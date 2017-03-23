@@ -1,4 +1,4 @@
-package com.application.homeaccountancy;
+package com.application.homeaccountancy.activity;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.Data.SQLiteHandler;
+import com.application.homeaccountancy.R;
 
 public class SingleCategoryActivity extends AppCompatActivity {
     TextView titleTextView;
@@ -45,7 +46,7 @@ public class SingleCategoryActivity extends AppCompatActivity {
 
         if (categoryId > 0) {
             cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
-            " WHERE " + AccountancyContract.Category._ID + "=?", new String[] {String.valueOf(categoryId)});
+                    " WHERE " + AccountancyContract.Category._ID + "=?", new String[] {String.valueOf(categoryId)});
 
             cursor.moveToFirst();
             titleTextView.setText(cursor.getString(1));

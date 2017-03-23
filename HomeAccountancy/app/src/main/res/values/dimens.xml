@@ -11,4 +11,5 @@
     <dimen name="transaction_margin_bottom">5dp</dimen>
     <dimen name="transaction_item_padding">7dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
 </resources>

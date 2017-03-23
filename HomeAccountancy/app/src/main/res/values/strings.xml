@@ -33,4 +33,27 @@
     <string name="title_activity_filter">FilterActivity</string>
     <string name="title_activity_account">AccountActivity</string>
     <string name="title_activity_single_category">SingleCategoryActivity</string>
+    <string name="title_activity_main_activity">Журнал</string>
+    <string name="title_activity_transactions_tabbed">Журнал</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_transaction_tabbed">TransactionTabbedActivity</string>
+
+
+    <string name="empty_text">
+        <![CDATA[
+            Не найдено записей.<br>
+            Для добавления новой записи нажмите кнопку
+            <b>Добавить новую запись</b>
+        ]]>
+    </string>
+        <string name="empty_text_filter">
+        <![CDATA[
+            Не найдено записей.<br>
+            Измените условия <b>Фильтра</b>, или добавьте
+            новую запись с помощью кнопки
+            <b>Добавить новую запись</b>
+        ]]>
+    </string>
+    <string name="title_activity_categories">Categories</string>
+
 </resources>

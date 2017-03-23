@@ -9,25 +9,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SingleTransactionActivity"
+            android:name=".activity.SingleTransactionActivity"
             android:label="@string/title_activity_single_transaction"
             android:parentActivityName=".FragmentBaseMenuActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.application.homeaccountancy.FragmentBaseMenuActivity" />
+                android:value="com.application.homeaccountancy.activity.MainActivity" />
         </activity>
         <activity
             android:name=".FragmentBaseMenuActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".FilterActivity"
+            android:name=".activity.FilterActivity"
             android:label="@string/title_activity_filter"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -39,10 +33,28 @@
                 android:value="com.application.homeaccountancy.FragmentBaseMenuActivity" />
         </activity>
         <activity
-            android:name=".SingleCategoryActivity"
+            android:name=".activity.SingleCategoryActivity"
             android:label="@string/title_activity_single_category"
             android:parentActivityName=".FragmentBaseMenuActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/title_activity_main_activity"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.CategoriesActivity"
+            android:label="@string/title_activity_categories"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.application.homeaccountancy.activity.MainActivity" />
         </activity>
     </application>
 

@@ -1,4 +1,4 @@
-package com.application.homeaccountancy;
+package com.application.homeaccountancy.activity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -18,6 +18,7 @@ import android.widget.TimePicker;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.Data.SQLiteHandler;
+import com.application.homeaccountancy.R;
 
 import java.util.Calendar;
 
