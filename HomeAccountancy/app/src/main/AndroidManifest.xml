@@ -11,15 +11,11 @@
         <activity
             android:name=".activity.SingleTransactionActivity"
             android:label="@string/title_activity_single_transaction"
-            android:parentActivityName=".FragmentBaseMenuActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.application.homeaccountancy.activity.MainActivity" />
         </activity>
-        <activity
-            android:name=".FragmentBaseMenuActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.FilterActivity"
             android:label="@string/title_activity_filter"
@@ -35,8 +31,12 @@
         <activity
             android:name=".activity.SingleCategoryActivity"
             android:label="@string/title_activity_single_category"
-            android:parentActivityName=".FragmentBaseMenuActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.application.homeaccountancy.activity.CategoriesActivity" />
+
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/title_activity_main_activity"
@@ -50,6 +50,15 @@
         <activity
             android:name=".activity.CategoriesActivity"
             android:label="@string/title_activity_categories"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.application.homeaccountancy.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.GraphicActivity"
+            android:label="@string/title_activity_graphic"
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

@@ -72,10 +72,11 @@ public class FragmentBaseTransaction extends ListFragment {
     }
 
     private String InitializeConditions(String query) {
+        String orderSequence = " ORDER BY " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " DESC";
         if (!FilterSettings.isFilter) {
             filterIsEnabled.setVisibility(View.GONE);
             setEmptyText(Html.fromHtml(getString(R.string.empty_text)));
-            return query;
+            return query + orderSequence;
         }
         else {
             filterIsEnabled.setVisibility(View.VISIBLE);
@@ -118,6 +119,6 @@ public class FragmentBaseTransaction extends ListFragment {
                     String.valueOf(FilterSettings.categoryID);
         }
 
-        return query;
+        return query + orderSequence;
     }
 }

@@ -23,9 +23,6 @@
 
     <!--Content-->
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
 
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.application.homeaccountancy.SingleTransactionActivity"
@@ -98,16 +95,27 @@
                         android:text="@string/transaction_sum"
                         android:textSize="@dimen/transaction_text_size"/>
 
-                    <EditText
-                        android:id="@+id/transaction_sum"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberSigned|numberDecimal"
-                        android:textAlignment="viewEnd"
-                        android:textSize="22sp"
-                        android:hint="Введите сумму">
-                        <requestFocus/>
-                    </EditText>
+                        android:layout_height="wrap_content">
+                        <Button
+                            android:layout_gravity="center"
+                            android:text="+"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:id="@+id/button_sign" />
+                        <EditText
+                            android:id="@+id/transaction_sum"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:textAlignment="viewEnd"
+                            android:textSize="22sp"
+                            android:hint="Введите сумму">
+                            <requestFocus/>
+                        </EditText>
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
@@ -137,8 +145,8 @@
                             android:id="@+id/transaction_category" />
 
                         <ImageButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             app:srcCompat="@android:drawable/ic_input_add" />
 
                     </LinearLayout>
@@ -170,8 +178,8 @@
                             android:id="@+id/transaction_account" />
 
                         <ImageButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             app:srcCompat="@android:drawable/ic_input_add" />
 
                     </LinearLayout>
