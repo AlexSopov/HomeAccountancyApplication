@@ -46,7 +46,7 @@
             <b>Добавить новую запись</b>
         ]]>
     </string>
-        <string name="empty_text_filter">
+    <string name="empty_text_filter">
         <![CDATA[
             Не найдено записей.<br>
             Измените условия <b>Фильтра</b>, или добавьте
@@ -54,8 +54,23 @@
             <b>Добавить новую запись</b>
         ]]>
     </string>
+        <string name="empty_text_char">
+        <![CDATA[
+            Не найдено данных для отображения.<br>
+            Добавьте новые<b>Записи</b>, или измените
+            <b>Условия отображения</b>
+        ]]>
+    </string>
+
+
     <string name="title_activity_categories">Categories</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_graphic">GraphicActivity</string>
+
+
+    <string-array name="categories_types">
+        <item>Траты</item>
+        <item>Пополнения</item>
+    </string-array>
 
 </resources>

@@ -60,7 +60,8 @@ public class SingleCategoryActivity extends AppCompatActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        db.close();
+        if (db != null)
+            db.close();
 
         if (cursor != null)
             cursor.close();

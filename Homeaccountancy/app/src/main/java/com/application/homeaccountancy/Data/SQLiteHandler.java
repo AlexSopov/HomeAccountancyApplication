@@ -13,7 +13,7 @@ import org.xmlpull.v1.XmlPullParser;
 
 public class SQLiteHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
-    private static final String DATABASE_NAME = "Accountancy6.db";
+    private static final String DATABASE_NAME = "Accountancy7.db";
     private Context context;
 
     public SQLiteHandler(Context context) {

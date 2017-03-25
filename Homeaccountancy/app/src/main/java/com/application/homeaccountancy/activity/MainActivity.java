@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         }
         if (id == R.id.menu_graphics) {
-            Intent intent = new Intent(getApplicationContext(), GraphicActivity.class);
+            Intent intent = new Intent(getApplicationContext(), PieCharActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
         }

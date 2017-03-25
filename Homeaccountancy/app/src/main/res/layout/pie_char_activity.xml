@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.application.homeaccountancy.activity.GraphicActivity">
+    tools:context="com.application.homeaccountancy.activity.PieCharActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -21,6 +21,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/graphic_content" />
+    <include layout="@layout/pie_char_content" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -57,7 +57,7 @@
                 android:value="com.application.homeaccountancy.activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.GraphicActivity"
+            android:name=".activity.PieCharActivity"
             android:label="@string/title_activity_graphic"
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">

@@ -65,7 +65,7 @@ public final class AccountancyContract {
             Account.TABLE_NAME + " (" +
             Account._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA_SEPARATOR +
             Account.COLUMN_NAME_TITLE + TEXT_TYPE + NOT_NULL + COMMA_SEPARATOR +
-            Account.COLUMN_NAME_START_BALANCE + REAL_TYPE + NOT_NULL + COMMA_SEPARATOR + ")";
+            Account.COLUMN_NAME_START_BALANCE + REAL_TYPE + NOT_NULL + ")";
 
 
     public static final String SQLITE_DELETE_TRANSACTIONS = DROP_TABLE + Transaction.TABLE_NAME;
