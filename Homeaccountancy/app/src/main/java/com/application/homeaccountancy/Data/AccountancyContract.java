@@ -38,7 +38,6 @@ public final class AccountancyContract {
         public static final String TABLE_NAME = "Accounts";
         public static final String COLUMN_NAME_START_BALANCE = "start_balance";
         public static final String COLUMN_NAME_TITLE = "title";
-        public static final String COLUMN_NAME_SUBTITLE = "subtitle";
     }
 
     public static final String SQLITE_CREATE_TRANSACTIONS = CREATE_TABLE +

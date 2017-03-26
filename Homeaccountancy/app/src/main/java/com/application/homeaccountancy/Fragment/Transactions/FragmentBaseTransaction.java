@@ -72,7 +72,7 @@ public class FragmentBaseTransaction extends ListFragment {
     }
 
     private String InitializeConditions(String query) {
-        String orderSequence = " ORDER BY " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " DESC";
+        String orderSequence = " ORDER BY date(" + AccountancyContract.Transaction.COLUMN_NAME_DATE + ") DESC";
         if (!FilterSettings.isFilter) {
             filterIsEnabled.setVisibility(View.GONE);
             setEmptyText(Html.fromHtml(getString(R.string.empty_text)));
@@ -93,7 +93,7 @@ public class FragmentBaseTransaction extends ListFragment {
         if (FilterSettings.fromDateCheckBoxChecked) {
             if (isCondition) query += " AND ";
             query += AccountancyContract.Transaction.COLUMN_NAME_DATE + " >= '" +
-                    String.format("%tY-%tm-%td", FilterSettings.dateFrom,
+                    String.format("%tY-%tm-%td 00:00", FilterSettings.dateFrom,
                             FilterSettings.dateFrom, FilterSettings.dateFrom) + "'";
             isCondition = true;
         }
@@ -101,7 +101,7 @@ public class FragmentBaseTransaction extends ListFragment {
         if (FilterSettings.tillDateCheckBoxChecked) {
             if (isCondition) query += " AND ";
             query += AccountancyContract.Transaction.COLUMN_NAME_DATE + " <= '" +
-                    String.format("%tY-%tm-%td", FilterSettings.dateTill,
+                    String.format("%tY-%tm-%td 23:59", FilterSettings.dateTill,
                             FilterSettings.dateTill, FilterSettings.dateTill) + "'";
             isCondition = true;
         }

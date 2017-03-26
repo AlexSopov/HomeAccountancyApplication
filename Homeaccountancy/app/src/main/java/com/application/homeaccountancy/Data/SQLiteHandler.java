@@ -12,8 +12,8 @@ import com.application.homeaccountancy.R;
 import org.xmlpull.v1.XmlPullParser;
 
 public class SQLiteHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 2;
-    private static final String DATABASE_NAME = "Accountancy7.db";
+    private static final int DATABASE_VERSION = 6;
+    private static final String DATABASE_NAME = "Accountancy8.db";
     private Context context;
 
     public SQLiteHandler(Context context) {
@@ -77,11 +77,11 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(AccountancyContract.Account.COLUMN_NAME_TITLE, "Наличные");
-        contentValues.put(AccountancyContract.Account.COLUMN_NAME_SUBTITLE, "Учёт наличных денег");
+        contentValues.put(AccountancyContract.Account.COLUMN_NAME_START_BALANCE, 500);
         db.insert(AccountancyContract.Account.TABLE_NAME, null, contentValues);
 
         contentValues.put(AccountancyContract.Account.COLUMN_NAME_TITLE, "Карточка xxxx-xxxx-xxxx-xxxx");
-        contentValues.put(AccountancyContract.Account.COLUMN_NAME_SUBTITLE, "Счёт карточки xxxx-xxxx-xxxx-xxxx");
+        contentValues.put(AccountancyContract.Account.COLUMN_NAME_START_BALANCE, 1000);
         db.insert(AccountancyContract.Account.TABLE_NAME, null, contentValues);
     }
 }

@@ -104,8 +104,13 @@ public class MainActivity extends AppCompatActivity
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
         }
-        if (id == R.id.menu_graphics) {
+        else if (id == R.id.menu_pie_graphic) {
             Intent intent = new Intent(getApplicationContext(), PieCharActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        }
+        else if (id == R.id.menu_bar_graphic) {
+            Intent intent = new Intent(getApplicationContext(), BarChartActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
         }

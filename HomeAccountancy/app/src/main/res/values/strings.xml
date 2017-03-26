@@ -72,5 +72,6 @@
         <item>Траты</item>
         <item>Пополнения</item>
     </string-array>
+    <string name="title_activity_bar_chart">BarChartActivity</string>
 
 </resources>

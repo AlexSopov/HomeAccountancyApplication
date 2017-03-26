@@ -11,22 +11,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import android.widget.AdapterView;
 import android.widget.DatePicker;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.Data.SQLiteHandler;
 import com.application.homeaccountancy.R;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class PieCharActivity extends AppCompatActivity {
+public class BarChartActivity extends AppCompatActivity {
     static final int[] colors = new int[] {Color.parseColor("#e53935"), Color.parseColor("#26C6DA"),  Color.parseColor("#FFCA28"),
             Color.parseColor("#EC407A"),  Color.parseColor("#26A69A"),  Color.parseColor("#FFA726"),
             Color.parseColor("#AB47BC"),  Color.parseColor("#66BB6A"),  Color.parseColor("#FF7043"),
@@ -44,11 +44,9 @@ public class PieCharActivity extends AppCompatActivity {
             Color.parseColor("#29B6F6")};
 
     String fromDate, tillDate, fromJoinSelector, whereSelector;
-    PieChart pieChart;
+    BarChart barChart;
 
-    TextView fromDateTextView, tillDateTextView, categoryTextView,
-            totalTextView, percentTextView;
-    Spinner categoriesSpinner;
+    TextView fromDateTextView, tillDateTextView;
 
     SQLiteHandler handler;
     SQLiteDatabase db;
@@ -62,7 +60,7 @@ public class PieCharActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.pie_char_activity);
+        setContentView(R.layout.bar_chart_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -82,8 +80,8 @@ public class PieCharActivity extends AppCompatActivity {
         initializeListeners();
         initializeGraphics();
 
-        pieChart.setNoDataText("Не найдено данных для отображения.");
-        pieChart.setNoDataTextColor(Color.BLACK);
+        barChart.setNoDataText("Не найдено данных для отображения.");
+        barChart.setNoDataTextColor(Color.BLACK);
         setInitialDateTime();
     }
 
@@ -129,8 +127,6 @@ public class PieCharActivity extends AppCompatActivity {
     }
 
     private void initializeStrings() {
-        int isOutgo = categoriesSpinner.getSelectedItemPosition() == 0 ? 1 : 0;
-
         fromDate = String.format("%tY-%tm-%td 00:00", dateFrom, dateFrom, dateFrom);
         tillDate = String.format("%tY-%tm-%td 23:59", dateTill, dateTill, dateTill);
 
@@ -141,85 +137,84 @@ public class PieCharActivity extends AppCompatActivity {
 
         whereSelector = " WHERE " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " >= '" +
                 fromDate + "' AND " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " <= '" +
-                tillDate + "'" + " AND " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO + " = " + isOutgo ;
+                tillDate + "'";
     }
     private void initializeGraphics() {
-        final int totalSum;
-        List<PieEntry> entries = new ArrayList<>();
+        List<BarEntry> outgoes = new ArrayList<>();
+        List<BarEntry> incomes = new ArrayList<>();
+        String query;
 
-        initializeStrings();
+        switch (changeField) {
+            case Calendar.MONTH:
+                int start = 1;
+                for (int i = 0; i < 5; i++) {
+                    dateFrom.set(Calendar.DAY_OF_MONTH, start);
+                    dateTill.set(Calendar.MONTH, dateFrom.get(Calendar.MONTH));
+                    dateTill.set(Calendar.DAY_OF_MONTH,
+                            start + 6 > dateTill.getActualMaximum(Calendar.DAY_OF_MONTH) ?
+                                    dateTill.getActualMaximum(Calendar.DAY_OF_MONTH) : start + 6);
 
-        String query = "SELECT SUM(" + AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + ") " +
-                fromJoinSelector + whereSelector;
-        cursor = db.rawQuery(query, null);
+                    start += 7;
+                    initializeStrings();
+                    setInitialDateTime();
 
-        if (cursor.moveToFirst())
-            totalSum = cursor.getInt(0);
-        else return;
 
-        query = "SELECT " + AccountancyContract.Category.COLUMN_NAME_TITLE +
-                AccountancyContract.COMMA_SEPARATOR + " SUM (" +
-                AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + ") " +
-                fromJoinSelector + whereSelector +
-                " GROUP BY " + AccountancyContract.Transaction.COLUMN_NAME_CATEGORY_ID;
+                    query = "SELECT SUM (" +
+                            AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + ") " +
+                            fromJoinSelector + " WHERE " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " >= '" +
+                            fromDate + "' AND " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " <= '" +
+                            tillDate + "'" + " AND " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO +
+                            " = 1" ;
+                    cursor = db.rawQuery(query, null);
+                    cursor.moveToFirst();
+                    outgoes.add(new BarEntry(i, Math.abs(cursor.getInt(0))));
 
-        cursor = db.rawQuery(query, null);
 
-        int currentSum;
-        if (cursor.moveToFirst()) {
-            do {
-                currentSum = cursor.getInt(1);
-                entries.add(new PieEntry(Math.abs(currentSum), cursor.getString(0)));
-            }
-            while (cursor.moveToNext());
+                    query = "SELECT SUM (" +
+                            AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + ") " +
+                            fromJoinSelector + " WHERE " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " >= '" +
+                            fromDate + "' AND " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " <= '" +
+                            tillDate + "'" + " AND " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO +
+                            " = 0" ;
+                    cursor = db.rawQuery(query, null);
+                    cursor.moveToFirst();
+                    incomes.add(new BarEntry(i, Math.abs(cursor.getInt(0))));
+                }
         }
+        BarDataSet barDataSetOungoes = new BarDataSet(outgoes, "Entries 1");
+        BarDataSet barDataSetIncomes = new BarDataSet(incomes, "Entries 2");
 
-        PieDataSet pieDataSet = new PieDataSet(entries, "Entries");
-        pieDataSet.setValueTextColor(Color.argb(180, 0, 0, 0));
-        pieDataSet.setValueTextSize(14);
-        pieDataSet.setColors(colors);
-        pieDataSet.setValueFormatter(new NegativeValueFormatter());
-        pieDataSet.setDrawValues(true);
-        pieDataSet.setHighlightEnabled(true);
+        float groupSpace = 0.06f;
+        float barSpace = 0.02f; // x2 dataset
+        float barWidth = 0.45f; // x2 dataset
+// (0.02 + 0.45) * 2 + 0.06 = 1.00 -> interval per "group"
 
-        PieData pieData = new PieData(pieDataSet);
-        pieChart.setData(pieData);
-        pieChart.setCenterText("Итого:\n " + String.valueOf(totalSum));
-        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-                categoryTextView.setText(((PieEntry)e).getLabel());
-                totalTextView.setText("Сумма: " + String.valueOf(e.getY()));
-                percentTextView.setText(String.format("Процент: %.2f%%", Math.abs((e.getY() * 100) / totalSum)));
-            }
+        BarData data = new BarData(barDataSetOungoes, barDataSetIncomes);
+        data.setBarWidth(barWidth); // set the width of each bar
+        barChart.setData(data);
+        barChart.groupBars(0, groupSpace, barSpace); // perform the "explicit" grouping
+        barChart.invalidate(); // refresh
 
-            @Override
-            public void onNothingSelected() {
-                categoryTextView.setText("Ничего не выбрано");
-                totalTextView.setText("Сумма: не определено");
-                percentTextView.setText("Процент: не определено");
-            }
-        });
-        pieChart.invalidate();
+
+        /*barDataSet.setValueTextColor(Color.argb(180, 0, 0, 0));
+        barDataSet.setValueTextSize(14);
+        barDataSet.setColors(colors);
+        barDataSet.setValueFormatter(new NegativeValueFormatter());
+        barDataSet.setDrawValues(true);
+        barDataSet.setHighlightEnabled(true);
+
+        BarData barData = new BarData(barDataSet);
+        barChart.setData(barData);
+        barChart.invalidate();*/
     }
     private void initializeViews() {
-        pieChart = (PieChart) findViewById(R.id.chart);
-        pieChart.getLegend().setEnabled(false);;
-        pieChart.setCenterTextSize(20);
-        pieChart.setHoleRadius(30);
-        pieChart.getContentDescription();
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setTransparentCircleRadius(35);
-
+        barChart = (BarChart) findViewById(R.id.chart);
+        barChart.getLegend();
+        barChart.getContentDescription();
+        barChart.getDescription().setEnabled(false);
 
         fromDateTextView = (TextView) findViewById(R.id.graph_date_from);
         tillDateTextView = (TextView) findViewById(R.id.graph_date_till);
-
-        categoryTextView = (TextView) findViewById(R.id.category);
-        totalTextView = (TextView) findViewById(R.id.total);
-        percentTextView = (TextView) findViewById(R.id.percent);
-
-        categoriesSpinner = (Spinner) findViewById(R.id.spinner_category_type);
     }
     private void initializeListeners() {
         onDateFromSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -252,17 +247,6 @@ public class PieCharActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setDateTill(v);
-            }
-        });
-
-        categoriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                initializeGraphics();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }

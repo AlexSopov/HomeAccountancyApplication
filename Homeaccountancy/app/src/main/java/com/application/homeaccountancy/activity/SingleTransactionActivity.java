@@ -39,7 +39,7 @@ public class SingleTransactionActivity extends AppCompatActivity {
     TimePickerDialog.OnTimeSetListener onTimeSetListener;
 
     Calendar dateTime;
-    boolean isNegativeSum;
+    boolean isNegativeSum = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,13 +146,17 @@ public class SingleTransactionActivity extends AppCompatActivity {
     }
 
     public void saveTransaction(View view) {
-        saveTransactionCloseActivity(view);
-        Intent intent = new Intent(getApplicationContext(), SingleTransactionActivity.class);
-        startActivity(intent);
+        if (saveTransactionCloseActivity(view)) {
+            Intent intent = new Intent(getApplicationContext(), SingleTransactionActivity.class);
+            startActivity(intent);
+        }
     }
-    public void saveTransactionCloseActivity(View view) {
-        if (executeSaving())
+    public boolean saveTransactionCloseActivity(View view) {
+        if (executeSaving()) {
             finish();
+            return true;
+        }
+        return false;
     }
 
     public boolean executeSaving() {
@@ -178,6 +182,17 @@ public class SingleTransactionActivity extends AppCompatActivity {
             makeToast("Поле сумма обязательно для заполнения");
             return false;
         }
+
+        if (accountsSpinner.getSelectedItemPosition() < 0) {
+            makeToast("Необходимо выбрать для какого счёта производится опреация");
+            return false;
+        }
+
+        if (categoriesSpinner.getSelectedItemPosition() < 0) {
+            makeToast("Необходимо выбрать категорию");
+            return false;
+        }
+
 
         cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
         " WHERE " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO + "=?",
@@ -209,7 +224,7 @@ public class SingleTransactionActivity extends AppCompatActivity {
     }
 
     private String getTimeString() {
-        return String.format("%tY-%tm-%td %tH:%tM",
+        return String.format("%tY-%tm-%td %tH:%tM:00",
                 dateTime, dateTime, dateTime, dateTime, dateTime);
     }
 }

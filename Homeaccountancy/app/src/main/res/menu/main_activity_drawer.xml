@@ -14,10 +14,19 @@
             android:id="@+id/menu_categories"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/categories" />
-        <item
-            android:id="@+id/menu_graphics"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Графики" />
+        <item android:title="Диаграммы">
+            <menu>
+                <item
+                    android:id="@+id/menu_pie_graphic"
+                    android:icon="@drawable/ic_menu_slideshow"
+                    android:title="Кольцыевая" />
+                <item
+                    android:id="@+id/menu_bar_graphic"
+                    android:icon="@drawable/ic_menu_slideshow"
+                    android:title="Столбчатая" />
+            </menu>
+        </item>
+
     </group>
 
     <!--<item android:title="Communicate">

@@ -100,7 +100,7 @@
                         android:layout_height="wrap_content">
                         <Button
                             android:layout_gravity="center"
-                            android:text="+"
+                            android:text="-"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:id="@+id/button_sign" />
