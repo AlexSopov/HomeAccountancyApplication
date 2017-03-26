@@ -1,6 +1,5 @@
 package com.application.homeaccountancy.activity;
 
-import android.app.DatePickerDialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -11,23 +10,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.Data.SQLiteHandler;
 import com.application.homeaccountancy.R;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 
 import java.util.ArrayList;
@@ -35,27 +30,24 @@ import java.util.Calendar;
 import java.util.List;
 
 public class BarChartActivity extends AppCompatActivity {
-    static final int[] colors = new int[] {Color.parseColor("#e53935"), Color.parseColor("#26C6DA"),  Color.parseColor("#FFCA28"),
-            Color.parseColor("#EC407A"),  Color.parseColor("#26A69A"),  Color.parseColor("#FFA726"),
-            Color.parseColor("#AB47BC"),  Color.parseColor("#66BB6A"),  Color.parseColor("#FF7043"),
-            Color.parseColor("#7E57C2"),  Color.parseColor("#9CCC65"),  Color.parseColor("#8D6E63"),
-            Color.parseColor("#5C6BC0"),  Color.parseColor("#D4E157"),  Color.parseColor("#BDBDBD"),
-            Color.parseColor("#42A5F5"),  Color.parseColor("#FFEE58"),  Color.parseColor("#78909C"),
-            Color.parseColor("#29B6F6")};
+    String[] humanizeMonthSingle = new String[] {"Январь", "Февраль", "Март", "Апрель", "Май",
+            "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
+
+    String[] humanizeMonthPersonable = new String[] {"Января", "Февраля", "Марта",
+            "Апреля", "Июня", "Июля", "Августа", "Сентября", "Октября",
+            "Ноября", "Декабря" };
 
     String fromDate, tillDate, fromJoinSelector, whereSelector;
     BarChart barChart;
 
-    TextView fromDateTextView, tillDateTextView;
+    TextView humanizeDate, formatDate;
 
     SQLiteHandler handler;
     SQLiteDatabase db;
-    Cursor cursor;
 
-    int changeField;
+    int changeFieldInterval, changeFieldIteration;
 
-    DatePickerDialog.OnDateSetListener onDateFromSetListener, onDateTillSetListener;
-    public static Calendar dateFrom, dateTill;
+    public static Calendar calendarFrom, calendarTill;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,21 +60,22 @@ public class BarChartActivity extends AppCompatActivity {
         handler = new SQLiteHandler(getApplicationContext());
         db = handler.getReadableDatabase();
 
-        dateTill = Calendar.getInstance();
-        dateTill.set(Calendar.DAY_OF_MONTH, dateTill.getMaximum(Calendar.DAY_OF_MONTH));
+        calendarTill = Calendar.getInstance();
+        calendarTill.set(Calendar.DAY_OF_MONTH, calendarTill.getMaximum(Calendar.DAY_OF_MONTH));
 
-        dateFrom = Calendar.getInstance();
-        dateFrom.set(Calendar.DAY_OF_MONTH, 1);
-        dateFrom.set(Calendar.MONTH, dateTill.get(Calendar.MONTH));
-        changeField = Calendar.MONTH;
+        calendarFrom = Calendar.getInstance();
+        calendarFrom.set(Calendar.DAY_OF_MONTH, 1);
+        calendarFrom.set(Calendar.MONTH, calendarTill.get(Calendar.MONTH));
+
+        changeFieldInterval = Calendar.MONTH;
+        changeFieldIteration = Calendar.DAY_OF_YEAR;
 
         initializeViews();
-        initializeListeners();
         initializeGraphics();
 
         barChart.setNoDataText("Не найдено данных для отображения.");
         barChart.setNoDataTextColor(Color.BLACK);
-        setInitialDateTime();
+        setDateTimeView();
     }
 
     @Override
@@ -100,18 +93,28 @@ public class BarChartActivity extends AppCompatActivity {
 
         switch(id){
             case R.id.chart_day :
-                changeField = Calendar.DAY_OF_YEAR;
-                return true;
+                changeFieldInterval = Calendar.DAY_OF_YEAR;
+                changeFieldIteration = Calendar.DAY_OF_YEAR;
+                break;
             case R.id.chart_week :
-                changeField = Calendar.WEEK_OF_YEAR;
-                return true;
+                changeFieldInterval = Calendar.WEEK_OF_YEAR;
+                changeFieldIteration = Calendar.DAY_OF_YEAR;
+                break;
             case R.id.chart_month :
-                changeField = Calendar.MONTH;
-                return true;
+                changeFieldInterval = Calendar.MONTH;
+                changeFieldIteration = Calendar.DAY_OF_YEAR;
+                break;
             case R.id.chart_year :
-                changeField = Calendar.YEAR;
-                return true;
+                changeFieldInterval = Calendar.YEAR;
+                changeFieldIteration = Calendar.MONTH;
+                break;
         }
+        calendarFrom = Calendar.getInstance();
+        calendarTill = Calendar.getInstance();
+        dateChange(0);
+
+        initializeGraphics();
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -121,14 +124,11 @@ public class BarChartActivity extends AppCompatActivity {
 
         if (db != null)
             db.close();
-
-        if (cursor != null)
-            cursor.close();
     }
 
     private void initializeStrings() {
-        fromDate = String.format("%tY-%tm-%td 00:00", dateFrom, dateFrom, dateFrom);
-        tillDate = String.format("%tY-%tm-%td 23:59", dateTill, dateTill, dateTill);
+        fromDate = String.format("%tY-%tm-%td 00:00", calendarFrom, calendarFrom, calendarFrom);
+        tillDate = String.format("%tY-%tm-%td 23:59", calendarTill, calendarTill, calendarTill);
 
         fromJoinSelector = " FROM " + AccountancyContract.Transaction.TABLE_NAME + " INNER JOIN " +
                 AccountancyContract.Category.TABLE_NAME + " ON " + AccountancyContract.Category.TABLE_NAME +
@@ -140,168 +140,176 @@ public class BarChartActivity extends AppCompatActivity {
                 tillDate + "'";
     }
     private void initializeGraphics() {
+        initializeStrings();
+
         List<BarEntry> outgoes = new ArrayList<>();
         List<BarEntry> incomes = new ArrayList<>();
-        String query;
 
-        switch (changeField) {
-            case Calendar.MONTH:
-                int start = 1;
-                for (int i = 0; i < 5; i++) {
-                    dateFrom.set(Calendar.DAY_OF_MONTH, start);
-                    dateTill.set(Calendar.MONTH, dateFrom.get(Calendar.MONTH));
-                    dateTill.set(Calendar.DAY_OF_MONTH,
-                            start + 6 > dateTill.getActualMaximum(Calendar.DAY_OF_MONTH) ?
-                                    dateTill.getActualMaximum(Calendar.DAY_OF_MONTH) : start + 6);
-
-                    start += 7;
-                    initializeStrings();
-                    setInitialDateTime();
-
-
-                    query = "SELECT SUM (" +
-                            AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + ") " +
-                            fromJoinSelector + " WHERE " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " >= '" +
-                            fromDate + "' AND " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " <= '" +
-                            tillDate + "'" + " AND " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO +
-                            " = 1" ;
-                    cursor = db.rawQuery(query, null);
-                    cursor.moveToFirst();
-                    outgoes.add(new BarEntry(i, Math.abs(cursor.getInt(0))));
-
-
-                    query = "SELECT SUM (" +
-                            AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + ") " +
-                            fromJoinSelector + " WHERE " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " >= '" +
-                            fromDate + "' AND " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " <= '" +
-                            tillDate + "'" + " AND " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO +
-                            " = 0" ;
-                    cursor = db.rawQuery(query, null);
-                    cursor.moveToFirst();
-                    incomes.add(new BarEntry(i, Math.abs(cursor.getInt(0))));
-                }
+        Calendar currentCalendarFrom = (Calendar)calendarFrom.clone();
+        Calendar currentCalendarTill = (Calendar)calendarFrom.clone();
+        if (changeFieldIteration == Calendar.MONTH) {
+            currentCalendarTill.set(Calendar.MONTH, currentCalendarFrom.get(Calendar.MONTH));
+            currentCalendarTill.set(Calendar.DAY_OF_MONTH, currentCalendarTill.getActualMaximum(Calendar.DAY_OF_MONTH));
         }
-        BarDataSet barDataSetOungoes = new BarDataSet(outgoes, "Entries 1");
-        BarDataSet barDataSetIncomes = new BarDataSet(incomes, "Entries 2");
 
-        float groupSpace = 0.06f;
-        float barSpace = 0.02f; // x2 dataset
-        float barWidth = 0.45f; // x2 dataset
-// (0.02 + 0.45) * 2 + 0.06 = 1.00 -> interval per "group"
+        int index = 0;
+        while (currentCalendarFrom.get(changeFieldIteration) <= calendarTill.get(changeFieldIteration) &&
+                currentCalendarFrom.get(Calendar.YEAR) == calendarTill.get(Calendar.YEAR)) {
 
-        BarData data = new BarData(barDataSetOungoes, barDataSetIncomes);
-        data.setBarWidth(barWidth); // set the width of each bar
+            fromDate = String.format("%tY-%tm-%td 00:00", currentCalendarFrom, currentCalendarFrom, currentCalendarFrom);
+            tillDate = String.format("%tY-%tm-%td 23:59", currentCalendarTill, currentCalendarTill, currentCalendarTill);
+
+            String query = "SELECT SUM (" +
+                    AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + ") " +
+                    fromJoinSelector + " WHERE " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " >= '" +
+                    fromDate + "' AND " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " <= '" +
+                    tillDate + "'" + " AND " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO +
+                    " = %d" ;
+
+            Cursor cursor = null;
+            try {
+                cursor = db.rawQuery(String.format(query, 1), null);
+                cursor.moveToFirst();
+                outgoes.add(new BarEntry(index, Math.abs(cursor.getInt(0))));
+
+
+                cursor = db.rawQuery(String.format(query, 0), null);
+                cursor.moveToFirst();
+                incomes.add(new BarEntry(index, Math.abs(cursor.getInt(0))));
+
+                index++;
+                if (changeFieldIteration == Calendar.DAY_OF_YEAR) {
+                    currentCalendarFrom.set(Calendar.DAY_OF_YEAR, currentCalendarFrom.get(changeFieldIteration) + 1);
+                    currentCalendarTill.set(Calendar.DAY_OF_YEAR, currentCalendarTill.get(changeFieldIteration) + 1);
+                }
+                else {
+                    currentCalendarFrom.set(Calendar.DAY_OF_MONTH, currentCalendarFrom.getActualMinimum(Calendar.DAY_OF_MONTH));
+                    currentCalendarFrom.set(Calendar.MONTH, currentCalendarFrom.get(Calendar.MONTH) + 1);
+
+                    currentCalendarTill.set(Calendar.DAY_OF_MONTH, currentCalendarTill.getActualMinimum(Calendar.DAY_OF_MONTH));
+                    currentCalendarTill.set(Calendar.MONTH, currentCalendarTill.get(Calendar.MONTH) + 1);
+                    currentCalendarTill.set(Calendar.DAY_OF_MONTH, currentCalendarTill.getActualMaximum(Calendar.DAY_OF_MONTH));
+                }
+            }
+            catch (Exception ignored) {}
+            finally {
+                if (cursor != null)
+                    cursor.close();
+            }
+
+        }
+
+
+        BarDataSet barDataSetOutgoes = new BarDataSet(outgoes, "Траты");
+        barDataSetOutgoes.setColor(Color.parseColor("#FFCA28"));
+        BarDataSet barDataSetIncomes = new BarDataSet(incomes, "Пополнения");
+        barDataSetIncomes.setColor(Color.parseColor("#66BB6A"));
+
+        float groupSpace = 0.1f;
+        float barSpace = 0.01f;
+        float barWidth = 0.44f;
+
+        BarData data = new BarData(barDataSetOutgoes, barDataSetIncomes);
+        data.setDrawValues(false);
+        data.setBarWidth(barWidth);
+
         barChart.setData(data);
-        barChart.groupBars(0, groupSpace, barSpace); // perform the "explicit" grouping
-        barChart.invalidate(); // refresh
+        barChart.groupBars(0, groupSpace, barSpace);
 
+        barChart.getAxisLeft().setAxisMinimum(0);
+        barChart.getAxisRight().setEnabled(false);
 
-        /*barDataSet.setValueTextColor(Color.argb(180, 0, 0, 0));
-        barDataSet.setValueTextSize(14);
-        barDataSet.setColors(colors);
-        barDataSet.setValueFormatter(new NegativeValueFormatter());
-        barDataSet.setDrawValues(true);
-        barDataSet.setHighlightEnabled(true);
+        barChart.getXAxis().setAxisMinimum(0);
+        barChart.getXAxis().setAxisMaximum(index);
+        barChart.getXAxis().setDrawGridLines(false);
+        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        barChart.getXAxis().setCenterAxisLabels(true);
+        barChart.getXAxis().setLabelRotationAngle(30);
 
-        BarData barData = new BarData(barDataSet);
-        barChart.setData(barData);
-        barChart.invalidate();*/
+        if (changeFieldIteration == Calendar.DAY_OF_YEAR)
+            barChart.getXAxis().setValueFormatter(new DaysValueFormatter(calendarFrom));
+        else
+            barChart.getXAxis().setValueFormatter(new MonthValueFormatter(calendarFrom));
+
+        barChart.getXAxis().setGranularityEnabled(true);
+
+        barChart.setHighlightPerDragEnabled(false);
+        barChart.setHighlightPerTapEnabled(false);
+
+        barChart.getLegend().setXEntrySpace(20);
+        barChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+
+        barChart.getViewPortHandler().setMaximumScaleY(1);
+        barChart.invalidate();
     }
     private void initializeViews() {
         barChart = (BarChart) findViewById(R.id.chart);
-        barChart.getLegend();
-        barChart.getContentDescription();
         barChart.getDescription().setEnabled(false);
 
-        fromDateTextView = (TextView) findViewById(R.id.graph_date_from);
-        tillDateTextView = (TextView) findViewById(R.id.graph_date_till);
-    }
-    private void initializeListeners() {
-        onDateFromSetListener = new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                dateFrom.set(Calendar.YEAR, year);
-                dateFrom.set(Calendar.MONTH, monthOfYear);
-                dateFrom.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                setInitialDateTime();
-                initializeGraphics();
-            }
-        };
-
-        onDateTillSetListener = new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                dateTill.set(Calendar.YEAR, year);
-                dateTill.set(Calendar.MONTH, monthOfYear);
-                dateTill.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                setInitialDateTime();
-                initializeGraphics();
-            }
-        };
-
-        fromDateTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setDateFrom(v);
-            }
-        });
-        tillDateTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setDateTill(v);
-            }
-        });
+        humanizeDate = (TextView) findViewById(R.id.humanize_date);
+        formatDate = (TextView) findViewById(R.id.format_date);
     }
 
-    private void setInitialDateTime() {
-        fromDateTextView.setText(String.format("%td.%tm.%tY",
-                dateFrom, dateFrom, dateFrom));
-        tillDateTextView.setText(String.format("%td.%tm.%tY",
-                dateTill, dateTill, dateTill));
-    }
-    public void setDateFrom(View view) {
-        new DatePickerDialog(this, onDateFromSetListener,
-                dateFrom.get(Calendar.YEAR),
-                dateFrom.get(Calendar.MONTH),
-                dateFrom.get(Calendar.DAY_OF_MONTH)).show();
-    }
-    public void setDateTill(View view) {
-        new DatePickerDialog(this, onDateTillSetListener,
-                dateTill.get(Calendar.YEAR),
-                dateTill.get(Calendar.MONTH),
-                dateTill.get(Calendar.DAY_OF_MONTH)).show();
+    private void setDateTimeView() {
+        formatDate.setText(String.format("%td.%tm.%tY - %td.%tm.%tY",
+                calendarFrom, calendarFrom, calendarFrom, calendarTill, calendarTill, calendarTill));
+
+        switch (changeFieldInterval) {
+            case Calendar.DAY_OF_YEAR:
+                humanizeDate.setText(String.format("%d %s %d",
+                        calendarFrom.get(Calendar.DAY_OF_MONTH),
+                        humanizeMonthPersonable[calendarFrom.get(Calendar.MONTH)],
+                        calendarFrom.get(Calendar.YEAR)));
+                break;
+            case Calendar.WEEK_OF_YEAR:
+                humanizeDate.setText(String.format("%d %s %d",
+                        calendarFrom.get(Calendar.WEEK_OF_YEAR),
+                        humanizeMonthPersonable[calendarFrom.get(Calendar.MONTH)],
+                        calendarFrom.get(Calendar.YEAR)));
+                break;
+            case Calendar.MONTH:
+                humanizeDate.setText(String.format("%s %d",
+                        humanizeMonthSingle[calendarFrom.get(Calendar.MONTH)],
+                        calendarFrom.get(Calendar.YEAR)));
+                break;
+            case Calendar.YEAR:
+                humanizeDate.setText(String.format("%d год",
+                        calendarFrom.get(Calendar.YEAR)));
+                break;
+        }
     }
 
     private void dateChange(int delta) {
-        switch (changeField) {
+        switch (changeFieldInterval) {
             case Calendar.DAY_OF_YEAR:
-                dateTill.set(Calendar.DAY_OF_YEAR, dateTill.get(Calendar.DAY_OF_YEAR) + delta);
-                dateFrom.set(Calendar.DAY_OF_YEAR, dateTill.get(Calendar.DAY_OF_YEAR));
-                dateFrom.set(Calendar.YEAR, dateTill.get(Calendar.YEAR));
+                calendarTill.set(Calendar.DAY_OF_YEAR, calendarTill.get(Calendar.DAY_OF_YEAR) + delta);
+                calendarFrom.set(Calendar.DAY_OF_YEAR, calendarTill.get(Calendar.DAY_OF_YEAR));
+                calendarFrom.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR));
                 break;
             case Calendar.WEEK_OF_YEAR:
-                dateTill.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                dateTill.set(Calendar.WEEK_OF_YEAR, dateTill.get(Calendar.WEEK_OF_YEAR) + delta);
-                dateFrom.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                dateFrom.set(Calendar.WEEK_OF_YEAR, dateTill.get(Calendar.WEEK_OF_YEAR));
-                dateFrom.set(Calendar.YEAR, dateTill.get(Calendar.YEAR));
+                calendarTill.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                calendarTill.set(Calendar.WEEK_OF_YEAR, calendarTill.get(Calendar.WEEK_OF_YEAR) + delta);
+                calendarFrom.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                calendarFrom.set(Calendar.WEEK_OF_YEAR, calendarTill.get(Calendar.WEEK_OF_YEAR));
+                calendarFrom.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR));
                 break;
             case Calendar.MONTH:
-                dateTill.set(Calendar.DAY_OF_MONTH, dateTill.getActualMinimum(Calendar.DAY_OF_MONTH));
-                dateTill.set(Calendar.MONTH, dateTill.get(Calendar.MONTH) + delta);
-                dateTill.set(Calendar.DAY_OF_MONTH, dateTill.getActualMaximum(Calendar.DAY_OF_MONTH));
-                dateFrom.set(Calendar.DAY_OF_MONTH, dateFrom.getActualMinimum(Calendar.DAY_OF_MONTH));
-                dateFrom.set(Calendar.MONTH, dateTill.get(Calendar.MONTH));
-                dateFrom.set(Calendar.YEAR, dateTill.get(Calendar.YEAR));
+                calendarTill.set(Calendar.DAY_OF_MONTH, calendarTill.getActualMinimum(Calendar.DAY_OF_MONTH));
+                calendarTill.set(Calendar.MONTH, calendarTill.get(Calendar.MONTH) + delta);
+                calendarTill.set(Calendar.DAY_OF_MONTH, calendarTill.getActualMaximum(Calendar.DAY_OF_MONTH));
+                calendarFrom.set(Calendar.DAY_OF_MONTH, calendarFrom.getActualMinimum(Calendar.DAY_OF_MONTH));
+                calendarFrom.set(Calendar.MONTH, calendarTill.get(Calendar.MONTH));
+                calendarFrom.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR));
                 break;
             case Calendar.YEAR:
-                dateTill.set(Calendar.DAY_OF_YEAR, dateTill.getActualMinimum(Calendar.DAY_OF_YEAR));
-                dateTill.set(Calendar.YEAR, dateTill.get(Calendar.YEAR) + delta);
-                dateTill.set(Calendar.DAY_OF_YEAR, dateTill.getActualMaximum(Calendar.DAY_OF_YEAR));
-                dateFrom.set(Calendar.DAY_OF_YEAR, dateFrom.getActualMinimum(Calendar.DAY_OF_YEAR));
-                dateFrom.set(Calendar.YEAR, dateTill.get(Calendar.YEAR));
+                calendarTill.set(Calendar.DAY_OF_YEAR, calendarTill.getActualMinimum(Calendar.DAY_OF_YEAR));
+                calendarTill.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR) + delta);
+                calendarTill.set(Calendar.DAY_OF_YEAR, calendarTill.getActualMaximum(Calendar.DAY_OF_YEAR));
+                calendarFrom.set(Calendar.DAY_OF_YEAR, calendarFrom.getActualMinimum(Calendar.DAY_OF_YEAR));
+                calendarFrom.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR));
                 break;
         }
-        setInitialDateTime();
-        initializeViews();
+        setDateTimeView();
     }
     public void decreaseDate(View view) {
         dateChange(-1);
@@ -312,10 +320,44 @@ public class BarChartActivity extends AppCompatActivity {
         initializeGraphics();
     }
 
-    private class NegativeValueFormatter implements IValueFormatter {
+    public class DaysValueFormatter implements IAxisValueFormatter {
+        String[] month = new String[] {"Янв.", "Фев.", "Мар.", "Апр.", "Май",
+                "Июн.", "Июл.", "Авг.", "Сен.", "Окт.", "Ноя.", "Дек."};
+
+        Calendar startDate;
+        DaysValueFormatter(Calendar calendar) {
+            startDate = (Calendar)calendar.clone();
+        }
+
         @Override
-        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-            return String.format("-%.2f", value);
+        public String getFormattedValue(float value, AxisBase axis) {
+            Calendar currentCalendar = (Calendar) startDate.clone();
+            currentCalendar.set(Calendar.DAY_OF_YEAR, currentCalendar.get(Calendar.DAY_OF_YEAR) + (int)value);
+
+            return String.format("%d %s %d",
+                    currentCalendar.get(Calendar.DAY_OF_MONTH),
+                    month[currentCalendar.get(Calendar.MONTH)],
+                    currentCalendar.get(Calendar.YEAR));
+        }
+    }
+
+    public class MonthValueFormatter implements IAxisValueFormatter {
+        String[] month = new String[] {"Январь", "Февраль", "Март", "Апрель", "Май",
+                "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
+
+        Calendar startDate;
+        MonthValueFormatter(Calendar calendar) {
+            startDate = (Calendar)calendar.clone();
+        }
+
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            Calendar currentCalendar = (Calendar) startDate.clone();
+            currentCalendar.set(Calendar.MONTH, currentCalendar.get(Calendar.MONTH) + (int)value);
+
+            return String.format("%s %d",
+                    month[currentCalendar.get(Calendar.MONTH)],
+                    currentCalendar.get(Calendar.YEAR));
         }
     }
 }

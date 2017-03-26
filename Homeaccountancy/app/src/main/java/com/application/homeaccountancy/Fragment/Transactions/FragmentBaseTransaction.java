@@ -72,7 +72,8 @@ public class FragmentBaseTransaction extends ListFragment {
     }
 
     private String InitializeConditions(String query) {
-        String orderSequence = " ORDER BY date(" + AccountancyContract.Transaction.COLUMN_NAME_DATE + ") DESC";
+        String orderSequence = " ORDER BY date(" + AccountancyContract.Transaction.COLUMN_NAME_DATE + ") DESC, " +
+                "datetime(" + AccountancyContract.Transaction.COLUMN_NAME_DATE + ") DESC";
         if (!FilterSettings.isFilter) {
             filterIsEnabled.setVisibility(View.GONE);
             setEmptyText(Html.fromHtml(getString(R.string.empty_text)));

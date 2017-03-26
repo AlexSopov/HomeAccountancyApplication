@@ -19,7 +19,7 @@
                 <item
                     android:id="@+id/menu_pie_graphic"
                     android:icon="@drawable/ic_menu_slideshow"
-                    android:title="Кольцыевая" />
+                    android:title="Кольцевая" />
                 <item
                     android:id="@+id/menu_bar_graphic"
                     android:icon="@drawable/ic_menu_slideshow"
