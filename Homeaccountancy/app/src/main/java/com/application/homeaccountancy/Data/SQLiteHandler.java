@@ -12,7 +12,7 @@ import com.application.homeaccountancy.R;
 import org.xmlpull.v1.XmlPullParser;
 
 public class SQLiteHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 11;
     private static final String DATABASE_NAME = "Accountancy8.db";
     private Context context;
 
@@ -26,6 +26,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.execSQL(AccountancyContract.SQLITE_CREATE_CATEGORIES);
         db.execSQL(AccountancyContract.SQLITE_CREATE_ACCOUNTS);
         db.execSQL(AccountancyContract.SQLITE_CREATE_TRANSACTIONS);
+        db.execSQL(AccountancyContract.SQLITE_CREATE_IMAGES);
 
         CreateCategories(db);
         CreateAccounts(db);
@@ -36,13 +37,15 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.execSQL(AccountancyContract.SQLITE_DELETE_CATEGORIES);
         db.execSQL(AccountancyContract.SQLITE_DELETE_ACCOUNTS);
         db.execSQL(AccountancyContract.SQLITE_DELETE_TRANSACTIONS);
+        db.execSQL(AccountancyContract.SQLITE_DELETE_IMAGES);
 
         onCreate(db);
     }
 
     private void CreateCategories(SQLiteDatabase db) {
         //TODO SQLiteConstraintException
-        ContentValues contentValues = new ContentValues();
+        ContentValues contentValuesCategories = new ContentValues();
+        ContentValues contentValuesImages = new ContentValues();
         Resources resources = context.getResources();
 
         XmlResourceParser xmlResourceParser = resources.getXml(R.xml.categories_records);
@@ -50,18 +53,21 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             int eventType = xmlResourceParser.getEventType();
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
-
                 if (eventType == XmlPullParser.START_TAG && xmlResourceParser.getName().equals("record")) {
                     String title = xmlResourceParser.getAttributeValue(0);
                     int isOutgo = xmlResourceParser.getAttributeIntValue(1, 1);
                     String icon = xmlResourceParser.getAttributeValue(2);
 
-                    contentValues.put(AccountancyContract.Category.COLUMN_NAME_TITLE, title);
-                    contentValues.put(AccountancyContract.Category.COLUMN_NAME_IS_OUTGO, isOutgo);
-                    contentValues.put(AccountancyContract.Category.COLUMN_NAME_ICON,
+                    contentValuesCategories.put(AccountancyContract.Category.COLUMN_NAME_TITLE, title);
+                    contentValuesCategories.put(AccountancyContract.Category.COLUMN_NAME_IS_OUTGO, isOutgo);
+                    contentValuesCategories.put(AccountancyContract.Category.COLUMN_NAME_ICON,
                             resources.getIdentifier(icon, "drawable", context.getPackageName()));
 
-                    db.insert(AccountancyContract.Category.TABLE_NAME, null, contentValues);
+                    contentValuesImages.put(AccountancyContract.Images.COLUMN_NAME_IMAGE,
+                            resources.getIdentifier(icon, "drawable", context.getPackageName()));
+
+                    db.insert(AccountancyContract.Category.TABLE_NAME, null, contentValuesCategories);
+                    db.insert(AccountancyContract.Images.TABLE_NAME, null, contentValuesImages);
                 }
                 eventType = xmlResourceParser.next();
             }

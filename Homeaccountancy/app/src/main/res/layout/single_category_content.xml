@@ -6,7 +6,6 @@
     xmlns:tools="http://schemas.android.com/tools"
 
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.application.homeaccountancy.SingleTransactionActivity"
     tools:showIn="@layout/single_category_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -68,19 +67,34 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Логотип:"/>
+
+            <Spinner
+                android:id="@+id/logo_spinner"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content">
+            </Spinner>
+
+        </LinearLayout>
+
     </LinearLayout>
 
-    <LinearLayout
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textSize="14sp"
-            android:text="Сохранить"
-            android:onClick="saveCategory"/>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="Сохранить"
+        android:onClick="saveCategory"/>
 
 </LinearLayout>

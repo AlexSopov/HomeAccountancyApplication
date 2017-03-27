@@ -1,11 +1,14 @@
 package com.application.homeaccountancy.Fragment.Categories;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.text.Html;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -13,6 +16,7 @@ import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.Data.SQLiteHandler;
 import com.application.homeaccountancy.FilterSettings;
 import com.application.homeaccountancy.R;
+import com.application.homeaccountancy.activity.SingleCategoryActivity;
 
 public class FragmentBaseCategories extends ListFragment {
     SQLiteHandler sqLiteHandler;
@@ -27,6 +31,15 @@ public class FragmentBaseCategories extends ListFragment {
         db = sqLiteHandler.getReadableDatabase();
 
         setEmptyText(Html.fromHtml(getString(R.string.empty_text)));
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        Intent intent = new Intent(getActivity().getApplicationContext(), SingleCategoryActivity.class);
+        intent.putExtra("id", id);
+        startActivity(intent);
+
     }
 
     @Override

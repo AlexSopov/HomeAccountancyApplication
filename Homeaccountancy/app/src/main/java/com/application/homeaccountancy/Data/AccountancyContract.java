@@ -40,6 +40,11 @@ public final class AccountancyContract {
         public static final String COLUMN_NAME_TITLE = "a_title";
     }
 
+    public static class Images implements BaseColumns {
+        public static final String TABLE_NAME = "Images";
+        public static final String COLUMN_NAME_IMAGE = "image";
+    }
+
     public static final String SQLITE_CREATE_TRANSACTIONS = CREATE_TABLE +
             Transaction.TABLE_NAME + " (" +
             Transaction._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA_SEPARATOR +
@@ -66,8 +71,14 @@ public final class AccountancyContract {
             Account.COLUMN_NAME_TITLE + TEXT_TYPE + NOT_NULL + COMMA_SEPARATOR +
             Account.COLUMN_NAME_START_BALANCE + REAL_TYPE + NOT_NULL + ")";
 
+    public static final String SQLITE_CREATE_IMAGES = CREATE_TABLE +
+            Images.TABLE_NAME + " (" +
+            Images._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA_SEPARATOR +
+            Images.COLUMN_NAME_IMAGE + INTEGER_TYPE + NOT_NULL + ")";
+
 
     public static final String SQLITE_DELETE_TRANSACTIONS = DROP_TABLE + Transaction.TABLE_NAME;
     public static final String SQLITE_DELETE_CATEGORIES = DROP_TABLE + Category.TABLE_NAME;
     public static final String SQLITE_DELETE_ACCOUNTS = DROP_TABLE + Account.TABLE_NAME;
+    public static final String SQLITE_DELETE_IMAGES = DROP_TABLE + Images.TABLE_NAME;
 }
