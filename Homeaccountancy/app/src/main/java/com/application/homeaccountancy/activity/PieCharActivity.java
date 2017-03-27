@@ -265,9 +265,8 @@ public class PieCharActivity extends AppCompatActivity {
                         calendarFrom.get(Calendar.YEAR)));
                 break;
             case Calendar.WEEK_OF_YEAR:
-                humanizeDate.setText(String.format("%d %s %d",
+                humanizeDate.setText(String.format("%d неделя %d",
                         calendarFrom.get(Calendar.WEEK_OF_YEAR),
-                        humanizeMonthPersonable[calendarFrom.get(Calendar.MONTH)],
                         calendarFrom.get(Calendar.YEAR)));
                 break;
             case Calendar.MONTH:

@@ -2,55 +2,68 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="wrap_content"
     android:padding="10dp"
-    android:orientation="horizontal">
-
-    <ImageView android:id="@+id/transaction_list_item_icon"
-        android:layout_width="50dp"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="10dp"
-        android:contentDescription="@string/icon"
-        android:layout_marginRight="10dp" />
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <TextView android:id="@+id/transaction_list_item_category"
+        <ImageView android:id="@+id/transaction_list_item_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@string/icon"
+            android:layout_marginRight="10dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1" >
+
+            <TextView android:id="@+id/transaction_list_item_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:gravity="top" />
+
+            <TextView android:id="@+id/transaction_list_item_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#000"/>
+            android:orientation="vertical">
 
-        <TextView android:id="@+id/transaction_list_item_description"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textColor="#000"/>
+            <TextView android:id="@+id/transaction_list_item_amount"
+                android:textAlignment="viewEnd"
+                android:layout_gravity="end"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textColor="#000" />
 
-    </LinearLayout>
+            <TextView android:id="@+id/transaction_list_item_date"
+                android:textAlignment="viewEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:layout_gravity="end" />
 
-    <LinearLayout android:id="@+id/lin_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="end">
-
-        <TextView android:id="@+id/transaction_list_item_sum"
-            android:textAlignment="viewEnd"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textColor="#000"/>
-
-        <TextView android:id="@+id/transaction_list_item_date"
-            android:textAlignment="viewEnd"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textColor="#000"/>
+        </LinearLayout>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/transaction_list_item_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000"/>
 
 </LinearLayout>

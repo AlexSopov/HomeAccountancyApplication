@@ -153,9 +153,8 @@ public class BarChartActivity extends AppCompatActivity {
         }
 
         int index = 0;
-        while (currentCalendarFrom.get(changeFieldIteration) <= calendarTill.get(changeFieldIteration) &&
-                currentCalendarFrom.get(Calendar.YEAR) == calendarTill.get(Calendar.YEAR)) {
-
+        // TODO week on years interaction
+        while (currentCalendarTill.get(changeFieldIteration) <= calendarTill.get(changeFieldIteration)) {
             fromDate = String.format("%tY-%tm-%td 00:00", currentCalendarFrom, currentCalendarFrom, currentCalendarFrom);
             tillDate = String.format("%tY-%tm-%td 23:59", currentCalendarTill, currentCalendarTill, currentCalendarTill);
 
@@ -176,6 +175,9 @@ public class BarChartActivity extends AppCompatActivity {
                 cursor = db.rawQuery(String.format(query, 0), null);
                 cursor.moveToFirst();
                 incomes.add(new BarEntry(index, Math.abs(cursor.getInt(0))));
+
+                if(currentCalendarTill.get(changeFieldIteration) == calendarTill.get(changeFieldIteration))
+                    break;
 
                 index++;
                 if (changeFieldIteration == Calendar.DAY_OF_YEAR) {
@@ -262,9 +264,8 @@ public class BarChartActivity extends AppCompatActivity {
                         calendarFrom.get(Calendar.YEAR)));
                 break;
             case Calendar.WEEK_OF_YEAR:
-                humanizeDate.setText(String.format("%d %s %d",
+                humanizeDate.setText(String.format("%d неделя %d",
                         calendarFrom.get(Calendar.WEEK_OF_YEAR),
-                        humanizeMonthPersonable[calendarFrom.get(Calendar.MONTH)],
                         calendarFrom.get(Calendar.YEAR)));
                 break;
             case Calendar.MONTH:

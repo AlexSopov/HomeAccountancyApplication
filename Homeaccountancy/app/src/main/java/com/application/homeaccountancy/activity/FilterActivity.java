@@ -119,7 +119,7 @@ public class FilterActivity extends AppCompatActivity {
 
         cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Account.TABLE_NAME, null);
         accountsAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, cursor,
-                new String[] {AccountancyContract.Category.COLUMN_NAME_TITLE}, new int[] {android.R.id.text1}, 0);
+                new String[] {AccountancyContract.Account.COLUMN_NAME_TITLE}, new int[] {android.R.id.text1}, 0);
         accountsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         accountsSpinner.setAdapter(accountsAdapter);
 

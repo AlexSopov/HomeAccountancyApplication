@@ -94,7 +94,7 @@ public class SingleTransactionActivity extends AppCompatActivity {
 
         cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Account.TABLE_NAME, null);
         accountsAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, cursor,
-                new String[] {AccountancyContract.Category.COLUMN_NAME_TITLE}, new int[] {android.R.id.text1}, 0);
+                new String[] {AccountancyContract.Account.COLUMN_NAME_TITLE}, new int[] {android.R.id.text1}, 0);
         accountsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         accountsSpinner.setAdapter(accountsAdapter);
     }
@@ -195,7 +195,7 @@ public class SingleTransactionActivity extends AppCompatActivity {
 
 
         cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
-        " WHERE " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO + "=?",
+        " WHERE " + AccountancyContract.Category._ID + "=?",
                 new String[] {String.valueOf(categoriesSpinner.getSelectedItemId())});
 
         if (cursor.moveToFirst()) {
@@ -206,7 +206,7 @@ public class SingleTransactionActivity extends AppCompatActivity {
                 makeToast("Сумма не может равняться нулю");
                 return false;
             }
-            else if (isOutgo > 0 &&  !isNegativeSum) {
+            else if (isOutgo > 0 && !isNegativeSum) {
                 makeToast("Недопустима положительная сумма для категории \"Траты\"");
                 return false;
             }

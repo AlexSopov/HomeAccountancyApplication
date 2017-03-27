@@ -12,11 +12,33 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
+import com.application.homeaccountancy.Data.Adapter.TransactionCursorAdapter;
 import com.application.homeaccountancy.Data.SQLiteHandler;
 import com.application.homeaccountancy.FilterSettings;
 import com.application.homeaccountancy.R;
 
 public class FragmentBaseTransaction extends ListFragment {
+    protected final String fromJoinSelector = " FROM " + AccountancyContract.Transaction.TABLE_NAME +
+            " INNER JOIN " + AccountancyContract.Category.TABLE_NAME + " " +
+            " ON " + AccountancyContract.Category.TABLE_NAME + "." + AccountancyContract.Category._ID + " = " +
+            AccountancyContract.Transaction.TABLE_NAME + "." + AccountancyContract.Transaction.COLUMN_NAME_CATEGORY_ID + " " +
+            " INNER JOIN " + AccountancyContract.Account.TABLE_NAME + " " +
+            " ON " + AccountancyContract.Account.TABLE_NAME + "." + AccountancyContract.Account._ID + " = " +
+            AccountancyContract.Transaction.TABLE_NAME + "." + AccountancyContract.Transaction.COLUMN_NAME_ACCOUNT_ID;
+
+
+    protected final String baseQuery = "SELECT " + AccountancyContract.Transaction.TABLE_NAME + "." +
+            AccountancyContract.Transaction._ID + AccountancyContract.COMMA_SEPARATOR +
+            AccountancyContract.Category.COLUMN_NAME_ICON + AccountancyContract.COMMA_SEPARATOR +
+            AccountancyContract.Category.COLUMN_NAME_TITLE + AccountancyContract.COMMA_SEPARATOR +
+            AccountancyContract.Account.COLUMN_NAME_TITLE + AccountancyContract.COMMA_SEPARATOR +
+            "strftime('%d.%m.%Y %H:%M'" + AccountancyContract.COMMA_SEPARATOR +
+            AccountancyContract.Transaction.COLUMN_NAME_DATE  + ") as " +
+            "'" + AccountancyContract.Transaction.COLUMN_NAME_DATE + "'" + AccountancyContract.COMMA_SEPARATOR +
+            AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + AccountancyContract.COMMA_SEPARATOR +
+            AccountancyContract.Transaction.COLUMN_NAME_NOTE + fromJoinSelector;
+
+
     SQLiteHandler sqLiteHandler;
     SQLiteDatabase db;
     Cursor cursor;
@@ -53,20 +75,22 @@ public class FragmentBaseTransaction extends ListFragment {
         String[] from = new String[] {
                 AccountancyContract.Category.COLUMN_NAME_ICON,
                 AccountancyContract.Category.COLUMN_NAME_TITLE,
+                AccountancyContract.Account.COLUMN_NAME_TITLE,
                 AccountancyContract.Transaction.COLUMN_NAME_DATE,
                 AccountancyContract.Transaction.COLUMN_NAME_AMOUNT,
-                AccountancyContract.Transaction.COLUMN_NAME_NOTE
+                AccountancyContract.Transaction.COLUMN_NAME_NOTE,
         };
 
         int[] to = new int[] {
                 R.id.transaction_list_item_icon,
                 R.id.transaction_list_item_category,
+                R.id.transaction_list_item_account,
                 R.id.transaction_list_item_date,
-                R.id.transaction_list_item_sum,
-                R.id.transaction_list_item_description
+                R.id.transaction_list_item_amount,
+                R.id.transaction_list_item_note
         };
 
-        transactionsCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),
+        transactionsCursorAdapter = new TransactionCursorAdapter(getActivity().getApplicationContext(),
                 R.layout.transaction_list_item, cursor, from, to, 0);
         setListAdapter(transactionsCursorAdapter);
     }

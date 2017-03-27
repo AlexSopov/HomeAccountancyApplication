@@ -12,7 +12,7 @@ import com.application.homeaccountancy.R;
 import org.xmlpull.v1.XmlPullParser;
 
 public class SQLiteHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 8;
     private static final String DATABASE_NAME = "Accountancy8.db";
     private Context context;
 
