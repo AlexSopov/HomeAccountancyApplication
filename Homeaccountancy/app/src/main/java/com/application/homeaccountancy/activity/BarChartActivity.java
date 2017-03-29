@@ -47,12 +47,13 @@ public class BarChartActivity extends AppCompatActivity {
 
     int changeFieldInterval, changeFieldIteration;
 
-    public static Calendar calendarFrom, calendarTill;
+    public Calendar calendarFrom, calendarTill;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bar_chart_activity);
+        setTitle("Столбчатая диаграмма");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -153,8 +154,7 @@ public class BarChartActivity extends AppCompatActivity {
         }
 
         int index = 0;
-        // TODO week on years interaction
-        while (currentCalendarTill.get(changeFieldIteration) <= calendarTill.get(changeFieldIteration)) {
+        while (currentCalendarTill.compareTo(calendarTill) <= 0) {
             fromDate = String.format("%tY-%tm-%td 00:00", currentCalendarFrom, currentCalendarFrom, currentCalendarFrom);
             tillDate = String.format("%tY-%tm-%td 23:59", currentCalendarTill, currentCalendarTill, currentCalendarTill);
 
@@ -175,9 +175,6 @@ public class BarChartActivity extends AppCompatActivity {
                 cursor = db.rawQuery(String.format(query, 0), null);
                 cursor.moveToFirst();
                 incomes.add(new BarEntry(index, Math.abs(cursor.getInt(0))));
-
-                if(currentCalendarTill.get(changeFieldIteration) == calendarTill.get(changeFieldIteration))
-                    break;
 
                 index++;
                 if (changeFieldIteration == Calendar.DAY_OF_YEAR) {

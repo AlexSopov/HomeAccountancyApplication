@@ -12,8 +12,8 @@ import com.application.homeaccountancy.R;
 import org.xmlpull.v1.XmlPullParser;
 
 public class SQLiteHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 11;
-    private static final String DATABASE_NAME = "Accountancy8.db";
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "Accountancy9.db";
     private Context context;
 
     public SQLiteHandler(Context context) {
@@ -41,6 +41,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
         onCreate(db);
     }
+
+    @Override
+    public void onConfigure(SQLiteDatabase db) {
+        super.onConfigure(db);
+        db.setForeignKeyConstraintsEnabled(true);
+    }
+
 
     private void CreateCategories(SQLiteDatabase db) {
         //TODO SQLiteConstraintException

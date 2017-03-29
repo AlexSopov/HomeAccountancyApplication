@@ -2,10 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:title="changeInterval"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_calendar">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/chart_day"
+                    android:title="День" />
+                <item android:id="@+id/chart_week"
+                    android:title="Неделя" />
+                <item android:id="@+id/chart_month"
+                    android:title="Месяц"
+                    android:checked="true" />
+                <item android:id="@+id/chart_year"
+                    android:title="Год" />
+            </group>
+        </menu>
+
+
+    </item>
     <item
         android:id="@+id/filter"
         android:title="filter"

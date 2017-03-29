@@ -85,7 +85,8 @@ public class SingleTransactionActivity extends AppCompatActivity {
     private void initializeSpinners() {
         SimpleCursorAdapter categoriesAdapter, accountsAdapter;
 
-        cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME, null);
+        cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
+                " ORDER BY " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO + " DESC", null);
         categoriesAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, cursor,
                 new String[] {AccountancyContract.Category.COLUMN_NAME_TITLE}, new int[] {android.R.id.text1}, 0);
         categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -163,7 +164,7 @@ public class SingleTransactionActivity extends AppCompatActivity {
         if (!ValidateData())
             return false;
 
-        int amount = Integer.parseInt(transactionSum.getText().toString());
+        double amount = Double.parseDouble(transactionSum.getText().toString());
         amount *= isNegativeSum ? -1 : 1;
 
         ContentValues contentValues = new ContentValues();
@@ -200,7 +201,7 @@ public class SingleTransactionActivity extends AppCompatActivity {
 
         if (cursor.moveToFirst()) {
             int isOutgo = cursor.getInt(cursor.getColumnIndex(AccountancyContract.Category.COLUMN_NAME_IS_OUTGO));
-            int sum = Integer.parseInt(transactionSum.getText().toString());
+            double sum = Double.parseDouble(transactionSum.getText().toString());
 
             if (sum == 0) {
                 makeToast("Сумма не может равняться нулю");

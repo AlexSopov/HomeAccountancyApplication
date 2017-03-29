@@ -28,15 +28,16 @@ public class TransactionCursorAdapter extends SimpleCursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         super.bindView(view, context, cursor);
 
-        int amount = cursor.getInt(cursor.getColumnIndex(AccountancyContract.Transaction.COLUMN_NAME_AMOUNT));
+        double amount = cursor.getDouble(cursor.getColumnIndex(AccountancyContract.Transaction.COLUMN_NAME_AMOUNT));
         String note = cursor.getString(cursor.getColumnIndex(AccountancyContract.Transaction.COLUMN_NAME_NOTE));
         TextView amountTextView = (TextView)view.findViewById(R.id.transaction_list_item_amount);
         TextView noteTextView = (TextView)view.findViewById(R.id.transaction_list_item_note);
 
         if (amount > 0)
-            amountTextView.setTextColor(Color.GREEN);
+            amountTextView.setTextColor(Color.parseColor("#4CAF50"));
         else
-            amountTextView.setTextColor(Color.RED);
+            amountTextView.setTextColor(Color.parseColor("#F44336"));
+        amountTextView.setText(String.format("%.2f %s", amount, "руб."));
 
         if (note.isEmpty())
             noteTextView.setVisibility(View.GONE);

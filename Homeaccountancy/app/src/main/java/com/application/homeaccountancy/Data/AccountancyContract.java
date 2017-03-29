@@ -14,6 +14,7 @@ public final class AccountancyContract {
     private static final String REFERENCES= " REFERENCES ";
     private static final String DROP_TABLE = "DROP TABLE IF EXISTS ";
     private static final String INTEGER_PRIMARY_KEY_AUTOINCREMENT = " INTEGER PRIMARY KEY AUTOINCREMENT";
+    private static final String ON_DELETE = " ON DELETE CASCADE ON UPDATE NO ACTION ";
     public static final String COMMA_SEPARATOR = ",";
 
     public AccountancyContract() {}
@@ -54,9 +55,9 @@ public final class AccountancyContract {
             Transaction.COLUMN_NAME_CATEGORY_ID + INTEGER_TYPE + COMMA_SEPARATOR +
             Transaction.COLUMN_NAME_NOTE + TEXT_TYPE + COMMA_SEPARATOR +
             FOREIGN_KEY + "(" + Transaction.COLUMN_NAME_ACCOUNT_ID + ")" +
-            REFERENCES + Account.TABLE_NAME + "(_id)" + COMMA_SEPARATOR +
+            REFERENCES + Account.TABLE_NAME + "(_id)" + ON_DELETE + COMMA_SEPARATOR +
             FOREIGN_KEY + "(" + Transaction.COLUMN_NAME_CATEGORY_ID + ")" +
-            REFERENCES + Category.TABLE_NAME + "(_id)" + ")";
+            REFERENCES + Category.TABLE_NAME + "(_id)" + ON_DELETE + ")";
 
     public static final String SQLITE_CREATE_CATEGORIES = CREATE_TABLE +
             Category.TABLE_NAME + " (" +
@@ -68,7 +69,7 @@ public final class AccountancyContract {
     public static final String SQLITE_CREATE_ACCOUNTS = CREATE_TABLE +
             Account.TABLE_NAME + " (" +
             Account._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA_SEPARATOR +
-            Account.COLUMN_NAME_TITLE + TEXT_TYPE + NOT_NULL + COMMA_SEPARATOR +
+            Account.COLUMN_NAME_TITLE + TEXT_TYPE + NOT_NULL + UNIQUE + COMMA_SEPARATOR +
             Account.COLUMN_NAME_START_BALANCE + REAL_TYPE + NOT_NULL + ")";
 
     public static final String SQLITE_CREATE_IMAGES = CREATE_TABLE +

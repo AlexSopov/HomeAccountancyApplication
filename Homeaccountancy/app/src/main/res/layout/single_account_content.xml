@@ -38,7 +38,7 @@
                 android:ems="10"
                 android:id="@+id/start_balance"
                 android:layout_weight="1"
-                android:hint="Начальный баланс"/>
+                android:hint="Начальный баланс" />
 
             <TextView
                 android:layout_width="wrap_content"

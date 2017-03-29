@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.Data.SQLiteHandler;
+import com.application.homeaccountancy.FilterSettings;
 import com.application.homeaccountancy.R;
 
 public class SingleCategoryActivity extends AppCompatActivity {
@@ -83,8 +84,32 @@ public class SingleCategoryActivity extends AppCompatActivity {
         cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Images.TABLE_NAME, null);
         logoAdapter = new SimpleCursorAdapter(this, R.layout.spinner_logo_item, cursor,
                 new String[] {AccountancyContract.Images.COLUMN_NAME_IMAGE}, new int[] {R.id.logo}, 0);
-        //logoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         logoSpinner.setAdapter(logoAdapter);
+
+
+        cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
+                        " WHERE " + AccountancyContract.Category._ID + " =?",
+                new String[] {String.valueOf(categoryId)});
+
+        if (!cursor.moveToFirst())
+            return;
+        int iconValue = cursor.getInt(cursor.getColumnIndex(AccountancyContract.Category.COLUMN_NAME_ICON));
+
+
+        cursor = db.rawQuery("SELECT " + AccountancyContract.Images._ID + " FROM " +
+                AccountancyContract.Images.TABLE_NAME + " WHERE " +
+                AccountancyContract.Images.COLUMN_NAME_IMAGE + "=" + String.valueOf(iconValue), null);
+        if (!cursor.moveToFirst())
+            return;
+
+        int iconId = cursor.getInt(cursor.getColumnIndex(AccountancyContract.Category._ID));
+
+        for (int i = 0; i < logoAdapter.getCount() && categoryId > 0; i++) {
+            if (iconId == logoAdapter.getItemId(i)) {
+                logoSpinner.setSelection(i);
+                break;
+            }
+        }
     }
 
     public void saveCategory(View view) {
@@ -97,17 +122,24 @@ public class SingleCategoryActivity extends AppCompatActivity {
         }
 
         try {
+            cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Images.TABLE_NAME +
+                    " WHERE " + AccountancyContract.Images._ID + "=?",
+                    new String[] {String.valueOf(logoSpinner.getSelectedItemId())});
+            cursor.moveToFirst();
+
+
             ContentValues contentValues = new ContentValues();
             contentValues.put(AccountancyContract.Category.COLUMN_NAME_TITLE, title);
             contentValues.put(AccountancyContract.Category.COLUMN_NAME_IS_OUTGO,
                     outgoCategoryRadioButton.isChecked() ? 1 : 0);
+            contentValues.put(AccountancyContract.Category.COLUMN_NAME_ICON,
+                    cursor.getInt(cursor.getColumnIndex(AccountancyContract.Images.COLUMN_NAME_IMAGE)));
 
             if (categoryId > 0) {
                 db.update(AccountancyContract.Category.TABLE_NAME, contentValues,
                         AccountancyContract.Category._ID + "=?", new String[] {String.valueOf(categoryId)});
             }
             else {
-                contentValues.put(AccountancyContract.Category.COLUMN_NAME_ICON, R.drawable.others);
                 db.insertOrThrow(AccountancyContract.Category.TABLE_NAME, null, contentValues);
             }
             finish();
@@ -116,5 +148,6 @@ public class SingleCategoryActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, "Категория с таким именем уже существует", Toast.LENGTH_LONG);
             toast.show();
         }
+        catch (Exception ex) {}
     }
 }
