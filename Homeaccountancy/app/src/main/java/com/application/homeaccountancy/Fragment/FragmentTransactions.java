@@ -1,4 +1,4 @@
-package com.application.homeaccountancy.Fragment.Transactions;
+package com.application.homeaccountancy.Fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
@@ -24,8 +25,11 @@ import com.application.homeaccountancy.Data.SQLiteHandler;
 import com.application.homeaccountancy.FilterSettings;
 import com.application.homeaccountancy.R;
 import com.application.homeaccountancy.activity.FilterActivity;
+import com.application.homeaccountancy.activity.SingleCategoryActivity;
+import com.application.homeaccountancy.activity.SingleTransactionActivity;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class FragmentTransactions extends ListFragment {
     public static final String fromJoinSelector = " FROM " + AccountancyContract.Transaction.TABLE_NAME +
@@ -193,11 +197,17 @@ public class FragmentTransactions extends ListFragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        final long id = ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).id;
+        if (!getUserVisibleHint())
+            return false;
 
+
+        final long id = ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).id;
         switch (item.getItemId()) {
             case R.id.change:
-                break;
+                Intent intent = new Intent(getActivity().getApplicationContext(), SingleTransactionActivity.class);
+                intent.putExtra("id", id);
+                startActivity(intent);
+                return true;
             case R.id.delete:
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                 dialog
@@ -365,15 +375,25 @@ public class FragmentTransactions extends ListFragment {
     }
     public void decreaseDate(View view) {
         dateChange(-1);
-        setCursor();
+        updateCursors();
     }
     public void increaseDate(View view) {
         dateChange(1);
-        setCursor();
+        updateCursors();
+    }
+    private void updateCursors() {
+        List<Fragment> fragmentList = getFragmentManager().getFragments();
+        for (int i = 0; i < fragmentList.size(); i++) {
+            FragmentTransactions fragmentTransactions = (FragmentTransactions)fragmentList.get(i);
+            fragmentTransactions.setCursor();
+            fragmentTransactions.transactionsCursorAdapter.changeCursor(
+                    fragmentTransactions.cursor
+            );
+
+        }
     }
 
     public void setQuery(String query) {
         this.query = query;
     }
 }
-//TODO !!!!DATA CHANGING!!!!

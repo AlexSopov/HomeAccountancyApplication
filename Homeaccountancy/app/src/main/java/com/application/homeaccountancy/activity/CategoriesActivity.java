@@ -6,14 +6,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
-import com.application.homeaccountancy.Fragment.Categories.FragmentCategories;
+import com.application.homeaccountancy.Fragment.FragmentCategories;
 import com.application.homeaccountancy.R;
 
 public class CategoriesActivity extends AppCompatActivity {
@@ -46,7 +46,7 @@ public class CategoriesActivity extends AppCompatActivity {
     }
 
     /* FragmentPagerAdapter */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);

@@ -1,4 +1,4 @@
-package com.application.homeaccountancy.Fragment.Categories;
+package com.application.homeaccountancy.Fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,13 +14,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.Data.SQLiteHandler;
-import com.application.homeaccountancy.FilterSettings;
 import com.application.homeaccountancy.R;
 import com.application.homeaccountancy.activity.SingleCategoryActivity;
 
@@ -69,8 +66,10 @@ public class FragmentCategories extends ListFragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        final long id = ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).id;
+        if (!getUserVisibleHint())
+            return false;
 
+        final long id = ((AdapterView.AdapterContextMenuInfo) item.getMenuInfo()).id;
         switch (item.getItemId()) {
             case R.id.change:
                 Intent intent = new Intent(getActivity().getApplicationContext(), SingleCategoryActivity.class);
@@ -88,10 +87,11 @@ public class FragmentCategories extends ListFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 db.delete(AccountancyContract.Category.TABLE_NAME,
                                         AccountancyContract.Category._ID + "=?",
-                                        new String[] {String.valueOf(id)}
+                                        new String[]{String.valueOf(id)}
                                 );
                                 setCursor();
                                 categoriesAdapter.changeCursor(cursor);
+                                categoriesAdapter.notifyDataSetChanged();
                             }
                         })
                         .setNegativeButton("Нет", null)

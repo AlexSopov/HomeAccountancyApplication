@@ -18,7 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.application.homeaccountancy.Fragment.Transactions.FragmentTransactions;
+import com.application.homeaccountancy.Fragment.FragmentTransactions;
 import com.application.homeaccountancy.R;
 
 public class MainActivity extends AppCompatActivity
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity
 
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
+        mViewPager.setOffscreenPageLimit(2);
 
 
         FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.add_new_transaction);
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /* FragmentPagerAdapter */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);

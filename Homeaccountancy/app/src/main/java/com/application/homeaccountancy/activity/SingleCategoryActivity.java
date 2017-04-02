@@ -20,10 +20,7 @@ import android.widget.Toast;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.Data.SQLiteHandler;
-import com.application.homeaccountancy.FilterSettings;
 import com.application.homeaccountancy.R;
-
-import java.util.Calendar;
 
 public class SingleCategoryActivity extends AppCompatActivity {
     TextView titleTextView;
