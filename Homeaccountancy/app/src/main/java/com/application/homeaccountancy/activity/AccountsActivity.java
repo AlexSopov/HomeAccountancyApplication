@@ -2,14 +2,9 @@ package com.application.homeaccountancy.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.util.CircularArray;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -21,15 +16,9 @@ import android.widget.SimpleCursorAdapter;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.Data.Adapter.AccountCursorAdapter;
-import com.application.homeaccountancy.Data.Adapter.TransactionCursorAdapter;
-import com.application.homeaccountancy.Data.SQLiteHandler;
 import com.application.homeaccountancy.R;
 
-public class AccountsActivity extends AppCompatActivity {
-    SQLiteHandler sqLiteHandler;
-    SQLiteDatabase db;
-    Cursor cursor;
-
+public class AccountsActivity extends UsingDataBaseActivity {
     ListView accountsList;
     SimpleCursorAdapter accountsCursorAdapter;
 
@@ -37,11 +26,9 @@ public class AccountsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.accounts_activity);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        sqLiteHandler = new SQLiteHandler(getApplicationContext());
-        db = sqLiteHandler.getReadableDatabase();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -123,22 +110,11 @@ public class AccountsActivity extends AppCompatActivity {
         return super.onContextItemSelected(item);
     }
 
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-
-        if (db != null)
-            db.close();
-
-        if (cursor != null)
-            cursor.close();
-    }
-
     private void setCursor() {
         String query = "SELECT " +
-                AccountancyContract.Account.TABLE_NAME + "." + AccountancyContract.Account._ID + AccountancyContract.COMMA_SEPARATOR +
-                AccountancyContract.Account.COLUMN_NAME_TITLE + AccountancyContract.COMMA_SEPARATOR +
-                AccountancyContract.Account.COLUMN_NAME_START_BALANCE + AccountancyContract.COMMA_SEPARATOR +
+                AccountancyContract.Account.TABLE_NAME + "." + AccountancyContract.Account._ID + AccountancyContract.COMMA +
+                AccountancyContract.Account.COLUMN_NAME_TITLE + AccountancyContract.COMMA +
+                AccountancyContract.Account.COLUMN_NAME_START_BALANCE + AccountancyContract.COMMA +
                 "SUM(" + AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + ") as '" +
                 AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + "' FROM " +
                 AccountancyContract.Account.TABLE_NAME +
@@ -150,5 +126,4 @@ public class AccountsActivity extends AppCompatActivity {
 
         cursor =  db.rawQuery(query, null);
     }
-
 }

@@ -66,7 +66,6 @@ public class PieCharActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pie_char_activity);
-        setTitle("Круговая диаграмма");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -169,7 +168,7 @@ public class PieCharActivity extends AppCompatActivity {
             else return;
 
             query = "SELECT " + AccountancyContract.Category.COLUMN_NAME_TITLE +
-                    AccountancyContract.COMMA_SEPARATOR + " SUM (" +
+                    AccountancyContract.COMMA + " SUM (" +
                     AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + ") " +
                     fromJoinSelector + whereSelector +
                     " GROUP BY " + AccountancyContract.Transaction.COLUMN_NAME_CATEGORY_ID;

@@ -2,14 +2,10 @@ package com.application.homeaccountancy.activity;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
@@ -22,56 +18,32 @@ import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.Data.SQLiteHandler;
 import com.application.homeaccountancy.R;
 
-public class SingleCategoryActivity extends AppCompatActivity {
+public class SingleCategoryActivity extends SingleEntityActivity {
     TextView titleTextView;
     RadioButton incomeCategoryRadioButton, outgoCategoryRadioButton;
     Spinner logoSpinner;
 
-    SQLiteHandler handler;
-    SQLiteDatabase db;
-    Cursor cursor;
-
-    long categoryId;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Категория");
         setContentView(R.layout.single_category_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         InitializeViews();
-
-        handler = new SQLiteHandler(getApplicationContext());
-        db = handler.getReadableDatabase();
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            categoryId = extras.getLong("id");
-        }
-
-        if (categoryId > 0) {
+        if (isEntityId()) {
             cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
-                    " WHERE " + AccountancyContract.Category._ID + "=?", new String[] {String.valueOf(categoryId)});
+                    " WHERE " + AccountancyContract.Category._ID + "=?", new String[] {String.valueOf(getEntityId())});
 
             cursor.moveToFirst();
             titleTextView.setText(cursor.getString(cursor.getColumnIndex(AccountancyContract.Category.COLUMN_NAME_TITLE)));
+
             if (cursor.getInt(cursor.getColumnIndex(AccountancyContract.Category.COLUMN_NAME_IS_OUTGO)) != 0)
                 outgoCategoryRadioButton.setChecked(true);
             else
                 incomeCategoryRadioButton.setChecked(true);
         }
         initializeSpinners();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (categoryId > 0) {
-            getMenuInflater().inflate(R.menu.dalete_menu, menu);
-        }
-
-        return true;
     }
 
     @Override
@@ -91,7 +63,7 @@ public class SingleCategoryActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             db.delete(AccountancyContract.Category.TABLE_NAME,
                                     AccountancyContract.Category._ID + "=?",
-                                    new String[] {String.valueOf(categoryId)}
+                                    new String[] {String.valueOf(getEntityId())}
                             );
                             finish();
                         }
@@ -100,18 +72,7 @@ public class SingleCategoryActivity extends AppCompatActivity {
                     .create();
             dialog.show();
         }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        if (db != null)
-            db.close();
-
-        if (cursor != null)
-            cursor.close();
+        return true;
     }
 
     private void InitializeViews() {
@@ -129,29 +90,24 @@ public class SingleCategoryActivity extends AppCompatActivity {
         logoSpinner.setAdapter(logoAdapter);
 
 
-        cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
-                        " WHERE " + AccountancyContract.Category._ID + " =?",
-                new String[] {String.valueOf(categoryId)});
-
-        if (!cursor.moveToFirst())
-            return;
-        int iconValue = cursor.getInt(cursor.getColumnIndex(AccountancyContract.Category.COLUMN_NAME_ICON));
-
-
-        cursor = db.rawQuery("SELECT " + AccountancyContract.Images._ID + " FROM " +
-                AccountancyContract.Images.TABLE_NAME + " WHERE " +
-                AccountancyContract.Images.COLUMN_NAME_IMAGE + "=" + String.valueOf(iconValue), null);
-        if (!cursor.moveToFirst())
+        if (!isEntityId())
             return;
 
-        int iconId = cursor.getInt(cursor.getColumnIndex(AccountancyContract.Category._ID));
+        cursor = db.rawQuery("SELECT " + AccountancyContract.Images.TABLE_NAME + "."+ AccountancyContract.Images._ID + ", " +
+                AccountancyContract.Category.COLUMN_NAME_ICON + " as 'icon_value'" + " FROM " +
+                AccountancyContract.Images.TABLE_NAME + " LEFT JOIN " +
+                AccountancyContract.Category.TABLE_NAME  + " ON " +
+                "icon_value=" +
+                AccountancyContract.Images.COLUMN_NAME_IMAGE +
+                " WHERE " + AccountancyContract.Category.TABLE_NAME + "." +
+                AccountancyContract.Category._ID + "=" +
+                String.valueOf(getEntityId()), null);
 
-        for (int i = 0; i < logoAdapter.getCount() && categoryId > 0; i++) {
-            if (iconId == logoAdapter.getItemId(i)) {
-                logoSpinner.setSelection(i);
-                break;
-            }
-        }
+        cursor.moveToFirst();
+        long iconId = cursor.getLong(
+                cursor.getColumnIndex(AccountancyContract.Images.TABLE_NAME + "."+ AccountancyContract.Images._ID));
+
+        Utilities.selectSpinnerItem(logoAdapter, logoSpinner, iconId);
     }
 
     public void saveCategory(View view) {
@@ -177,9 +133,9 @@ public class SingleCategoryActivity extends AppCompatActivity {
             contentValues.put(AccountancyContract.Category.COLUMN_NAME_ICON,
                     cursor.getInt(cursor.getColumnIndex(AccountancyContract.Images.COLUMN_NAME_IMAGE)));
 
-            if (categoryId > 0) {
+            if (isEntityId()) {
                 db.update(AccountancyContract.Category.TABLE_NAME, contentValues,
-                        AccountancyContract.Category._ID + "=?", new String[] {String.valueOf(categoryId)});
+                        AccountancyContract.Category._ID + "=?", new String[] {String.valueOf(getEntityId())});
             }
             else {
                 db.insertOrThrow(AccountancyContract.Category.TABLE_NAME, null, contentValues);

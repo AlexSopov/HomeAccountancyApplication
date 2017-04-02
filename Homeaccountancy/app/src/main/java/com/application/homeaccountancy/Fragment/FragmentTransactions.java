@@ -25,7 +25,6 @@ import com.application.homeaccountancy.Data.SQLiteHandler;
 import com.application.homeaccountancy.FilterSettings;
 import com.application.homeaccountancy.R;
 import com.application.homeaccountancy.activity.FilterActivity;
-import com.application.homeaccountancy.activity.SingleCategoryActivity;
 import com.application.homeaccountancy.activity.SingleTransactionActivity;
 
 import java.util.Calendar;
@@ -42,14 +41,14 @@ public class FragmentTransactions extends ListFragment {
 
 
     public static final String baseQuery = "SELECT " + AccountancyContract.Transaction.TABLE_NAME + "." +
-            AccountancyContract.Transaction._ID + AccountancyContract.COMMA_SEPARATOR +
-            AccountancyContract.Category.COLUMN_NAME_ICON + AccountancyContract.COMMA_SEPARATOR +
-            AccountancyContract.Category.COLUMN_NAME_TITLE + AccountancyContract.COMMA_SEPARATOR +
-            AccountancyContract.Account.COLUMN_NAME_TITLE + AccountancyContract.COMMA_SEPARATOR +
-            "strftime('%d.%m.%Y'" + AccountancyContract.COMMA_SEPARATOR +
+            AccountancyContract.Transaction._ID + AccountancyContract.COMMA +
+            AccountancyContract.Category.COLUMN_NAME_ICON + AccountancyContract.COMMA +
+            AccountancyContract.Category.COLUMN_NAME_TITLE + AccountancyContract.COMMA +
+            AccountancyContract.Account.COLUMN_NAME_TITLE + AccountancyContract.COMMA +
+            "strftime('%d.%m.%Y'" + AccountancyContract.COMMA +
             AccountancyContract.Transaction.COLUMN_NAME_DATE  + ") as " +
-            "'" + AccountancyContract.Transaction.COLUMN_NAME_DATE + "'" + AccountancyContract.COMMA_SEPARATOR +
-            AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + AccountancyContract.COMMA_SEPARATOR +
+            "'" + AccountancyContract.Transaction.COLUMN_NAME_DATE + "'" + AccountancyContract.COMMA +
+            AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + AccountancyContract.COMMA +
             AccountancyContract.Transaction.COLUMN_NAME_NOTE + fromJoinSelector;
 
     String[] humanizeMonthSingle = new String[] {"Январь", "Февраль", "Март", "Апрель", "Май",

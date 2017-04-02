@@ -48,7 +48,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.setForeignKeyConstraintsEnabled(true);
     }
 
-
     private void CreateCategories(SQLiteDatabase db) {
         //TODO SQLiteConstraintException
         ContentValues contentValuesCategories = new ContentValues();
