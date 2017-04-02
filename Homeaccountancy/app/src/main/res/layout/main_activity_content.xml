@@ -90,8 +90,6 @@
             tools:context="com.application.homeaccountancy.activity.MainActivity"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
-
-
             <android.support.v4.view.ViewPager
                 android:id="@+id/container"
                 android:layout_width="wrap_content"

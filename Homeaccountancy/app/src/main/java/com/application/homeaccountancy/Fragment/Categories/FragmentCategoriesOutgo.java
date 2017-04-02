@@ -1,7 +1,6 @@
 package com.application.homeaccountancy.Fragment.Categories;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
-import com.application.homeaccountancy.Fragment.Transactions.FragmentBaseTransaction;
 
 public class FragmentCategoriesOutgo extends FragmentBaseCategories {
     @Override

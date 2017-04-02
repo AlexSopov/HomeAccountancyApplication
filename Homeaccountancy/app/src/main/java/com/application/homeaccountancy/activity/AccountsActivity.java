@@ -48,9 +48,11 @@ public class AccountsActivity extends AppCompatActivity {
         accountsList = (ListView)findViewById(R.id.accounts);
     }
 
-    private void initializeList() {
-        SimpleCursorAdapter accountsCursorAdapter;
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        SimpleCursorAdapter accountsCursorAdapter;
         String query = "SELECT " +
                 AccountancyContract.Account.TABLE_NAME + "." + AccountancyContract.Account._ID + AccountancyContract.COMMA_SEPARATOR +
                 AccountancyContract.Account.COLUMN_NAME_TITLE + AccountancyContract.COMMA_SEPARATOR +
@@ -79,12 +81,6 @@ public class AccountsActivity extends AppCompatActivity {
         accountsCursorAdapter = new AccountCursorAdapter(getApplicationContext(),
                 R.layout.account_list_item, cursor, from, to, 0);
         accountsList.setAdapter(accountsCursorAdapter);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        initializeList();
     }
 
     @Override

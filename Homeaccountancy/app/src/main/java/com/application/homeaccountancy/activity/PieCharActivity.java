@@ -75,10 +75,10 @@ public class PieCharActivity extends AppCompatActivity {
         db = handler.getReadableDatabase();
 
         calendarTill = Calendar.getInstance();
-        calendarTill.set(Calendar.DAY_OF_MONTH, calendarTill.getMaximum(Calendar.DAY_OF_MONTH));
+        calendarTill.set(Calendar.DAY_OF_MONTH, calendarTill.getActualMaximum(Calendar.DAY_OF_MONTH));
 
         calendarFrom = Calendar.getInstance();
-        calendarFrom.set(Calendar.DAY_OF_MONTH, 1);
+        calendarFrom.set(Calendar.DAY_OF_MONTH, calendarFrom.getActualMinimum(Calendar.DAY_OF_MONTH));
         calendarFrom.set(Calendar.MONTH, calendarTill.get(Calendar.MONTH));
         changeFieldInterval = Calendar.MONTH;
 

@@ -1,22 +1,20 @@
 package com.application.homeaccountancy.Fragment.Transactions;
 
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
-
-import android.view.LayoutInflater;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.AdapterView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -26,12 +24,11 @@ import com.application.homeaccountancy.Data.SQLiteHandler;
 import com.application.homeaccountancy.FilterSettings;
 import com.application.homeaccountancy.R;
 import com.application.homeaccountancy.activity.FilterActivity;
-import com.application.homeaccountancy.activity.MainActivity;
 
 import java.util.Calendar;
 
-public class FragmentBaseTransaction extends ListFragment {
-    protected final String fromJoinSelector = " FROM " + AccountancyContract.Transaction.TABLE_NAME +
+public class FragmentTransactions extends ListFragment {
+    public static final String fromJoinSelector = " FROM " + AccountancyContract.Transaction.TABLE_NAME +
             " INNER JOIN " + AccountancyContract.Category.TABLE_NAME + " " +
             " ON " + AccountancyContract.Category.TABLE_NAME + "." + AccountancyContract.Category._ID + " = " +
             AccountancyContract.Transaction.TABLE_NAME + "." + AccountancyContract.Transaction.COLUMN_NAME_CATEGORY_ID + " " +
@@ -40,7 +37,7 @@ public class FragmentBaseTransaction extends ListFragment {
             AccountancyContract.Transaction.TABLE_NAME + "." + AccountancyContract.Transaction.COLUMN_NAME_ACCOUNT_ID;
 
 
-    protected final String baseQuery = "SELECT " + AccountancyContract.Transaction.TABLE_NAME + "." +
+    public static final String baseQuery = "SELECT " + AccountancyContract.Transaction.TABLE_NAME + "." +
             AccountancyContract.Transaction._ID + AccountancyContract.COMMA_SEPARATOR +
             AccountancyContract.Category.COLUMN_NAME_ICON + AccountancyContract.COMMA_SEPARATOR +
             AccountancyContract.Category.COLUMN_NAME_TITLE + AccountancyContract.COMMA_SEPARATOR +
@@ -58,6 +55,9 @@ public class FragmentBaseTransaction extends ListFragment {
             "Апреля", "Июня", "Июля", "Августа", "Сентября", "Октября",
             "Ноября", "Декабря" };
 
+    public String query;
+
+    SimpleCursorAdapter transactionsCursorAdapter;
 
     SQLiteHandler sqLiteHandler;
     SQLiteDatabase db;
@@ -69,7 +69,9 @@ public class FragmentBaseTransaction extends ListFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         setHasOptionsMenu(true);
+        registerForContextMenu(getListView());
 
         filterIsEnabled = (TextView) getActivity().findViewById(R.id.filter_is_enabled);
 
@@ -84,17 +86,55 @@ public class FragmentBaseTransaction extends ListFragment {
             @Override
             public void onClick(View v) {
                 decreaseDate(v);
+                transactionsCursorAdapter.changeCursor(cursor);
+                getListView().invalidate();
             }
         });
         getActivity().findViewById(R.id.inc_date_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 increaseDate(v);
+                transactionsCursorAdapter.changeCursor(cursor);
+                getListView().invalidate();
             }
         });
 
         setEmptyText(Html.fromHtml(getString(R.string.empty_text)));
         setDateTimeView();
+
+
+
+        String[] from = new String[] {
+                AccountancyContract.Category.COLUMN_NAME_ICON,
+                AccountancyContract.Category.COLUMN_NAME_TITLE,
+                AccountancyContract.Account.COLUMN_NAME_TITLE,
+                AccountancyContract.Transaction.COLUMN_NAME_DATE,
+                AccountancyContract.Transaction.COLUMN_NAME_AMOUNT,
+                AccountancyContract.Transaction.COLUMN_NAME_NOTE,
+        };
+
+        int[] to = new int[] {
+                R.id.transaction_list_item_icon,
+                R.id.transaction_list_item_category,
+                R.id.transaction_list_item_account,
+                R.id.transaction_list_item_date,
+                R.id.transaction_list_item_amount,
+                R.id.transaction_list_item_note
+        };
+
+        setCursor();
+        transactionsCursorAdapter = new TransactionCursorAdapter(getActivity().getApplicationContext(),
+                R.layout.transaction_list_item, cursor, from, to, 0);
+
+        setListAdapter(transactionsCursorAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        setCursor();
+        transactionsCursorAdapter.changeCursor(cursor);
     }
 
     @Override
@@ -144,6 +184,45 @@ public class FragmentBaseTransaction extends ListFragment {
     }
 
     @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        final long id = ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).id;
+
+        switch (item.getItemId()) {
+            case R.id.change:
+                break;
+            case R.id.delete:
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+                dialog
+                        .setTitle("Подтверждение действия")
+                        .setMessage("Вы действительно хотите удалить запись?")
+                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                db.delete(AccountancyContract.Transaction.TABLE_NAME,
+                                        AccountancyContract.Transaction._ID + "=?",
+                                        new String[] {String.valueOf(id)}
+                                );
+                                setCursor();
+                                transactionsCursorAdapter.changeCursor(cursor);
+                            }
+                        })
+                        .setNegativeButton("Нет", null)
+                        .create();
+                dialog.show();
+                return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
     public void onDestroy(){
         super.onDestroy();
 
@@ -154,34 +233,8 @@ public class FragmentBaseTransaction extends ListFragment {
             cursor.close();
     }
 
-
-    protected void setAdapter(String query) {
-        SimpleCursorAdapter transactionsCursorAdapter;
+    protected void setCursor() {
         cursor =  db.rawQuery(InitializeConditions(query), null);
-
-        String[] from = new String[] {
-                AccountancyContract.Category.COLUMN_NAME_ICON,
-                AccountancyContract.Category.COLUMN_NAME_TITLE,
-                AccountancyContract.Account.COLUMN_NAME_TITLE,
-                AccountancyContract.Transaction.COLUMN_NAME_DATE,
-                AccountancyContract.Transaction.COLUMN_NAME_AMOUNT,
-                AccountancyContract.Transaction.COLUMN_NAME_NOTE,
-        };
-
-        int[] to = new int[] {
-                R.id.transaction_list_item_icon,
-                R.id.transaction_list_item_category,
-                R.id.transaction_list_item_account,
-                R.id.transaction_list_item_date,
-                R.id.transaction_list_item_amount,
-                R.id.transaction_list_item_note
-        };
-
-        transactionsCursorAdapter = new TransactionCursorAdapter(getActivity().getApplicationContext(),
-                R.layout.transaction_list_item, cursor, from, to, 0);
-        setListAdapter(transactionsCursorAdapter);
-
-        transactionsCursorAdapter.notifyDataSetChanged();
     }
     private String InitializeConditions(String query) {
         String orderSequence = " ORDER BY date(" + AccountancyContract.Transaction.COLUMN_NAME_DATE + ") DESC, " +
@@ -201,16 +254,16 @@ public class FragmentBaseTransaction extends ListFragment {
             whereSelector= " WHERE " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " >= '" +
                 fromDate + "' AND " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " <= '" +
                 tillDate + "'";
-        if (!FilterSettings.isFilter) {
+        /*if (!FilterSettings.isFilter) {
             filterIsEnabled.setVisibility(View.GONE);
-            setEmptyText(Html.fromHtml(getString(R.string.empty_text)));
+            setEmptyText(Html.fromHtml(getResources().getString(R.string.empty_text)));
             //return query + orderSequence;
         }
         else {
             filterIsEnabled.setVisibility(View.VISIBLE);
             filterIsEnabled.setText("Фильтр активен");
-            setEmptyText(Html.fromHtml(getString(R.string.empty_text_filter)));
-        }
+            setEmptyText(Html.fromHtml(getResources().getString(R.string.empty_text_filter)));
+        }*/
 
         /*boolean isCondition = false;
         if (!query.contains("WHERE"))
@@ -312,11 +365,15 @@ public class FragmentBaseTransaction extends ListFragment {
     }
     public void decreaseDate(View view) {
         dateChange(-1);
-        onResume();
+        setCursor();
     }
     public void increaseDate(View view) {
         dateChange(1);
-        onResume();
+        setCursor();
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
     }
 }
 //TODO !!!!DATA CHANGING!!!!

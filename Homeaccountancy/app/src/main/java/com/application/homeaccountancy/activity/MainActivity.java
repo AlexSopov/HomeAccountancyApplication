@@ -16,12 +16,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
-import com.application.homeaccountancy.Fragment.Transactions.FragmentAllTransactions;
-import com.application.homeaccountancy.Fragment.Transactions.FragmentIncomeTransaction;
-import com.application.homeaccountancy.Fragment.Transactions.FragmentOutgoTransactions;
+import com.application.homeaccountancy.Fragment.Transactions.FragmentTransactions;
 import com.application.homeaccountancy.R;
 
 public class MainActivity extends AppCompatActivity
@@ -106,7 +103,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /* FragmentPagerAdapter */
-    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -114,16 +111,23 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
+            FragmentTransactions fragmentTransaction = new FragmentTransactions();
             switch (position) {
                 case 0:
-                    return new FragmentAllTransactions();
+                    fragmentTransaction.setQuery(FragmentTransactions.baseQuery);
+                    break;
                 case 1:
-                    return new FragmentOutgoTransactions();
+                    fragmentTransaction.setQuery(FragmentTransactions.baseQuery +
+                            " WHERE is_outgo = 1");
+                    break;
                 case 2:
-                    return new FragmentIncomeTransaction();
+                    fragmentTransaction.setQuery(FragmentTransactions.baseQuery +
+                            " WHERE is_outgo = 0");
+                    break;
                 default:
-                    return new FragmentAllTransactions();
+                    fragmentTransaction.setQuery(FragmentTransactions.baseQuery);
             }
+            return fragmentTransaction;
         }
 
         @Override
