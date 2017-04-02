@@ -1,12 +1,16 @@
 package com.application.homeaccountancy.activity;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -52,6 +56,7 @@ public class SingleAccountActivity extends AppCompatActivity {
 
             cursor.moveToFirst();
             titleTextView.setText(cursor.getString(cursor.getColumnIndex(AccountancyContract.Account.COLUMN_NAME_TITLE)));
+            startBalanceTextView.setText(cursor.getString(cursor.getColumnIndex(AccountancyContract.Account.COLUMN_NAME_START_BALANCE)));
         }
     }
 
@@ -63,6 +68,44 @@ public class SingleAccountActivity extends AppCompatActivity {
 
         if (cursor != null)
             cursor.close();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (accountId > 0) {
+            getMenuInflater().inflate(R.menu.dalete_menu, menu);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(!item.isChecked())
+            item.setChecked(true);
+
+        if (id == R.id.delete) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(SingleAccountActivity.this);
+            dialog
+                    .setTitle("Подтверждение действия")
+                    .setMessage("Вы действительно хотите удалить счёт? Все записи данного " +
+                            "счёта будут стерты.")
+                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            db.delete(AccountancyContract.Account.TABLE_NAME,
+                                    AccountancyContract.Account._ID + "=?",
+                                    new String[] {String.valueOf(accountId)}
+                            );
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("Нет", null)
+                    .create();
+            dialog.show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void InitializeViews() {

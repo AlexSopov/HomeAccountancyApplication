@@ -1,12 +1,16 @@
 package com.application.homeaccountancy.activity;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.SimpleCursorAdapter;
@@ -18,6 +22,8 @@ import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.Data.SQLiteHandler;
 import com.application.homeaccountancy.FilterSettings;
 import com.application.homeaccountancy.R;
+
+import java.util.Calendar;
 
 public class SingleCategoryActivity extends AppCompatActivity {
     TextView titleTextView;
@@ -61,6 +67,45 @@ public class SingleCategoryActivity extends AppCompatActivity {
         }
         initializeSpinners();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (categoryId > 0) {
+            getMenuInflater().inflate(R.menu.dalete_menu, menu);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(!item.isChecked())
+            item.setChecked(true);
+
+        if (id == R.id.delete) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(SingleCategoryActivity.this);
+            dialog
+                    .setTitle("Подтверждение действия")
+                    .setMessage("Вы действительно хотите удалить категорию? Все записи данной " +
+                            "категории будут стерты.")
+                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            db.delete(AccountancyContract.Category.TABLE_NAME,
+                                    AccountancyContract.Category._ID + "=?",
+                                    new String[] {String.valueOf(categoryId)}
+                            );
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("Нет", null)
+                    .create();
+            dialog.show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     public void onDestroy(){
@@ -148,6 +193,6 @@ public class SingleCategoryActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, "Категория с таким именем уже существует", Toast.LENGTH_LONG);
             toast.show();
         }
-        catch (Exception ex) {}
+        catch (Exception ignored) {}
     }
 }

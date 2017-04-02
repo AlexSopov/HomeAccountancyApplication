@@ -1,27 +1,19 @@
 package com.application.homeaccountancy.activity;
 
 import android.content.Intent;
-import android.support.design.widget.TabLayout;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
 
-import android.widget.TextView;
-
-import com.application.homeaccountancy.Fragment.Categories.FragmentCategoriesIncome;
-import com.application.homeaccountancy.Fragment.Categories.FragmentCategoriesOutgo;
+import com.application.homeaccountancy.Data.AccountancyContract;
+import com.application.homeaccountancy.Fragment.Categories.FragmentCategories;
 import com.application.homeaccountancy.R;
 
 public class CategoriesActivity extends AppCompatActivity {
@@ -62,14 +54,21 @@ public class CategoriesActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
+            FragmentCategories fragmentCategories = new FragmentCategories();
+
             switch (position) {
                 case 0:
-                    return new FragmentCategoriesOutgo();
+                    fragmentCategories.setQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
+                            " WHERE " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO + " = 1");
+                    break;
                 case 1:
-                    return new FragmentCategoriesIncome();
+                    fragmentCategories.setQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
+                            " WHERE " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO + " = 0");
+                    break;
                 default:
-                    return new FragmentCategoriesOutgo();
+                    fragmentCategories.setQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME);
             }
+            return fragmentCategories;
         }
 
         @Override
