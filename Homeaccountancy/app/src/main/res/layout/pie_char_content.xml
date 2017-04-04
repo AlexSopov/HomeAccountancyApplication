@@ -8,48 +8,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.application.homeaccountancy.activity.PieCharActivity"
+    tools:context="com.application.homeaccountancy.Activity.PieCharActivity"
     tools:showIn="@layout/pie_char_activity"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_gravity="center_horizontal"
+    <include
+        layout="@layout/date_selector"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#FFFFFF">
-
-        <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentStart="true"
-            android:onClick="decreaseDate"/>
-
-        <TextView
-            android:id="@+id/humanize_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_alignParentTop="true"
-            android:text="Date in human format"
-            android:layout_marginTop="5dp"/>
-
-        <TextView
-            android:id="@+id/format_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/humanize_date"
-            android:text="Date in num format"/>
-
-
-        <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:onClick="increaseDate"/>
-
-    </RelativeLayout>
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"

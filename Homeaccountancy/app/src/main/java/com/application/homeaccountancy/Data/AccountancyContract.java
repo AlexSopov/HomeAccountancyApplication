@@ -21,24 +21,24 @@ public final class AccountancyContract {
 
     public static class Transaction implements BaseColumns {
         public static final String TABLE_NAME = "Transactions";
-        public static final String COLUMN_NAME_DATE = "date";
-        public static final String COLUMN_NAME_AMOUNT = "amount";
-        public static final String COLUMN_NAME_ACCOUNT_ID = "account_id";
-        public static final String COLUMN_NAME_CATEGORY_ID = "category_id";
-        public static final String COLUMN_NAME_NOTE = "note";
+        public static final String DATE = "date";
+        public static final String AMOUNT = "amount";
+        public static final String ACCOUNT_ID = "account_id";
+        public static final String CATEGORY_ID = "category_id";
+        public static final String NOTE = "note";
     }
 
     public static class Category implements BaseColumns {
         public static final String TABLE_NAME = "Categories";
-        public static final String COLUMN_NAME_TITLE = "c_title";
-        public static final String COLUMN_NAME_IS_OUTGO = "is_outgo";
-        public static final String COLUMN_NAME_ICON = "icon";
+        public static final String C_TITLE = "c_title";
+        public static final String IS_OUTGO = "is_outgo";
+        public static final String ICON = "icon";
     }
 
     public static class Account implements BaseColumns {
         public static final String TABLE_NAME = "Accounts";
-        public static final String COLUMN_NAME_START_BALANCE = "start_balance";
-        public static final String COLUMN_NAME_TITLE = "a_title";
+        public static final String START_BALANCE = "start_balance";
+        public static final String A_TITLE = "a_title";
     }
 
     public static class Images implements BaseColumns {
@@ -46,40 +46,40 @@ public final class AccountancyContract {
         public static final String COLUMN_NAME_IMAGE = "image";
     }
 
-    public static final String SQLITE_CREATE_TRANSACTIONS = CREATE_TABLE +
+    static final String SQLITE_CREATE_TRANSACTIONS = CREATE_TABLE +
             Transaction.TABLE_NAME + " (" +
             Transaction._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA +
-            Transaction.COLUMN_NAME_DATE + INTEGER_TYPE + NOT_NULL + COMMA +
-            Transaction.COLUMN_NAME_AMOUNT + REAL_TYPE + NOT_NULL + COMMA +
-            Transaction.COLUMN_NAME_ACCOUNT_ID + INTEGER_TYPE + COMMA +
-            Transaction.COLUMN_NAME_CATEGORY_ID + INTEGER_TYPE + COMMA +
-            Transaction.COLUMN_NAME_NOTE + TEXT_TYPE + COMMA +
-            FOREIGN_KEY + "(" + Transaction.COLUMN_NAME_ACCOUNT_ID + ")" +
+            Transaction.DATE + INTEGER_TYPE + NOT_NULL + COMMA +
+            Transaction.AMOUNT + REAL_TYPE + NOT_NULL + COMMA +
+            Transaction.ACCOUNT_ID + INTEGER_TYPE + COMMA +
+            Transaction.CATEGORY_ID + INTEGER_TYPE + COMMA +
+            Transaction.NOTE + TEXT_TYPE + COMMA +
+            FOREIGN_KEY + "(" + Transaction.ACCOUNT_ID + ")" +
             REFERENCES + Account.TABLE_NAME + "(_id)" + ON_DELETE + COMMA +
-            FOREIGN_KEY + "(" + Transaction.COLUMN_NAME_CATEGORY_ID + ")" +
+            FOREIGN_KEY + "(" + Transaction.CATEGORY_ID + ")" +
             REFERENCES + Category.TABLE_NAME + "(_id)" + ON_DELETE + ")";
 
-    public static final String SQLITE_CREATE_CATEGORIES = CREATE_TABLE +
+    static final String SQLITE_CREATE_CATEGORIES = CREATE_TABLE +
             Category.TABLE_NAME + " (" +
             Category._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA +
-            Category.COLUMN_NAME_TITLE + TEXT_TYPE + NOT_NULL + UNIQUE + COMMA +
-            Category.COLUMN_NAME_IS_OUTGO + INTEGER_TYPE + NOT_NULL + COMMA +
-            Category.COLUMN_NAME_ICON + INTEGER_TYPE + ")";
+            Category.C_TITLE + TEXT_TYPE + NOT_NULL + UNIQUE + COMMA +
+            Category.IS_OUTGO + INTEGER_TYPE + NOT_NULL + COMMA +
+            Category.ICON + INTEGER_TYPE + ")";
 
-    public static final String SQLITE_CREATE_ACCOUNTS = CREATE_TABLE +
+    static final String SQLITE_CREATE_ACCOUNTS = CREATE_TABLE +
             Account.TABLE_NAME + " (" +
             Account._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA +
-            Account.COLUMN_NAME_TITLE + TEXT_TYPE + NOT_NULL + UNIQUE + COMMA +
-            Account.COLUMN_NAME_START_BALANCE + REAL_TYPE + NOT_NULL + ")";
+            Account.A_TITLE + TEXT_TYPE + NOT_NULL + UNIQUE + COMMA +
+            Account.START_BALANCE + REAL_TYPE + NOT_NULL + ")";
 
-    public static final String SQLITE_CREATE_IMAGES = CREATE_TABLE +
+    static final String SQLITE_CREATE_IMAGES = CREATE_TABLE +
             Images.TABLE_NAME + " (" +
             Images._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA +
             Images.COLUMN_NAME_IMAGE + INTEGER_TYPE + NOT_NULL + ")";
 
 
-    public static final String SQLITE_DELETE_TRANSACTIONS = DROP_TABLE + Transaction.TABLE_NAME;
-    public static final String SQLITE_DELETE_CATEGORIES = DROP_TABLE + Category.TABLE_NAME;
-    public static final String SQLITE_DELETE_ACCOUNTS = DROP_TABLE + Account.TABLE_NAME;
-    public static final String SQLITE_DELETE_IMAGES = DROP_TABLE + Images.TABLE_NAME;
+    static final String SQLITE_DELETE_TRANSACTIONS = DROP_TABLE + Transaction.TABLE_NAME;
+    static final String SQLITE_DELETE_CATEGORIES = DROP_TABLE + Category.TABLE_NAME;
+    static final String SQLITE_DELETE_ACCOUNTS = DROP_TABLE + Account.TABLE_NAME;
+    static final String SQLITE_DELETE_IMAGES = DROP_TABLE + Images.TABLE_NAME;
 }

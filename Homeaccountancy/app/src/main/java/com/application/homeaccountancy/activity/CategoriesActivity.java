@@ -1,4 +1,4 @@
-package com.application.homeaccountancy.activity;
+package com.application.homeaccountancy.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +17,6 @@ import com.application.homeaccountancy.Fragment.FragmentCategories;
 import com.application.homeaccountancy.R;
 
 public class CategoriesActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,9 +44,9 @@ public class CategoriesActivity extends AppCompatActivity {
     }
 
     /* FragmentPagerAdapter */
-    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+    private class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -57,15 +56,15 @@ public class CategoriesActivity extends AppCompatActivity {
 
             switch (position) {
                 case 0:
-                    fragmentCategories.setQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
-                            " WHERE " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO + " = 1");
+                    fragmentCategories.setQuery(FragmentCategories.getBaseQuery() +
+                            " WHERE " + AccountancyContract.Category.IS_OUTGO + " = 1");
                     break;
                 case 1:
-                    fragmentCategories.setQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
-                            " WHERE " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO + " = 0");
+                    fragmentCategories.setQuery(FragmentCategories.getBaseQuery() +
+                            " WHERE " + AccountancyContract.Category.IS_OUTGO + " = 0");
                     break;
                 default:
-                    fragmentCategories.setQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME);
+                    fragmentCategories.setQuery(FragmentCategories.getBaseQuery());
             }
             return fragmentCategories;
         }

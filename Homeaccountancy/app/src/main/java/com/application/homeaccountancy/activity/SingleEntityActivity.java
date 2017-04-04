@@ -1,4 +1,4 @@
-package com.application.homeaccountancy.activity;
+package com.application.homeaccountancy.Activity;
 
 import android.os.Bundle;
 import android.view.Menu;

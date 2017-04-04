@@ -27,8 +27,8 @@ public class AccountCursorAdapter extends SimpleCursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         super.bindView(view, context, cursor);
 
-        double balance = cursor.getDouble(cursor.getColumnIndex(AccountancyContract.Transaction.COLUMN_NAME_AMOUNT));
-        double start = cursor.getDouble(cursor.getColumnIndex(AccountancyContract.Account.COLUMN_NAME_START_BALANCE));
+        double balance = cursor.getDouble(cursor.getColumnIndex(AccountancyContract.Transaction.AMOUNT));
+        double start = cursor.getDouble(cursor.getColumnIndex(AccountancyContract.Account.START_BALANCE));
         TextView balanceTextView = (TextView)view.findViewById(R.id.account_list_item_balance);
         TextView startTextView = (TextView)view.findViewById(R.id.account_list_item_start);
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:id="@+id/date_selector_humanize_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:text="Date in human format"
+        android:textColor="#000" />
+
+    <TextView
+        android:id="@+id/date_selector_format_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/date_selector_humanize_date"
+        android:text="Date in num format"
+        android:textColor="#000"/>
+
+    <ImageButton
+        android:id="@+id/date_selector_increase_date"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:background="@android:color/transparent"
+        app:srcCompat="@mipmap/ic_right_date_selector"/>
+
+    <ImageButton
+        android:id="@+id/date_selector_decrease_date"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@android:color/transparent"
+        app:srcCompat="@mipmap/ic_left_date_selector"/>
+
+</RelativeLayout>

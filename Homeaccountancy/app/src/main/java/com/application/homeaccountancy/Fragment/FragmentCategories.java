@@ -2,11 +2,8 @@ package com.application.homeaccountancy.Fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ListFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.view.ContextMenu;
@@ -17,43 +14,21 @@ import android.widget.AdapterView;
 import android.widget.SimpleCursorAdapter;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
-import com.application.homeaccountancy.Data.SQLiteHandler;
 import com.application.homeaccountancy.R;
-import com.application.homeaccountancy.activity.SingleCategoryActivity;
+import com.application.homeaccountancy.Activity.SingleCategoryActivity;
 
-public class FragmentCategories extends ListFragment {
-    SQLiteHandler sqLiteHandler;
-    SQLiteDatabase db;
-    Cursor cursor;
-
-    String query;
-    SimpleCursorAdapter categoriesAdapter;
+public class FragmentCategories extends UsingDataBaseListFragment {
+    private String query;
+    private SimpleCursorAdapter categoriesCursorAdapter;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        sqLiteHandler = new SQLiteHandler(getActivity().getApplicationContext());
-        db = sqLiteHandler.getReadableDatabase();
-
         setEmptyText(Html.fromHtml(getResources().getString(R.string.empty_text)));
 
-        String[] from = new String[] {
-                AccountancyContract.Category.COLUMN_NAME_TITLE,
-                AccountancyContract.Category.COLUMN_NAME_ICON
-        };
-
-        int[] to = new int[] {
-                R.id.category_list_item_title,
-                R.id.category_list_item_icon
-        };
-
-        setCursor();
-        categoriesAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),
-                R.layout.category_list_item, cursor, from, to, 0);
-        setListAdapter(categoriesAdapter);
-
         registerForContextMenu(getListView());
+        initializeAdapter();
     }
 
     @Override
@@ -89,9 +64,9 @@ public class FragmentCategories extends ListFragment {
                                         AccountancyContract.Category._ID + "=?",
                                         new String[]{String.valueOf(id)}
                                 );
-                                setCursor();
-                                categoriesAdapter.changeCursor(cursor);
-                                categoriesAdapter.notifyDataSetChanged();
+                                requeryCursor();
+                                categoriesCursorAdapter.changeCursor(cursor);
+                                categoriesCursorAdapter.notifyDataSetChanged();
                             }
                         })
                         .setNegativeButton("Нет", null)
@@ -106,26 +81,35 @@ public class FragmentCategories extends ListFragment {
     public void onResume() {
         super.onResume();
 
-        setCursor();
-        categoriesAdapter.changeCursor(cursor);
+        requeryCursor();
+        categoriesCursorAdapter.changeCursor(cursor);
     }
 
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
+    private void initializeAdapter() {
+        String[] from = new String[] {
+                AccountancyContract.Category.C_TITLE,
+                AccountancyContract.Category.ICON
+        };
 
-        if (db != null)
-            db.close();
+        int[] to = new int[] {
+                R.id.category_list_item_title,
+                R.id.category_list_item_icon
+        };
 
-        if (cursor != null)
-            cursor.close();
-    }
-
-    protected void setCursor() {
-        cursor =  db.rawQuery(query, null);
+        requeryCursor();
+        categoriesCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),
+                R.layout.category_list_item, cursor, from, to, 0);
+        setListAdapter(categoriesCursorAdapter);
     }
 
     public void setQuery(String query) {
         this.query = query;
+    }
+    public static String getBaseQuery() {
+        return "SELECT * FROM " + AccountancyContract.Category.TABLE_NAME;
+    }
+
+    private void requeryCursor() {
+        cursor =  db.rawQuery(query, null);
     }
 }

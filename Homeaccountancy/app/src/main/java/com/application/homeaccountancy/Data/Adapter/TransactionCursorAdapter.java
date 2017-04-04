@@ -11,8 +11,6 @@ import android.widget.TextView;
 import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.R;
 
-import org.w3c.dom.Text;
-
 
 public class TransactionCursorAdapter extends SimpleCursorAdapter {
     public TransactionCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
@@ -28,8 +26,8 @@ public class TransactionCursorAdapter extends SimpleCursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         super.bindView(view, context, cursor);
 
-        double amount = cursor.getDouble(cursor.getColumnIndex(AccountancyContract.Transaction.COLUMN_NAME_AMOUNT));
-        String note = cursor.getString(cursor.getColumnIndex(AccountancyContract.Transaction.COLUMN_NAME_NOTE));
+        double amount = cursor.getDouble(cursor.getColumnIndex(AccountancyContract.Transaction.AMOUNT));
+        String note = cursor.getString(cursor.getColumnIndex(AccountancyContract.Transaction.NOTE));
         TextView amountTextView = (TextView)view.findViewById(R.id.transaction_list_item_amount);
         TextView noteTextView = (TextView)view.findViewById(R.id.transaction_list_item_note);
 

@@ -1,4 +1,4 @@
-package com.application.homeaccountancy.activity;
+package com.application.homeaccountancy.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -18,11 +17,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.application.homeaccountancy.DateSelector;
 import com.application.homeaccountancy.Fragment.FragmentTransactions;
 import com.application.homeaccountancy.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    DateSelector dateSelector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        dateSelector = new DateSelector(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -79,22 +83,18 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.menu_categories) {
             Intent intent = new Intent(getApplicationContext(), CategoriesActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
         }
         else if (id == R.id.menu_pie_graphic) {
             Intent intent = new Intent(getApplicationContext(), PieCharActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
         }
         else if (id == R.id.menu_bar_graphic) {
             Intent intent = new Intent(getApplicationContext(), BarChartActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
         }
         else if (id == R.id.menu_accounts) {
             Intent intent = new Intent(getApplicationContext(), AccountsActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
         }
 
@@ -103,10 +103,14 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    /* FragmentPagerAdapter */
-    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+    public DateSelector getDateSelector() {
+        return dateSelector;
+    }
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+    /* FragmentPagerAdapter */
+    private class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -115,18 +119,18 @@ public class MainActivity extends AppCompatActivity
             FragmentTransactions fragmentTransaction = new FragmentTransactions();
             switch (position) {
                 case 0:
-                    fragmentTransaction.setQuery(FragmentTransactions.baseQuery);
+                    fragmentTransaction.setQuery(FragmentTransactions.getBaseQuery());
                     break;
                 case 1:
-                    fragmentTransaction.setQuery(FragmentTransactions.baseQuery +
+                    fragmentTransaction.setQuery(FragmentTransactions.getBaseQuery() +
                             " WHERE is_outgo = 1");
                     break;
                 case 2:
-                    fragmentTransaction.setQuery(FragmentTransactions.baseQuery +
+                    fragmentTransaction.setQuery(FragmentTransactions.getBaseQuery() +
                             " WHERE is_outgo = 0");
                     break;
                 default:
-                    fragmentTransaction.setQuery(FragmentTransactions.baseQuery);
+                    fragmentTransaction.setQuery(FragmentTransactions.getBaseQuery());
             }
             return fragmentTransaction;
         }

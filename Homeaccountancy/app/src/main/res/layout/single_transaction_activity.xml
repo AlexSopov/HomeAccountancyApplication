@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.application.homeaccountancy.activity.SingleTransactionActivity">
+    tools:context="com.application.homeaccountancy.Activity.SingleTransactionActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/single_outgo_date_time"
+                        android:text="Дата и время"
                         android:textSize="@dimen/transaction_text_size"/>
 
                     <LinearLayout
@@ -92,7 +92,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/transaction_sum"
+                        android:text="Сумма"
                         android:textSize="@dimen/transaction_text_size"/>
 
                     <LinearLayout
@@ -130,7 +130,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/transaction_category"
+                        android:text="Категория"
                         android:textSize="@dimen/transaction_text_size"/>
 
                     <LinearLayout
@@ -147,6 +147,7 @@
                         <ImageButton
                             android:layout_width="50dp"
                             android:layout_height="50dp"
+                            android:onClick="addNewCategory"
                             app:srcCompat="@android:drawable/ic_input_add" />
 
                     </LinearLayout>
@@ -180,6 +181,7 @@
                         <ImageButton
                             android:layout_width="50dp"
                             android:layout_height="50dp"
+                            android:onClick="addNewAccount"
                             app:srcCompat="@android:drawable/ic_input_add" />
 
                     </LinearLayout>
@@ -222,7 +224,7 @@
                 android:layout_weight="1"
                 android:textSize="14sp"
                 android:text="Сохранить и новый"
-                android:onClick="saveTransaction"/>
+                android:onClick="saveTransactionContinue"/>
 
             <Button
                 android:layout_width="0dp"
@@ -230,7 +232,7 @@
                 android:layout_weight="1"
                 android:textSize="14sp"
                 android:text="Сохранить"
-                android:onClick="saveTransactionCloseActivity"/>
+                android:onClick="saveTransactionClose"/>
         </LinearLayout>
 
     </LinearLayout>

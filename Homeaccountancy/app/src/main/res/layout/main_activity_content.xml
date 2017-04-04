@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.application.homeaccountancy.activity.MainActivity">
+    tools:context="com.application.homeaccountancy.Activity.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -25,51 +25,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <RelativeLayout
-            android:layout_gravity="top"
+        <include
+            layout="@layout/date_selector"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="#FFFFFF">
-
-            <ImageButton
-                android:id="@+id/dec_date_btn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentStart="true"
-                android:onClick="decreaseDate"
-                app:srcCompat="@mipmap/ic_left"
-                android:background="#FFF"/>
-
-            <TextView
-                android:id="@+id/humanize_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_alignParentTop="true"
-                android:text="Date in human format"
-                android:layout_marginTop="5dp"
-                android:textColor="#000"/>
-
-            <TextView
-                android:id="@+id/format_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/humanize_date"
-                android:text="Date in num format"
-                android:textColor="#000"/>
-
-
-            <ImageButton
-                android:id="@+id/inc_date_btn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentEnd="true"
-                app:srcCompat="@mipmap/ic_right"
-                android:background="#FFF"/>
-
-        </RelativeLayout>
+            android:layout_height="wrap_content" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -77,7 +36,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.application.homeaccountancy.activity.MainActivity"
+        tools:context="com.application.homeaccountancy.Activity.MainActivity"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:orientation="vertical">
 
@@ -87,7 +46,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:fitsSystemWindows="true"
-            tools:context="com.application.homeaccountancy.activity.MainActivity"
+            tools:context="com.application.homeaccountancy.Activity.MainActivity"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
             <android.support.v4.view.ViewPager
@@ -105,11 +64,6 @@
                 app:srcCompat="@drawable/ic_add_black_24dp" />
 
         </android.support.design.widget.CoordinatorLayout>
-
-        <TextView
-            android:id="@+id/filter_is_enabled"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

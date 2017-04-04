@@ -10,8 +10,8 @@
 
         <!--Main activity-->
         <activity
-            android:name=".activity.MainActivity"
-            android:label="@string/title_activity_main_activity"
+            android:name=".Activity.MainActivity"
+            android:label="Журнал"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,61 +22,56 @@
 
         <!--Data activities-->
         <activity
-            android:name=".activity.CategoriesActivity"
+            android:name=".Activity.CategoriesActivity"
             android:label="Категории"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.application.homeaccountancy.activity.MainActivity" />
+                android:value="com.application.homeaccountancy.Activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.AccountsActivity"
+            android:name=".Activity.AccountsActivity"
             android:label="Счета"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.application.homeaccountancy.activity.MainActivity" />
+                android:value="com.application.homeaccountancy.Activity.MainActivity" />
         </activity>
 
         <!--Single data activities-->
         <activity
-            android:name=".activity.SingleTransactionActivity"
+            android:name=".Activity.SingleTransactionActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="Транзакция">
         </activity>
         <activity
-            android:name=".activity.SingleAccountActivity"
+            android:name=".Activity.SingleAccountActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="Счёт">
         </activity>
         <activity
-            android:name=".activity.SingleCategoryActivity"
+            android:name=".Activity.SingleCategoryActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="Категория">
         </activity>
 
         <!-- Chart activities-->
         <activity
-            android:name=".activity.PieCharActivity"
+            android:name=".Activity.PieCharActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="Круговая диаграмма">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.application.homeaccountancy.activity.MainActivity" />
+                android:value="com.application.homeaccountancy.Activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.BarChartActivity"
+            android:name=".Activity.BarChartActivity"
             android:label="Столбчатая диаграмма"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.application.homeaccountancy.activity.MainActivity" />
+                android:value="com.application.homeaccountancy.Activity.MainActivity" />
         </activity>
-
-        <activity
-            android:name=".activity.FilterActivity"
-            android:label="@string/title_activity_filter"
-            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

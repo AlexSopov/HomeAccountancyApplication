@@ -1,22 +1,23 @@
-package com.application.homeaccountancy.Activity;
+package com.application.homeaccountancy.Fragment;
+
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.ListFragment;
 
 import com.application.homeaccountancy.Data.SQLiteHandler;
 
-public class UsingDataBaseActivity extends AppCompatActivity {
+public class UsingDataBaseListFragment extends ListFragment {
     SQLiteHandler handler;
     SQLiteDatabase db;
     Cursor cursor;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        handler = new SQLiteHandler(getApplicationContext());
+        handler = new SQLiteHandler(getActivity().getApplicationContext());
         db = handler.getReadableDatabase();
     }
 

@@ -2,29 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:title="changeInterval"
+        android:title="date_range"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_calendar">
+        android:icon="@mipmap/ic_date_range">
         <menu>
             <group android:checkableBehavior="single">
                 <item
-                    android:id="@+id/chart_day"
+                    android:id="@+id/range_day"
                     android:title="День" />
-                <item android:id="@+id/chart_week"
+                <item android:id="@+id/range_week"
                     android:title="Неделя" />
-                <item android:id="@+id/chart_month"
+                <item android:id="@+id/range_month"
                     android:title="Месяц"
                     android:checked="true" />
-                <item android:id="@+id/chart_year"
+                <item android:id="@+id/range_year"
                     android:title="Год" />
             </group>
         </menu>
-
-
     </item>
-    <item
-        android:id="@+id/filter"
-        android:title="filter"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/filter" />
 </menu>

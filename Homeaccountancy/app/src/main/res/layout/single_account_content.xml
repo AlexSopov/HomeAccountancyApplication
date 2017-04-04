@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
 
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.application.homeaccountancy.activity.SingleTransactionActivity"
+    tools:context="com.application.homeaccountancy.Activity.SingleTransactionActivity"
     tools:showIn="@layout/single_account_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -51,17 +51,12 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textSize="14sp"
-            android:text="Сохранить"
-            android:onClick="saveAccount"/>
-    </LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="Сохранить"
+        android:onClick="saveAccount"/>
 
 </LinearLayout>

@@ -28,8 +28,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.execSQL(AccountancyContract.SQLITE_CREATE_TRANSACTIONS);
         db.execSQL(AccountancyContract.SQLITE_CREATE_IMAGES);
 
-        CreateCategories(db);
-        CreateAccounts(db);
+        createCategories(db);
+        createAccounts(db);
     }
 
     @Override
@@ -48,8 +48,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.setForeignKeyConstraintsEnabled(true);
     }
 
-    private void CreateCategories(SQLiteDatabase db) {
-        //TODO SQLiteConstraintException
+    private void createCategories(SQLiteDatabase db) {
         ContentValues contentValuesCategories = new ContentValues();
         ContentValues contentValuesImages = new ContentValues();
         Resources resources = context.getResources();
@@ -64,9 +63,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                     int isOutgo = xmlResourceParser.getAttributeIntValue(1, 1);
                     String icon = xmlResourceParser.getAttributeValue(2);
 
-                    contentValuesCategories.put(AccountancyContract.Category.COLUMN_NAME_TITLE, title);
-                    contentValuesCategories.put(AccountancyContract.Category.COLUMN_NAME_IS_OUTGO, isOutgo);
-                    contentValuesCategories.put(AccountancyContract.Category.COLUMN_NAME_ICON,
+                    contentValuesCategories.put(AccountancyContract.Category.C_TITLE, title);
+                    contentValuesCategories.put(AccountancyContract.Category.IS_OUTGO, isOutgo);
+                    contentValuesCategories.put(AccountancyContract.Category.ICON,
                             resources.getIdentifier(icon, "drawable", context.getPackageName()));
 
                     contentValuesImages.put(AccountancyContract.Images.COLUMN_NAME_IMAGE,
@@ -84,16 +83,15 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             xmlResourceParser.close();
         }
     }
-
-    private void CreateAccounts(SQLiteDatabase db) {
+    private void createAccounts(SQLiteDatabase db) {
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(AccountancyContract.Account.COLUMN_NAME_TITLE, "Наличные");
-        contentValues.put(AccountancyContract.Account.COLUMN_NAME_START_BALANCE, 500);
+        contentValues.put(AccountancyContract.Account.A_TITLE, "Наличные");
+        contentValues.put(AccountancyContract.Account.START_BALANCE, 500);
         db.insert(AccountancyContract.Account.TABLE_NAME, null, contentValues);
 
-        contentValues.put(AccountancyContract.Account.COLUMN_NAME_TITLE, "Карточка xxxx-xxxx-xxxx-xxxx");
-        contentValues.put(AccountancyContract.Account.COLUMN_NAME_START_BALANCE, 1000);
+        contentValues.put(AccountancyContract.Account.A_TITLE, "Карточка xxxx-xxxx-xxxx-xxxx");
+        contentValues.put(AccountancyContract.Account.START_BALANCE, 1000);
         db.insert(AccountancyContract.Account.TABLE_NAME, null, contentValues);
     }
 }

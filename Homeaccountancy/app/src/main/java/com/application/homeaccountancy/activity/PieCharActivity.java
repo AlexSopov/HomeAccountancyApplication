@@ -1,21 +1,17 @@
-package com.application.homeaccountancy.activity;
+package com.application.homeaccountancy.Activity;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
-import com.application.homeaccountancy.Data.SQLiteHandler;
+import com.application.homeaccountancy.DateSelector;
 import com.application.homeaccountancy.R;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
@@ -27,12 +23,12 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class PieCharActivity extends AppCompatActivity {
+public class PieCharActivity extends UsingDataBaseActivity {
+    // region final int[] colors
     static final int[] colors = new int[] {Color.parseColor("#e53935"), Color.parseColor("#26C6DA"),  Color.parseColor("#FFCA28"),
             Color.parseColor("#EC407A"),  Color.parseColor("#26A69A"),  Color.parseColor("#FFA726"),
             Color.parseColor("#AB47BC"),  Color.parseColor("#66BB6A"),  Color.parseColor("#FF7043"),
@@ -40,46 +36,38 @@ public class PieCharActivity extends AppCompatActivity {
             Color.parseColor("#5C6BC0"),  Color.parseColor("#D4E157"),  Color.parseColor("#BDBDBD"),
             Color.parseColor("#42A5F5"),  Color.parseColor("#FFEE58"),  Color.parseColor("#78909C"),
             Color.parseColor("#29B6F6")};
+    // endregion
 
-    String[] humanizeMonthSingle = new String[] {"Январь", "Февраль", "Март", "Апрель", "Май",
-            "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
+    private String fromJoinSelector, whereSelector;
 
-    String[] humanizeMonthPersonable = new String[] {"Января", "Февраля", "Марта",
-            "Апреля", "Июня", "Июля", "Августа", "Сентября", "Октября",
-            "Ноября", "Декабря" };
+    private TextView categoryTextView, totalTextView, percentTextView;
+    private Spinner categoriesSpinner;
+    private DateSelector dateSelector;
 
-    String fromDate, tillDate, fromJoinSelector, whereSelector;
-    PieChart pieChart;
-
-    TextView humanizeDate, formatDate, categoryTextView,
-            totalTextView, percentTextView;
-    Spinner categoriesSpinner;
-
-    SQLiteHandler handler;
-    SQLiteDatabase db;
-
-    int changeFieldInterval;
-
-    public static Calendar calendarFrom, calendarTill;
+    private PieChart pieChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pie_char_activity);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        handler = new SQLiteHandler(getApplicationContext());
-        db = handler.getReadableDatabase();
-
-        calendarTill = Calendar.getInstance();
-        calendarTill.set(Calendar.DAY_OF_MONTH, calendarTill.getActualMaximum(Calendar.DAY_OF_MONTH));
-
-        calendarFrom = Calendar.getInstance();
-        calendarFrom.set(Calendar.DAY_OF_MONTH, calendarFrom.getActualMinimum(Calendar.DAY_OF_MONTH));
-        calendarFrom.set(Calendar.MONTH, calendarTill.get(Calendar.MONTH));
-        changeFieldInterval = Calendar.MONTH;
+        dateSelector = new DateSelector(this);
+        dateSelector.setOnDecreaseClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                decreaseDate(v);
+            }
+        });
+        dateSelector.setOnIncreaseClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                increaseDate(v);
+            }
+        });
 
         initializeViews();
         initializeListeners();
@@ -87,13 +75,11 @@ public class PieCharActivity extends AppCompatActivity {
 
         pieChart.setNoDataText("Не найдено данных для отображения.");
         pieChart.setNoDataTextColor(Color.BLACK);
-        setDateTimeView();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.chart_menu, menu);
+        getMenuInflater().inflate(R.menu.date_selector_menu, menu);
         return true;
     }
 
@@ -104,91 +90,72 @@ public class PieCharActivity extends AppCompatActivity {
             item.setChecked(true);
 
         switch(id){
-            case R.id.chart_day :
-                changeFieldInterval = Calendar.DAY_OF_YEAR;
+            case R.id.range_day:
+                dateSelector.setChangeFieldInterval(Calendar.DAY_OF_YEAR);
                 break;
-            case R.id.chart_week :
-                changeFieldInterval = Calendar.WEEK_OF_YEAR;
+            case R.id.range_week:
+                dateSelector.setChangeFieldInterval(Calendar.WEEK_OF_YEAR);
                 break;
-            case R.id.chart_month :
-                changeFieldInterval = Calendar.MONTH;
+            case R.id.range_month:
+                dateSelector.setChangeFieldInterval(Calendar.MONTH);
                 break;
-            case R.id.chart_year :
-                changeFieldInterval = Calendar.YEAR;
+            case R.id.range_year:
+                dateSelector.setChangeFieldInterval(Calendar.YEAR);
                 break;
         }
-        calendarFrom = Calendar.getInstance();
-        calendarTill = Calendar.getInstance();
-        dateChange(0);
+        dateSelector.resetState();
 
         initializeGraphics();
-
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
+    private void initializeViews() {
+        pieChart = (PieChart) findViewById(R.id.chart);
+        pieChart.getLegend().setEnabled(false);;
+        pieChart.setCenterTextSize(20);
+        pieChart.setHoleRadius(30);
+        pieChart.getContentDescription();
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setTransparentCircleRadius(35);
 
-        if (db != null)
-            db.close();
-    }
+        categoryTextView = (TextView) findViewById(R.id.category);
+        totalTextView = (TextView) findViewById(R.id.total);
+        percentTextView = (TextView) findViewById(R.id.percent);
 
-    private void initializeStrings() {
-        int isOutgo = categoriesSpinner.getSelectedItemPosition() == 0 ? 1 : 0;
-
-        fromDate = String.format("%tY-%tm-%td 00:00", calendarFrom, calendarFrom, calendarFrom);
-        tillDate = String.format("%tY-%tm-%td 23:59", calendarTill, calendarTill, calendarTill);
-
-        fromJoinSelector = " FROM " + AccountancyContract.Transaction.TABLE_NAME + " INNER JOIN " +
-                AccountancyContract.Category.TABLE_NAME + " ON " + AccountancyContract.Category.TABLE_NAME +
-                "." + AccountancyContract.Category._ID + " = " + AccountancyContract.Transaction.TABLE_NAME + "." +
-                AccountancyContract.Transaction.COLUMN_NAME_CATEGORY_ID ;
-
-        whereSelector = " WHERE " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " >= '" +
-                fromDate + "' AND " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " <= '" +
-                tillDate + "'" + " AND " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO + " = " + isOutgo ;
+        categoriesSpinner = (Spinner) findViewById(R.id.spinner_category_type);
     }
     private void initializeGraphics() {
-        int totalSum = 0;
+        int totalSum;
         final int totalSumEx;
 
-        List<PieEntry> entries = new ArrayList<>();
-
         initializeStrings();
-        String query = "SELECT SUM(" + AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + ") " +
+        List<PieEntry> entries = new ArrayList<>();
+        String query = "SELECT SUM(" + AccountancyContract.Transaction.AMOUNT + ") " +
                 fromJoinSelector + whereSelector;
 
-        Cursor cursor = null;
-        try {
-            cursor = db.rawQuery(query, null);
+        cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst())
+            totalSum = cursor.getInt(0);
+        else return;
 
-            if (cursor.moveToFirst())
-                totalSum = cursor.getInt(0);
-            else return;
+        query = "SELECT " + AccountancyContract.Category.C_TITLE +
+                AccountancyContract.COMMA + " SUM (" +
+                AccountancyContract.Transaction.AMOUNT + ") " +
+                fromJoinSelector + whereSelector +
+                " GROUP BY " + AccountancyContract.Transaction.CATEGORY_ID;
 
-            query = "SELECT " + AccountancyContract.Category.COLUMN_NAME_TITLE +
-                    AccountancyContract.COMMA + " SUM (" +
-                    AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + ") " +
-                    fromJoinSelector + whereSelector +
-                    " GROUP BY " + AccountancyContract.Transaction.COLUMN_NAME_CATEGORY_ID;
+        cursor = db.rawQuery(query, null);
 
-            cursor = db.rawQuery(query, null);
-
-            int currentSum;
-            if (cursor.moveToFirst()) {
-                do {
-                    currentSum = cursor.getInt(1);
-                    entries.add(new PieEntry(Math.abs(currentSum), cursor.getString(0)));
-                }
-                while (cursor.moveToNext());
+        int currentSum;
+        if (cursor.moveToFirst()) {
+            do {
+                currentSum = cursor.getInt(1);
+                entries.add(new PieEntry(Math.abs(currentSum), cursor.getString(0)));
             }
+            while (cursor.moveToNext());
         }
-        catch (Exception ignored) { }
-        finally {
-            if (cursor != null)
-                cursor.close();
-        }
+        cursor.close();
+
 
         PieDataSet pieDataSet = new PieDataSet(entries, "Entries");
         pieDataSet.setValueTextColor(Color.argb(180, 0, 0, 0));
@@ -209,7 +176,7 @@ public class PieCharActivity extends AppCompatActivity {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
                 categoryTextView.setText(((PieEntry)e).getLabel());
-                totalTextView.setText("Сумма: " + String.valueOf(e.getY()));
+                totalTextView.setText("Сумма: " + String.valueOf(e.getY()) + " руб.");
                 percentTextView.setText(String.format("Процент: %.2f%%", Math.abs((e.getY() * 100) / totalSumEx)));
             }
 
@@ -222,23 +189,20 @@ public class PieCharActivity extends AppCompatActivity {
         });
         pieChart.invalidate();
     }
-    private void initializeViews() {
-        pieChart = (PieChart) findViewById(R.id.chart);
-        pieChart.getLegend().setEnabled(false);;
-        pieChart.setCenterTextSize(20);
-        pieChart.setHoleRadius(30);
-        pieChart.getContentDescription();
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setTransparentCircleRadius(35);
+    private void initializeStrings() {
+        int isOutgo = categoriesSpinner.getSelectedItemPosition() == 0 ? 1 : 0;
 
-        humanizeDate = (TextView) findViewById(R.id.humanize_date);
-        formatDate = (TextView) findViewById(R.id.format_date);
+        String fromDate = dateSelector.getFromString();
+        String tillDate = dateSelector.getTillString();
 
-        categoryTextView = (TextView) findViewById(R.id.category);
-        totalTextView = (TextView) findViewById(R.id.total);
-        percentTextView = (TextView) findViewById(R.id.percent);
+        fromJoinSelector = " FROM " + AccountancyContract.Transaction.TABLE_NAME + " INNER JOIN " +
+                AccountancyContract.Category.TABLE_NAME + " ON " + AccountancyContract.Category.TABLE_NAME +
+                "." + AccountancyContract.Category._ID + " = " + AccountancyContract.Transaction.TABLE_NAME + "." +
+                AccountancyContract.Transaction.CATEGORY_ID;
 
-        categoriesSpinner = (Spinner) findViewById(R.id.spinner_category_type);
+        whereSelector = " WHERE " + AccountancyContract.Transaction.DATE + " >= '" +
+                fromDate + "' AND " + AccountancyContract.Transaction.DATE + " <= '" +
+                tillDate + "'" + " AND " + AccountancyContract.Category.IS_OUTGO + " = " + isOutgo ;
     }
     private void initializeListeners() {
         categoriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -253,72 +217,12 @@ public class PieCharActivity extends AppCompatActivity {
         });
     }
 
-    private void setDateTimeView() {
-        formatDate.setText(String.format("%td.%tm.%tY - %td.%tm.%tY",
-                calendarFrom, calendarFrom, calendarFrom, calendarTill, calendarTill, calendarTill));
-
-        switch (changeFieldInterval) {
-            case Calendar.DAY_OF_YEAR:
-                humanizeDate.setText(String.format("%d %s %d",
-                        calendarFrom.get(Calendar.DAY_OF_MONTH),
-                        humanizeMonthPersonable[calendarFrom.get(Calendar.MONTH)],
-                        calendarFrom.get(Calendar.YEAR)));
-                break;
-            case Calendar.WEEK_OF_YEAR:
-                humanizeDate.setText(String.format("%d неделя %d",
-                        calendarFrom.get(Calendar.WEEK_OF_YEAR),
-                        calendarFrom.get(Calendar.YEAR)));
-                break;
-            case Calendar.MONTH:
-                humanizeDate.setText(String.format("%s %d",
-                        humanizeMonthSingle[calendarFrom.get(Calendar.MONTH)],
-                        calendarFrom.get(Calendar.YEAR)));
-                break;
-            case Calendar.YEAR:
-                humanizeDate.setText(String.format("%d год",
-                        calendarFrom.get(Calendar.YEAR)));
-                break;
-        }
-    }
-
-    private void dateChange(int delta) {
-        switch (changeFieldInterval) {
-            case Calendar.DAY_OF_YEAR:
-                calendarTill.set(Calendar.DAY_OF_YEAR, calendarTill.get(Calendar.DAY_OF_YEAR) + delta);
-                calendarFrom.set(Calendar.DAY_OF_YEAR, calendarTill.get(Calendar.DAY_OF_YEAR));
-                calendarFrom.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR));
-                break;
-            case Calendar.WEEK_OF_YEAR:
-                calendarTill.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                calendarTill.set(Calendar.WEEK_OF_YEAR, calendarTill.get(Calendar.WEEK_OF_YEAR) + delta);
-                calendarFrom.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                calendarFrom.set(Calendar.WEEK_OF_YEAR, calendarTill.get(Calendar.WEEK_OF_YEAR));
-                calendarFrom.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR));
-                break;
-            case Calendar.MONTH:
-                calendarTill.set(Calendar.DAY_OF_MONTH, calendarTill.getActualMinimum(Calendar.DAY_OF_MONTH));
-                calendarTill.set(Calendar.MONTH, calendarTill.get(Calendar.MONTH) + delta);
-                calendarTill.set(Calendar.DAY_OF_MONTH, calendarTill.getActualMaximum(Calendar.DAY_OF_MONTH));
-                calendarFrom.set(Calendar.DAY_OF_MONTH, calendarFrom.getActualMinimum(Calendar.DAY_OF_MONTH));
-                calendarFrom.set(Calendar.MONTH, calendarTill.get(Calendar.MONTH));
-                calendarFrom.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR));
-                break;
-            case Calendar.YEAR:
-                calendarTill.set(Calendar.DAY_OF_YEAR, calendarTill.getActualMinimum(Calendar.DAY_OF_YEAR));
-                calendarTill.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR) + delta);
-                calendarTill.set(Calendar.DAY_OF_YEAR, calendarTill.getActualMaximum(Calendar.DAY_OF_YEAR));
-                calendarFrom.set(Calendar.DAY_OF_YEAR, calendarFrom.getActualMinimum(Calendar.DAY_OF_YEAR));
-                calendarFrom.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR));
-                break;
-        }
-        setDateTimeView();
-    }
     public void decreaseDate(View view) {
-        dateChange(-1);
+        dateSelector.dateChange(-1);
         initializeGraphics();
     }
     public void increaseDate(View view) {
-        dateChange(1);
+        dateSelector.dateChange(1);
         initializeGraphics();
     }
 

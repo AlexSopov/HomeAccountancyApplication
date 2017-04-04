@@ -1,4 +1,4 @@
-package com.application.homeaccountancy.activity;
+package com.application.homeaccountancy.Activity;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -15,13 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
-import com.application.homeaccountancy.Data.SQLiteHandler;
 import com.application.homeaccountancy.R;
+import com.application.homeaccountancy.Utilities;
 
 public class SingleCategoryActivity extends SingleEntityActivity {
-    TextView titleTextView;
-    RadioButton incomeCategoryRadioButton, outgoCategoryRadioButton;
-    Spinner logoSpinner;
+    private TextView titleTextView;
+    private RadioButton incomeCategoryRadioButton, outgoCategoryRadioButton;
+    private Spinner logoSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,15 +30,15 @@ public class SingleCategoryActivity extends SingleEntityActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        InitializeViews();
+        initializeViews();
         if (isEntityId()) {
             cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
                     " WHERE " + AccountancyContract.Category._ID + "=?", new String[] {String.valueOf(getEntityId())});
 
             cursor.moveToFirst();
-            titleTextView.setText(cursor.getString(cursor.getColumnIndex(AccountancyContract.Category.COLUMN_NAME_TITLE)));
+            titleTextView.setText(cursor.getString(cursor.getColumnIndex(AccountancyContract.Category.C_TITLE)));
 
-            if (cursor.getInt(cursor.getColumnIndex(AccountancyContract.Category.COLUMN_NAME_IS_OUTGO)) != 0)
+            if (cursor.getInt(cursor.getColumnIndex(AccountancyContract.Category.IS_OUTGO)) != 0)
                 outgoCategoryRadioButton.setChecked(true);
             else
                 incomeCategoryRadioButton.setChecked(true);
@@ -75,7 +75,7 @@ public class SingleCategoryActivity extends SingleEntityActivity {
         return true;
     }
 
-    private void InitializeViews() {
+    private void initializeViews() {
         titleTextView = (TextView) findViewById(R.id.category_title);
         incomeCategoryRadioButton = (RadioButton) findViewById(R.id.category_income_rb);
         outgoCategoryRadioButton = (RadioButton) findViewById(R.id.category_outgo_rb);
@@ -94,7 +94,7 @@ public class SingleCategoryActivity extends SingleEntityActivity {
             return;
 
         cursor = db.rawQuery("SELECT " + AccountancyContract.Images.TABLE_NAME + "."+ AccountancyContract.Images._ID + ", " +
-                AccountancyContract.Category.COLUMN_NAME_ICON + " as 'icon_value'" + " FROM " +
+                AccountancyContract.Category.ICON + " as 'icon_value'" + " FROM " +
                 AccountancyContract.Images.TABLE_NAME + " LEFT JOIN " +
                 AccountancyContract.Category.TABLE_NAME  + " ON " +
                 "icon_value=" +
@@ -127,10 +127,10 @@ public class SingleCategoryActivity extends SingleEntityActivity {
 
 
             ContentValues contentValues = new ContentValues();
-            contentValues.put(AccountancyContract.Category.COLUMN_NAME_TITLE, title);
-            contentValues.put(AccountancyContract.Category.COLUMN_NAME_IS_OUTGO,
+            contentValues.put(AccountancyContract.Category.C_TITLE, title);
+            contentValues.put(AccountancyContract.Category.IS_OUTGO,
                     outgoCategoryRadioButton.isChecked() ? 1 : 0);
-            contentValues.put(AccountancyContract.Category.COLUMN_NAME_ICON,
+            contentValues.put(AccountancyContract.Category.ICON,
                     cursor.getInt(cursor.getColumnIndex(AccountancyContract.Images.COLUMN_NAME_IMAGE)));
 
             if (isEntityId()) {
@@ -142,7 +142,7 @@ public class SingleCategoryActivity extends SingleEntityActivity {
             }
             finish();
         }
-        catch (SQLiteConstraintException exceprion) {
+        catch (SQLiteConstraintException excerion) {
             Toast toast = Toast.makeText(this, "Категория с таким именем уже существует", Toast.LENGTH_LONG);
             toast.show();
         }

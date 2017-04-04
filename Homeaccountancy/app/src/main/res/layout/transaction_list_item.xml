@@ -14,7 +14,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginEnd="10dp"
-            android:contentDescription="@string/icon"
+            android:contentDescription="transaction_icon"
             android:layout_marginRight="10dp" />
 
         <LinearLayout

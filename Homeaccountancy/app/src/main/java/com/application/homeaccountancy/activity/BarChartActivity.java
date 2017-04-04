@@ -1,19 +1,14 @@
-package com.application.homeaccountancy.activity;
+package com.application.homeaccountancy.Activity;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import android.widget.TextView;
-
 import com.application.homeaccountancy.Data.AccountancyContract;
-import com.application.homeaccountancy.Data.SQLiteHandler;
+import com.application.homeaccountancy.DateSelector;
 import com.application.homeaccountancy.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -29,59 +24,45 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class BarChartActivity extends AppCompatActivity {
-    String[] humanizeMonthSingle = new String[] {"Январь", "Февраль", "Март", "Апрель", "Май",
-            "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
+public class BarChartActivity extends UsingDataBaseActivity {
+    private String fromDate, tillDate, fromJoinSelector;
+    private int changeFieldIteration;
+    private DateSelector dateSelector;
 
-    String[] humanizeMonthPersonable = new String[] {"Января", "Февраля", "Марта",
-            "Апреля", "Июня", "Июля", "Августа", "Сентября", "Октября",
-            "Ноября", "Декабря" };
-
-    String fromDate, tillDate, fromJoinSelector, whereSelector;
-    BarChart barChart;
-
-    TextView humanizeDate, formatDate;
-
-    SQLiteHandler handler;
-    SQLiteDatabase db;
-
-    int changeFieldInterval, changeFieldIteration;
-
-    public Calendar calendarFrom, calendarTill;
+    private BarChart barChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bar_chart_activity);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        handler = new SQLiteHandler(getApplicationContext());
-        db = handler.getReadableDatabase();
+        dateSelector = new DateSelector(this);
+        dateSelector.setOnDecreaseClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                decreaseDate(v);
+            }
+        });
+        dateSelector.setOnIncreaseClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                increaseDate(v);
+            }
+        });
 
-        calendarTill = Calendar.getInstance();
-        calendarTill.set(Calendar.DAY_OF_MONTH, calendarTill.getActualMaximum(Calendar.DAY_OF_MONTH));
-
-        calendarFrom = Calendar.getInstance();
-        calendarFrom.set(Calendar.DAY_OF_MONTH, 1);
-        calendarFrom.set(Calendar.MONTH, calendarTill.get(Calendar.MONTH));
-
-        changeFieldInterval = Calendar.MONTH;
         changeFieldIteration = Calendar.DAY_OF_YEAR;
-
         initializeViews();
         initializeGraphics();
-
-        barChart.setNoDataText("Не найдено данных для отображения.");
-        barChart.setNoDataTextColor(Color.BLACK);
-        setDateTimeView();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.chart_menu, menu);
+        getMenuInflater().inflate(R.menu.date_selector_menu, menu);
         return true;
     }
 
@@ -92,52 +73,43 @@ public class BarChartActivity extends AppCompatActivity {
             item.setChecked(true);
 
         switch(id){
-            case R.id.chart_day :
-                changeFieldInterval = Calendar.DAY_OF_YEAR;
+            case R.id.range_day:
+                dateSelector.setChangeFieldInterval(Calendar.DAY_OF_YEAR);
                 changeFieldIteration = Calendar.DAY_OF_YEAR;
                 break;
-            case R.id.chart_week :
-                changeFieldInterval = Calendar.WEEK_OF_YEAR;
+            case R.id.range_week:
+                dateSelector.setChangeFieldInterval(Calendar.WEEK_OF_YEAR);
                 changeFieldIteration = Calendar.DAY_OF_YEAR;
                 break;
-            case R.id.chart_month :
-                changeFieldInterval = Calendar.MONTH;
+            case R.id.range_month:
+                dateSelector.setChangeFieldInterval(Calendar.MONTH);
                 changeFieldIteration = Calendar.DAY_OF_YEAR;
                 break;
-            case R.id.chart_year :
-                changeFieldInterval = Calendar.YEAR;
+            case R.id.range_year:
+                dateSelector.setChangeFieldInterval(Calendar.YEAR);
                 changeFieldIteration = Calendar.MONTH;
                 break;
         }
-        calendarFrom = Calendar.getInstance();
-        calendarTill = Calendar.getInstance();
-        dateChange(0);
-
+        dateSelector.resetState();
         initializeGraphics();
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-
-        if (db != null)
-            db.close();
+    private void initializeViews() {
+        barChart = (BarChart) findViewById(R.id.chart);
+        barChart.getDescription().setEnabled(false);
+        barChart.setNoDataText("Не найдено данных для отображения.");
+        barChart.setNoDataTextColor(Color.BLACK);
     }
-
     private void initializeStrings() {
-        fromDate = String.format("%tY-%tm-%td 00:00", calendarFrom, calendarFrom, calendarFrom);
-        tillDate = String.format("%tY-%tm-%td 23:59", calendarTill, calendarTill, calendarTill);
+        fromDate = dateSelector.getFromString();
+        tillDate = dateSelector.getTillString();
 
         fromJoinSelector = " FROM " + AccountancyContract.Transaction.TABLE_NAME + " INNER JOIN " +
                 AccountancyContract.Category.TABLE_NAME + " ON " + AccountancyContract.Category.TABLE_NAME +
                 "." + AccountancyContract.Category._ID + " = " + AccountancyContract.Transaction.TABLE_NAME + "." +
-                AccountancyContract.Transaction.COLUMN_NAME_CATEGORY_ID ;
-
-        whereSelector = " WHERE " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " >= '" +
-                fromDate + "' AND " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " <= '" +
-                tillDate + "'";
+                AccountancyContract.Transaction.CATEGORY_ID;
     }
     private void initializeGraphics() {
         initializeStrings();
@@ -145,27 +117,25 @@ public class BarChartActivity extends AppCompatActivity {
         List<BarEntry> outgoes = new ArrayList<>();
         List<BarEntry> incomes = new ArrayList<>();
 
-        Calendar currentCalendarFrom = (Calendar)calendarFrom.clone();
-        Calendar currentCalendarTill = (Calendar)calendarFrom.clone();
+        Calendar currentCalendarFrom = (Calendar)dateSelector.getCalendarFrom().clone();
+        Calendar currentCalendarTill = (Calendar)dateSelector.getCalendarFrom().clone();
         if (changeFieldIteration == Calendar.MONTH) {
             currentCalendarTill.set(Calendar.MONTH, currentCalendarFrom.get(Calendar.MONTH));
             currentCalendarTill.set(Calendar.DAY_OF_MONTH, currentCalendarTill.getActualMaximum(Calendar.DAY_OF_MONTH));
         }
 
         int index = 0;
-        while (currentCalendarTill.compareTo(calendarTill) <= 0) {
+        while (currentCalendarTill.compareTo(dateSelector.getCalendarTill()) <= 0) {
             fromDate = String.format("%tY-%tm-%td 00:00", currentCalendarFrom, currentCalendarFrom, currentCalendarFrom);
             tillDate = String.format("%tY-%tm-%td 23:59", currentCalendarTill, currentCalendarTill, currentCalendarTill);
 
             String query = "SELECT SUM (" +
-                    AccountancyContract.Transaction.COLUMN_NAME_AMOUNT + ") " +
-                    fromJoinSelector + " WHERE " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " >= '" +
-                    fromDate + "' AND " + AccountancyContract.Transaction.COLUMN_NAME_DATE + " <= '" +
-                    tillDate + "'" + " AND " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO +
+                    AccountancyContract.Transaction.AMOUNT + ") " +
+                    fromJoinSelector + " WHERE " + AccountancyContract.Transaction.DATE + " >= '" +
+                    fromDate + "' AND " + AccountancyContract.Transaction.DATE + " <= '" +
+                    tillDate + "'" + " AND " + AccountancyContract.Category.IS_OUTGO +
                     " = %d" ;
 
-            Cursor cursor = null;
-            try {
                 cursor = db.rawQuery(String.format(query, 1), null);
                 cursor.moveToFirst();
                 outgoes.add(new BarEntry(index, Math.abs(cursor.getInt(0))));
@@ -188,13 +158,8 @@ public class BarChartActivity extends AppCompatActivity {
                     currentCalendarTill.set(Calendar.MONTH, currentCalendarTill.get(Calendar.MONTH) + 1);
                     currentCalendarTill.set(Calendar.DAY_OF_MONTH, currentCalendarTill.getActualMaximum(Calendar.DAY_OF_MONTH));
                 }
-            }
-            catch (Exception ignored) {}
-            finally {
-                if (cursor != null)
-                    cursor.close();
-            }
 
+            cursor.close();
         }
 
 
@@ -225,9 +190,9 @@ public class BarChartActivity extends AppCompatActivity {
         barChart.getXAxis().setLabelRotationAngle(30);
 
         if (changeFieldIteration == Calendar.DAY_OF_YEAR)
-            barChart.getXAxis().setValueFormatter(new DaysValueFormatter(calendarFrom));
+            barChart.getXAxis().setValueFormatter(new DaysValueFormatter(dateSelector.getCalendarFrom()));
         else
-            barChart.getXAxis().setValueFormatter(new MonthValueFormatter(calendarFrom));
+            barChart.getXAxis().setValueFormatter(new MonthValueFormatter(dateSelector.getCalendarFrom()));
 
         barChart.getXAxis().setGranularityEnabled(true);
 
@@ -240,84 +205,17 @@ public class BarChartActivity extends AppCompatActivity {
         barChart.getViewPortHandler().setMaximumScaleY(1);
         barChart.invalidate();
     }
-    private void initializeViews() {
-        barChart = (BarChart) findViewById(R.id.chart);
-        barChart.getDescription().setEnabled(false);
 
-        humanizeDate = (TextView) findViewById(R.id.humanize_date);
-        formatDate = (TextView) findViewById(R.id.format_date);
-    }
-
-    private void setDateTimeView() {
-        formatDate.setText(String.format("%td.%tm.%tY - %td.%tm.%tY",
-                calendarFrom, calendarFrom, calendarFrom, calendarTill, calendarTill, calendarTill));
-
-        switch (changeFieldInterval) {
-            case Calendar.DAY_OF_YEAR:
-                humanizeDate.setText(String.format("%d %s %d",
-                        calendarFrom.get(Calendar.DAY_OF_MONTH),
-                        humanizeMonthPersonable[calendarFrom.get(Calendar.MONTH)],
-                        calendarFrom.get(Calendar.YEAR)));
-                break;
-            case Calendar.WEEK_OF_YEAR:
-                humanizeDate.setText(String.format("%d неделя %d",
-                        calendarFrom.get(Calendar.WEEK_OF_YEAR),
-                        calendarFrom.get(Calendar.YEAR)));
-                break;
-            case Calendar.MONTH:
-                humanizeDate.setText(String.format("%s %d",
-                        humanizeMonthSingle[calendarFrom.get(Calendar.MONTH)],
-                        calendarFrom.get(Calendar.YEAR)));
-                break;
-            case Calendar.YEAR:
-                humanizeDate.setText(String.format("%d год",
-                        calendarFrom.get(Calendar.YEAR)));
-                break;
-        }
-    }
-
-    private void dateChange(int delta) {
-        switch (changeFieldInterval) {
-            case Calendar.DAY_OF_YEAR:
-                calendarTill.set(Calendar.DAY_OF_YEAR, calendarTill.get(Calendar.DAY_OF_YEAR) + delta);
-                calendarFrom.set(Calendar.DAY_OF_YEAR, calendarTill.get(Calendar.DAY_OF_YEAR));
-                calendarFrom.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR));
-                break;
-            case Calendar.WEEK_OF_YEAR:
-                calendarTill.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                calendarTill.set(Calendar.WEEK_OF_YEAR, calendarTill.get(Calendar.WEEK_OF_YEAR) + delta);
-                calendarFrom.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                calendarFrom.set(Calendar.WEEK_OF_YEAR, calendarTill.get(Calendar.WEEK_OF_YEAR));
-                calendarFrom.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR));
-                break;
-            case Calendar.MONTH:
-                calendarTill.set(Calendar.DAY_OF_MONTH, calendarTill.getActualMinimum(Calendar.DAY_OF_MONTH));
-                calendarTill.set(Calendar.MONTH, calendarTill.get(Calendar.MONTH) + delta);
-                calendarTill.set(Calendar.DAY_OF_MONTH, calendarTill.getActualMaximum(Calendar.DAY_OF_MONTH));
-                calendarFrom.set(Calendar.DAY_OF_MONTH, calendarFrom.getActualMinimum(Calendar.DAY_OF_MONTH));
-                calendarFrom.set(Calendar.MONTH, calendarTill.get(Calendar.MONTH));
-                calendarFrom.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR));
-                break;
-            case Calendar.YEAR:
-                calendarTill.set(Calendar.DAY_OF_YEAR, calendarTill.getActualMinimum(Calendar.DAY_OF_YEAR));
-                calendarTill.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR) + delta);
-                calendarTill.set(Calendar.DAY_OF_YEAR, calendarTill.getActualMaximum(Calendar.DAY_OF_YEAR));
-                calendarFrom.set(Calendar.DAY_OF_YEAR, calendarFrom.getActualMinimum(Calendar.DAY_OF_YEAR));
-                calendarFrom.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR));
-                break;
-        }
-        setDateTimeView();
-    }
-    public void decreaseDate(View view) {
-        dateChange(-1);
+    private void decreaseDate(View view) {
+        dateSelector.dateChange(-1);
         initializeGraphics();
     }
-    public void increaseDate(View view) {
-        dateChange(1);
+    private void increaseDate(View view) {
+        dateSelector.dateChange(1);
         initializeGraphics();
     }
 
-    public class DaysValueFormatter implements IAxisValueFormatter {
+    private class DaysValueFormatter implements IAxisValueFormatter {
         String[] month = new String[] {"Янв.", "Фев.", "Мар.", "Апр.", "Май",
                 "Июн.", "Июл.", "Авг.", "Сен.", "Окт.", "Ноя.", "Дек."};
 
@@ -337,8 +235,7 @@ public class BarChartActivity extends AppCompatActivity {
                     currentCalendar.get(Calendar.YEAR));
         }
     }
-
-    public class MonthValueFormatter implements IAxisValueFormatter {
+    private class MonthValueFormatter implements IAxisValueFormatter {
         String[] month = new String[] {"Январь", "Февраль", "Март", "Апрель", "Май",
                 "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
 

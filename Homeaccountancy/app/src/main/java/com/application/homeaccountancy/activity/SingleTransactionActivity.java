@@ -1,17 +1,13 @@
-package com.application.homeaccountancy.activity;
+package com.application.homeaccountancy.Activity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -21,12 +17,10 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.application.homeaccountancy.Data.AccountancyContract;
-import com.application.homeaccountancy.Data.SQLiteHandler;
-import com.application.homeaccountancy.FilterSettings;
 import com.application.homeaccountancy.R;
+import com.application.homeaccountancy.Utilities;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -34,25 +28,18 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class SingleTransactionActivity extends AppCompatActivity {
-    TextView currentDate, currentTime;
-    Spinner categoriesSpinner, accountsSpinner;
-    EditText transactionSum, noteEditText;
-    Button signButton;
+public class SingleTransactionActivity extends SingleEntityActivity {
+    private TextView currentDateTextView, currentTimeTextView;
+    private Spinner categoriesSpinner, accountsSpinner;
+    private EditText transactionAmountEditText, noteEditTextEditText;
+    private Button signButton;
 
-    SQLiteHandler handler;
-    SQLiteDatabase db;
-    Cursor cursor;
+    private DatePickerDialog.OnDateSetListener onDateSetListener;
+    private TimePickerDialog.OnTimeSetListener onTimeSetListener;
 
-    DatePickerDialog.OnDateSetListener onDateSetListener;
-    TimePickerDialog.OnTimeSetListener onTimeSetListener;
-
-    Calendar dateTime;
-    boolean isNegativeSum = true;
-
-    long transactionId;
-    long categoryID, accountID;
-
+    private Calendar dateTime;
+    private boolean isNegativeAmount;
+    private long categoryID, accountID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,26 +52,19 @@ public class SingleTransactionActivity extends AppCompatActivity {
         initializeViews();
         initializeListeners();
 
+        isNegativeAmount = true;
         dateTime = Calendar.getInstance();
-        handler = new SQLiteHandler(getApplicationContext());
-        db = handler.getReadableDatabase();
 
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            transactionId = extras.getLong("id");
-        }
-
-        if (transactionId > 0) {
+        if (isEntityId()) {
             cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Transaction.TABLE_NAME +
-                    " WHERE " + AccountancyContract.Transaction._ID + "=?", new String[] {String.valueOf(transactionId)});
+                    " WHERE " + AccountancyContract.Transaction._ID + "=?", new String[] {String.valueOf(getEntityId())});
             cursor.moveToFirst();
 
-            String date = cursor.getString(cursor.getColumnIndex(AccountancyContract.Transaction.COLUMN_NAME_DATE));
-            int amount = cursor.getInt(cursor.getColumnIndex(AccountancyContract.Transaction.COLUMN_NAME_AMOUNT));
-            categoryID = cursor.getLong(cursor.getColumnIndex(AccountancyContract.Transaction.COLUMN_NAME_CATEGORY_ID));
-            accountID = cursor.getLong(cursor.getColumnIndex(AccountancyContract.Transaction.COLUMN_NAME_ACCOUNT_ID));
-            String note = cursor.getString(cursor.getColumnIndex(AccountancyContract.Transaction.COLUMN_NAME_NOTE));
+            String date = cursor.getString(cursor.getColumnIndex(AccountancyContract.Transaction.DATE));
+            int amount = cursor.getInt(cursor.getColumnIndex(AccountancyContract.Transaction.AMOUNT));
+            categoryID = cursor.getLong(cursor.getColumnIndex(AccountancyContract.Transaction.CATEGORY_ID));
+            accountID = cursor.getLong(cursor.getColumnIndex(AccountancyContract.Transaction.ACCOUNT_ID));
+            String note = cursor.getString(cursor.getColumnIndex(AccountancyContract.Transaction.NOTE));
 
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
 
@@ -100,20 +80,16 @@ public class SingleTransactionActivity extends AppCompatActivity {
             if (amount >= 0)
                 signButton.performClick();
 
-            transactionSum.setText(String.valueOf(Math.abs(amount)));
-            noteEditText.setText(note);
+            transactionAmountEditText.setText(String.valueOf(Math.abs(amount)));
+            noteEditTextEditText.setText(note);
         }
-        initializeSpinners();
         setInitialDateTime();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (transactionId > 0) {
-            getMenuInflater().inflate(R.menu.dalete_menu, menu);
-        }
-
-        return true;
+    protected void onResume() {
+        super.onResume();
+        initializeSpinners();
     }
 
     @Override
@@ -132,7 +108,7 @@ public class SingleTransactionActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             db.delete(AccountancyContract.Transaction.TABLE_NAME,
                                     AccountancyContract.Transaction._ID + "=?",
-                                    new String[] {String.valueOf(transactionId)}
+                                    new String[] {String.valueOf(getEntityId())}
                             );
                             finish();
                         }
@@ -141,60 +117,40 @@ public class SingleTransactionActivity extends AppCompatActivity {
                     .create();
             dialog.show();
         }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-
-        if (db != null)
-            db.close();
-
-        if (cursor != null)
-            cursor.close();
+        return true;
     }
 
     private void initializeViews() {
         categoriesSpinner = (Spinner)findViewById(R.id.transaction_category);
         accountsSpinner = (Spinner)findViewById(R.id.transaction_account);
-        currentDate = (TextView)findViewById(R.id.transaction_date);
-        currentTime = (TextView)findViewById(R.id.transaction_time);
-        transactionSum = (EditText)findViewById(R.id.transaction_sum);
-        noteEditText = (EditText)findViewById(R.id.transaction_note);
+        currentDateTextView = (TextView)findViewById(R.id.transaction_date);
+        currentTimeTextView = (TextView)findViewById(R.id.transaction_time);
+        transactionAmountEditText = (EditText)findViewById(R.id.transaction_sum);
+        noteEditTextEditText = (EditText)findViewById(R.id.transaction_note);
         signButton = (Button) findViewById(R.id.button_sign);
     }
     private void initializeSpinners() {
         SimpleCursorAdapter categoriesAdapter, accountsAdapter;
 
         cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
-                " ORDER BY " + AccountancyContract.Category.COLUMN_NAME_IS_OUTGO + " DESC", null);
+                " ORDER BY " + AccountancyContract.Category.IS_OUTGO + " DESC", null);
         categoriesAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, cursor,
-                new String[] {AccountancyContract.Category.COLUMN_NAME_TITLE}, new int[] {android.R.id.text1}, 0);
+                new String[] {AccountancyContract.Category.C_TITLE}, new int[] {android.R.id.text1}, 0);
         categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categoriesSpinner.setAdapter(categoriesAdapter);
 
-        for (int i = 0; i < categoriesAdapter.getCount() && categoryID > 0; i++) {
-            if (categoriesAdapter.getItemId(i) == categoryID) {
-                categoriesSpinner.setSelection(i);
-                break;
-            }
-        }
-
-
         cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Account.TABLE_NAME, null);
         accountsAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, cursor,
-                new String[] {AccountancyContract.Account.COLUMN_NAME_TITLE}, new int[] {android.R.id.text1}, 0);
+                new String[] {AccountancyContract.Account.A_TITLE}, new int[] {android.R.id.text1}, 0);
         accountsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         accountsSpinner.setAdapter(accountsAdapter);
 
-        for (int i = 0; i < accountsAdapter.getCount() && accountID > 0; i++) {
-            if (accountsAdapter.getItemId(i) == accountID) {
-                accountsSpinner.setSelection(i);
-                break;
-            }
+        if (isEntityId()) {
+            Utilities.selectSpinnerItem(categoriesAdapter, categoriesSpinner, categoryID);
+            Utilities.selectSpinnerItem(accountsAdapter, accountsSpinner, accountID);
         }
     }
+
     private void initializeListeners() {
         onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -216,9 +172,9 @@ public class SingleTransactionActivity extends AppCompatActivity {
         signButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isNegativeSum = !isNegativeSum;
+                isNegativeAmount = !isNegativeAmount;
 
-                if (isNegativeSum)
+                if (isNegativeAmount)
                     signButton.setText("-");
                 else
                     signButton.setText("+");
@@ -226,8 +182,8 @@ public class SingleTransactionActivity extends AppCompatActivity {
         });
     }
     private void setInitialDateTime() {
-        currentDate.setText(String.format("%td.%tm.%tY", dateTime, dateTime, dateTime));
-        currentTime.setText(String.format("%tH:%tM", dateTime, dateTime));
+        currentDateTextView.setText(String.format("%td.%tm.%tY", dateTime, dateTime, dateTime));
+        currentTimeTextView.setText(String.format("%tH:%tM", dateTime, dateTime));
     }
 
     public void setDate(View view) {
@@ -242,40 +198,43 @@ public class SingleTransactionActivity extends AppCompatActivity {
                 dateTime.get(Calendar.MINUTE), true).show();
     }
 
-    public void saveTransaction(View view) {
-        if (saveTransactionCloseActivity(view)) {
+    public void saveTransactionContinue(View view) {
+        if (executeSaving()) {
             Intent intent = new Intent(getApplicationContext(), SingleTransactionActivity.class);
             startActivity(intent);
         }
     }
-    public boolean saveTransactionCloseActivity(View view) {
-        if (executeSaving()) {
+    public void saveTransactionClose(View view) {
+        executeSaving();
+    }
+
+    private boolean executeSaving() {
+        if (executeDataBaseSaving()) {
             finish();
             return true;
         }
         return false;
     }
-
-    public boolean executeSaving() {
+    public boolean executeDataBaseSaving() {
         if (!ValidateData())
             return false;
 
-        double amount = Double.parseDouble(transactionSum.getText().toString());
-        amount *= isNegativeSum ? -1 : 1;
+        double amount = Double.parseDouble(transactionAmountEditText.getText().toString());
+        amount *= isNegativeAmount ? -1 : 1;
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(AccountancyContract.Transaction.COLUMN_NAME_DATE, getTimeString());
-        contentValues.put(AccountancyContract.Transaction.COLUMN_NAME_AMOUNT, amount);
+        contentValues.put(AccountancyContract.Transaction.DATE, Utilities.getSQLiteTimeString(dateTime));
+        contentValues.put(AccountancyContract.Transaction.AMOUNT, amount);
 
-        contentValues.put(AccountancyContract.Transaction.COLUMN_NAME_ACCOUNT_ID, accountsSpinner.getSelectedItemId());
-        contentValues.put(AccountancyContract.Transaction.COLUMN_NAME_CATEGORY_ID, categoriesSpinner.getSelectedItemId());
-        contentValues.put(AccountancyContract.Transaction.COLUMN_NAME_NOTE, noteEditText.getText().toString());
+        contentValues.put(AccountancyContract.Transaction.ACCOUNT_ID, accountsSpinner.getSelectedItemId());
+        contentValues.put(AccountancyContract.Transaction.CATEGORY_ID, categoriesSpinner.getSelectedItemId());
+        contentValues.put(AccountancyContract.Transaction.NOTE, noteEditTextEditText.getText().toString());
 
 
-        if (transactionId > 0) {
+        if (isEntityId()) {
             db.update(AccountancyContract.Transaction.TABLE_NAME, contentValues,
                     AccountancyContract.Transaction._ID + "=?",
-                    new String[] {String.valueOf(transactionId)});
+                    new String[] {String.valueOf(getEntityId())});
         }
         else {
             db.insert(AccountancyContract.Transaction.TABLE_NAME, null, contentValues);
@@ -284,18 +243,18 @@ public class SingleTransactionActivity extends AppCompatActivity {
         return true;
     }
     private boolean ValidateData() {
-        if (transactionSum.getText().toString().isEmpty()) {
-            makeToast("Поле сумма обязательно для заполнения");
+        if (transactionAmountEditText.getText().toString().isEmpty()) {
+            Utilities.makeToast(this, "Поле сумма обязательно для заполнения");
             return false;
         }
 
         if (accountsSpinner.getSelectedItemPosition() < 0) {
-            makeToast("Необходимо выбрать для какого счёта производится опреация");
+            Utilities.makeToast(this, "Необходимо выбрать для какого счёта производится опреация");
             return false;
         }
 
         if (categoriesSpinner.getSelectedItemPosition() < 0) {
-            makeToast("Необходимо выбрать категорию");
+            Utilities.makeToast(this, "Необходимо выбрать категорию");
             return false;
         }
 
@@ -305,32 +264,33 @@ public class SingleTransactionActivity extends AppCompatActivity {
                 new String[] {String.valueOf(categoriesSpinner.getSelectedItemId())});
 
         if (cursor.moveToFirst()) {
-            int isOutgo = cursor.getInt(cursor.getColumnIndex(AccountancyContract.Category.COLUMN_NAME_IS_OUTGO));
-            double sum = Double.parseDouble(transactionSum.getText().toString());
+            int isOutgo = cursor.getInt(cursor.getColumnIndex(AccountancyContract.Category.IS_OUTGO));
+            double sum = Double.parseDouble(transactionAmountEditText.getText().toString());
 
             if (sum == 0) {
-                makeToast("Сумма не может равняться нулю");
+                Utilities.makeToast(this, "Сумма не может равняться нулю");
                 return false;
             }
-            else if (isOutgo > 0 && !isNegativeSum) {
-                makeToast("Недопустима положительная сумма для категории \"Траты\"");
+            else if (isOutgo > 0 && !isNegativeAmount) {
+                Utilities.makeToast(this, "Недопустима положительная сумма для категории \"Траты\"");
                 return false;
             }
-            else if (isOutgo == 0 && isNegativeSum) {
-                makeToast("Недопустима отрицательная сумма для категории \"Пополнения\"");
+            else if (isOutgo == 0 && isNegativeAmount) {
+                Utilities.makeToast(this, "Недопустима отрицательная сумма для категории \"Пополнения\"");
                 return false;
             }
         }
 
         return true;
     }
-    private void makeToast(String message) {
-        Toast toast = Toast.makeText(this, message, Toast.LENGTH_LONG);
-        toast.show();
+
+    public void addNewCategory(View view) {
+        Intent intent = new Intent(getApplicationContext(), SingleCategoryActivity.class);
+        startActivity(intent);
     }
 
-    private String getTimeString() {
-        return String.format("%tY-%tm-%td %tH:%tM:00",
-                dateTime, dateTime, dateTime, dateTime, dateTime);
+    public void addNewAccount(View view) {
+        Intent intent = new Intent(getApplicationContext(), SingleAccountActivity.class);
+        startActivity(intent);
     }
 }
