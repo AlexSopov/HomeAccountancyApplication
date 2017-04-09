@@ -12,4 +12,10 @@
     <dimen name="transaction_item_padding">7dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="description_text_size">14sp</dimen>
+    <dimen name="important_text_size">16sp</dimen>
+    <dimen name="linear_layout_bottom_margin">15dp</dimen>
+
+    <dimen name="text_size_title_transaction">18dp</dimen>
+    <dimen name="text_size_transaction">16dp</dimen>
 </resources>

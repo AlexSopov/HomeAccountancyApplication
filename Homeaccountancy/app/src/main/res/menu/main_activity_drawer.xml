@@ -4,25 +4,25 @@
     <group>
         <item
             android:id="@+id/menu_transactions"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_history"
             android:title="Журнал" />
         <item
             android:id="@+id/menu_accounts"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_account"
             android:title="Счета" />
         <item
             android:id="@+id/menu_categories"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_category"
             android:title="Категории" />
         <item android:title="Диаграммы">
             <menu>
                 <item
                     android:id="@+id/menu_pie_graphic"
-                    android:icon="@drawable/ic_menu_slideshow"
+                    android:icon="@drawable/ic_pie_chart"
                     android:title="Круговая" />
                 <item
                     android:id="@+id/menu_bar_graphic"
-                    android:icon="@drawable/ic_menu_slideshow"
+                    android:icon="@drawable/ic_bar_chart"
                     android:title="Столбчатая" />
             </menu>
         </item>

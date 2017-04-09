@@ -16,28 +16,28 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_margin="10dp">
 
         <EditText
             android:id="@+id/account_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:hint="Название"/>
+            android:hint="Название"
+            android:textColor="@color/primary"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="10dp">
+            android:orientation="horizontal">
 
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="numberSigned"
-                android:ems="10"
                 android:id="@+id/start_balance"
                 android:layout_weight="1"
+                android:textColor="@color/primary"
                 android:hint="Начальный баланс" />
 
             <TextView
@@ -51,12 +51,13 @@
 
     </LinearLayout>
 
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:text="Сохранить"
-        android:onClick="saveAccount"/>
+        android:onClick="saveAccount"
+        android:background="?attr/colorControlHighlight"
+        android:textColor="@color/main_text_color" />
 
 </LinearLayout>

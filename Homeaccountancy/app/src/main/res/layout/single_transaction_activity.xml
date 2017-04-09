@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -21,9 +22,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <!--Content-->
     <LinearLayout
-
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.application.homeaccountancy.SingleTransactionActivity"
         tools:showIn="@layout/single_transaction_activity"
@@ -40,22 +39,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_margin="10dp" >
+                android:layout_margin="15dp" >
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginBottom="@dimen/transaction_margin_bottom"
-                    android:padding="@dimen/transaction_item_padding"
-                    android:background="@drawable/transaction_item_border">
+                    android:layout_marginBottom="@dimen/linear_layout_bottom_margin">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Дата и время"
-                        android:textSize="@dimen/transaction_text_size"/>
-
+                        android:textSize="@dimen/text_size_title_transaction"
+                        android:textColor="@color/main_text_color"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -66,38 +63,40 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="3"
-                            android:textSize="22sp"
+                            android:textColor="@color/primary"
+                            android:textSize="@dimen/text_size_transaction"
                             android:onClick="setDate" />
-
                         <TextView
                             android:id="@+id/transaction_time"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:textAlignment="textEnd"
                             android:layout_weight="1"
-                            android:textSize="22sp"
+                            android:textColor="@color/primary"
+                            android:textSize="@dimen/text_size_transaction"
                             android:onClick="setTime" />
 
                     </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginBottom="@dimen/transaction_margin_bottom"
-                    android:padding="@dimen/transaction_item_padding"
-                    android:background="@drawable/transaction_item_border">
+                    android:layout_marginBottom="@dimen/linear_layout_bottom_margin">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Сумма"
-                        android:textSize="@dimen/transaction_text_size"/>
-
+                        android:text="Сумма платежа"
+                        android:textSize="@dimen/text_size_title_transaction"
+                        android:textColor="@color/main_text_color"/>
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
                         <Button
                             android:layout_gravity="center"
                             android:text="-"
@@ -106,16 +105,24 @@
                             android:id="@+id/button_sign" />
                         <EditText
                             android:id="@+id/transaction_sum"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal"
                             android:textAlignment="viewEnd"
-                            android:textSize="22sp"
-                            android:hint="Введите сумму">
+                            android:textColor="@color/primary"
+                            android:layout_weight="1"
+                            android:maxLength="6"
+                            android:hint="Сумма">
                             <requestFocus/>
                         </EditText>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="руб."
+                            android:textColor="@color/main_text_color"
+                            android:textSize="@dimen/text_size_transaction"
+                            android:gravity="center"/>
                     </LinearLayout>
-
 
                 </LinearLayout>
 
@@ -123,15 +130,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginBottom="@dimen/transaction_margin_bottom"
-                    android:padding="@dimen/transaction_item_padding"
-                    android:background="@drawable/transaction_item_border">
+                    android:layout_marginBottom="@dimen/linear_layout_bottom_margin">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Категория"
-                        android:textSize="@dimen/transaction_text_size"/>
+                        android:textSize="@dimen/text_size_title_transaction"
+                        android:textColor="@color/main_text_color"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -142,13 +148,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:id="@+id/transaction_category" />
-
+                            android:textSize="@dimen/description_text_size"
+                            android:textColor="@color/main_text_color"
+                            android:id="@+id/transaction_category"
+                            style="@style/Widget.AppCompat.Spinner.Underlined" />
                         <ImageButton
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:onClick="addNewCategory"
-                            app:srcCompat="@android:drawable/ic_input_add" />
+                            app:srcCompat="@drawable/ic_edit"
+                            android:background="@android:color/transparent" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -157,16 +166,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginBottom="@dimen/transaction_margin_bottom"
-                    android:padding="@dimen/transaction_item_padding"
-                    android:background="@drawable/transaction_item_border">
+                    android:layout_marginBottom="@dimen/linear_layout_bottom_margin">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Счёт"
-                        android:textSize="@dimen/transaction_text_size"/>
-
+                        android:textSize="@dimen/text_size_title_transaction"
+                        android:textColor="@color/main_text_color"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -176,36 +183,39 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:id="@+id/transaction_account" />
+                            android:id="@+id/transaction_account"
+                            android:textSize="@dimen/description_text_size"
+                            android:textColor="@color/main_text_color"
+                            style="@style/Base.Widget.AppCompat.Spinner.Underlined" />
 
                         <ImageButton
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:onClick="addNewAccount"
-                            app:srcCompat="@android:drawable/ic_input_add" />
+                            app:srcCompat="@drawable/ic_edit"
+                            android:background="@android:color/transparent" />
 
                     </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginBottom="@dimen/transaction_margin_bottom"
-                    android:padding="@dimen/transaction_item_padding"
-                    android:background="@drawable/transaction_item_border">
+                    android:layout_marginBottom="@dimen/linear_layout_bottom_margin">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Заметка"
-                        android:textSize="@dimen/transaction_text_size"/>
-
+                        android:textSize="@dimen/text_size_title_transaction"
+                        android:textColor="@color/main_text_color"/>
                     <EditText
                         android:id="@+id/transaction_note"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textColor="@color/primary"
                         android:hint="Введите заметку"/>
 
                 </LinearLayout>
@@ -213,7 +223,6 @@
             </LinearLayout>
 
         </ScrollView>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -222,17 +231,18 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textSize="14sp"
                 android:text="Сохранить и новый"
-                android:onClick="saveTransactionContinue"/>
-
+                android:background="?attr/colorControlHighlight"
+                android:onClick="saveTransactionContinue" />
             <Button
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textSize="14sp"
                 android:text="Сохранить"
+                android:layout_marginLeft="1dp"
+                android:background="?attr/colorControlHighlight"
                 android:onClick="saveTransactionClose"/>
+
         </LinearLayout>
 
     </LinearLayout>

@@ -27,9 +27,14 @@ import java.util.List;
 
 public class FragmentTransactions extends UsingDataBaseListFragment {
     private String query;
-
     private SimpleCursorAdapter transactionsCursorAdapter;
     private DateSelector dateSelector;
+
+    public static FragmentTransactions FragmentTransactionsFactory(String query) {
+        FragmentTransactions fragmentTransactions = new FragmentTransactions();
+        fragmentTransactions.setQuery(query);
+        return fragmentTransactions;
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -51,7 +56,6 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
                 increaseDate(v);
             }
         });
-
 
         setEmptyText(Html.fromHtml(getString(R.string.empty_text)));
         initializeAdapter();
@@ -92,7 +96,7 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
                 dateSelector.setChangeFieldInterval(Calendar.YEAR);
                 break;
             default:
-                isChangeState = true;
+                isChangeState = false;
         }
         if (isChangeState) {
             dateSelector.resetState();

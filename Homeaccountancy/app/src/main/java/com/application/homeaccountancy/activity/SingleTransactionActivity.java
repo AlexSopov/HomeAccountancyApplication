@@ -133,7 +133,8 @@ public class SingleTransactionActivity extends SingleEntityActivity {
         SimpleCursorAdapter categoriesAdapter, accountsAdapter;
 
         cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
-                " ORDER BY " + AccountancyContract.Category.IS_OUTGO + " DESC", null);
+                " ORDER BY " + AccountancyContract.Category.IS_OUTGO + " DESC" + AccountancyContract.COMMA +
+                AccountancyContract.Category.C_TITLE + " ASC", null);
         categoriesAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, cursor,
                 new String[] {AccountancyContract.Category.C_TITLE}, new int[] {android.R.id.text1}, 0);
         categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -150,7 +151,6 @@ public class SingleTransactionActivity extends SingleEntityActivity {
             Utilities.selectSpinnerItem(accountsAdapter, accountsSpinner, accountID);
         }
     }
-
     private void initializeListeners() {
         onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -181,6 +181,7 @@ public class SingleTransactionActivity extends SingleEntityActivity {
             }
         });
     }
+
     private void setInitialDateTime() {
         currentDateTextView.setText(String.format("%td.%tm.%tY", dateTime, dateTime, dateTime));
         currentTimeTextView.setText(String.format("%tH:%tM", dateTime, dateTime));
@@ -216,7 +217,7 @@ public class SingleTransactionActivity extends SingleEntityActivity {
         return false;
     }
     public boolean executeDataBaseSaving() {
-        if (!ValidateData())
+        if (!validateData())
             return false;
 
         double amount = Double.parseDouble(transactionAmountEditText.getText().toString());
@@ -242,7 +243,7 @@ public class SingleTransactionActivity extends SingleEntityActivity {
 
         return true;
     }
-    private boolean ValidateData() {
+    private boolean validateData() {
         if (transactionAmountEditText.getText().toString().isEmpty()) {
             Utilities.makeToast(this, "Поле сумма обязательно для заполнения");
             return false;

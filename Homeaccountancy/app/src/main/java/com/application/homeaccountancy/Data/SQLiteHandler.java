@@ -87,11 +87,11 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(AccountancyContract.Account.A_TITLE, "Наличные");
-        contentValues.put(AccountancyContract.Account.START_BALANCE, 500);
+        contentValues.put(AccountancyContract.Account.START_BALANCE, 0);
         db.insert(AccountancyContract.Account.TABLE_NAME, null, contentValues);
 
-        contentValues.put(AccountancyContract.Account.A_TITLE, "Карточка xxxx-xxxx-xxxx-xxxx");
-        contentValues.put(AccountancyContract.Account.START_BALANCE, 1000);
+        contentValues.put(AccountancyContract.Account.A_TITLE, "Банковская карточка");
+        contentValues.put(AccountancyContract.Account.START_BALANCE, 0);
         db.insert(AccountancyContract.Account.TABLE_NAME, null, contentValues);
     }
 }

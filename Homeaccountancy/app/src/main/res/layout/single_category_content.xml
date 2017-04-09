@@ -9,11 +9,11 @@
     tools:showIn="@layout/single_category_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_margin="10dp"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
@@ -37,28 +37,32 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_gravity="center_vertical"
-                android:hint="Название категори"/>
+                android:hint="Название категори"
+                android:selectAllOnFocus="true"
+                android:textSize="16sp"
+                android:textColor="@color/primary"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="15dp">
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:layout_weight="1"
-                android:text="Тип"/>
+                android:text="Тип категории"
+                android:textColor="@color/main_text_color"
+
+                android:textSize="@dimen/description_text_size"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginRight="20dp">
+                android:orientation="vertical">
 
                 <RadioGroup
                     android:layout_width="wrap_content"
@@ -69,12 +73,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/category_outgo_rb"
-                        android:checked="true"/>
+                        android:checked="true"
+                        android:textColor="@color/main_text_color"/>
                     <RadioButton
                         android:text="Пополнения"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/category_income_rb" />
+                        android:id="@+id/category_income_rb"
+                        android:textColor="@color/main_text_color"/>
 
                 </RadioGroup>
 
@@ -90,6 +96,8 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:text="Сохранить"
-        android:onClick="saveCategory"/>
+        android:onClick="saveCategory"
+        android:background="?attr/colorControlHighlight"
+        android:textColor="@color/main_text_color" />
 
 </LinearLayout>

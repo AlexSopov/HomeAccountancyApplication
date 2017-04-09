@@ -42,16 +42,19 @@
         <activity
             android:name=".Activity.SingleTransactionActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:label="Транзакция">
+            android:windowSoftInputMode="adjustResize"
+            android:label="Платеж">
         </activity>
         <activity
             android:name=".Activity.SingleAccountActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
             android:label="Счёт">
         </activity>
         <activity
             android:name=".Activity.SingleCategoryActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
             android:label="Категория">
         </activity>
 

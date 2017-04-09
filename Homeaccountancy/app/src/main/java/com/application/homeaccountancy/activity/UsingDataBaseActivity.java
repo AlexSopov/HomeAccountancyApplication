@@ -7,10 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.application.homeaccountancy.Data.SQLiteHandler;
 
-public class UsingDataBaseActivity extends AppCompatActivity {
-    SQLiteHandler handler;
-    SQLiteDatabase db;
-    Cursor cursor;
+public abstract class UsingDataBaseActivity extends AppCompatActivity {
+    protected SQLiteHandler handler;
+    protected SQLiteDatabase db;
+    protected Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

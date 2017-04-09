@@ -15,8 +15,8 @@
         android:layout_marginTop="5dp"
         android:layout_centerInParent="true"
         android:layout_alignParentTop="true"
-        android:text="Date in human format"
-        android:textColor="#000" />
+        android:textColor="@color/main_text_color"
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/date_selector_format_date"
@@ -24,8 +24,9 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/date_selector_humanize_date"
-        android:text="Date in num format"
-        android:textColor="#000"/>
+        android:textColor="@color/main_text_color"
+        android:textSize="14sp"
+        android:textStyle="italic"/>
 
     <ImageButton
         android:id="@+id/date_selector_increase_date"
@@ -43,6 +44,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@android:color/transparent"
-        app:srcCompat="@mipmap/ic_left_date_selector"/>
+        app:srcCompat="@mipmap/ic_left_date_selector"
+        android:elevation="0dp" />
 
 </RelativeLayout>

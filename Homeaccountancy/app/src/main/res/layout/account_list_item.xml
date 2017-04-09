@@ -15,14 +15,19 @@
         <TextView android:id="@+id/account_list_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="top"
             android:layout_marginBottom="5dp"
-            android:textColor="#000"
-            android:gravity="top" />
+            android:textSize="@dimen/important_text_size"
+            android:textColor="@color/main_text_color"
+            android:textStyle="normal|bold" />
+
         <TextView android:id="@+id/account_list_item_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#000"
-            android:gravity="top" />
+            android:textSize="@dimen/description_text_size"
+            android:textColor="@color/main_text_color"
+            android:gravity="top"
+            android:textStyle="normal|italic" />
 
     </LinearLayout>
 
@@ -33,10 +38,11 @@
 
         <TextView android:id="@+id/account_list_item_balance"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:textColor="#000"
-            android:layout_gravity="center_vertical" />
+            android:layout_height="match_parent"
+            android:textSize="@dimen/important_text_size"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:textStyle="normal|bold" />
 
     </LinearLayout>
 

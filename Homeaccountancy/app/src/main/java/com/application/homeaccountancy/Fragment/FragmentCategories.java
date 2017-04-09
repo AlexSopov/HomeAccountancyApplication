@@ -21,6 +21,12 @@ public class FragmentCategories extends UsingDataBaseListFragment {
     private String query;
     private SimpleCursorAdapter categoriesCursorAdapter;
 
+    public static FragmentCategories FragmentCategoriesFactory(String query) {
+        FragmentCategories fragmentCategories = new FragmentCategories();
+        fragmentCategories.setQuery(query);
+        return fragmentCategories;
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

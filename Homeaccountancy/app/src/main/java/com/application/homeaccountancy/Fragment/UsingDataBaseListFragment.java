@@ -9,9 +9,9 @@ import android.support.v4.app.ListFragment;
 import com.application.homeaccountancy.Data.SQLiteHandler;
 
 public class UsingDataBaseListFragment extends ListFragment {
-    SQLiteHandler handler;
-    SQLiteDatabase db;
-    Cursor cursor;
+    protected SQLiteHandler handler;
+    protected SQLiteDatabase db;
+    protected Cursor cursor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

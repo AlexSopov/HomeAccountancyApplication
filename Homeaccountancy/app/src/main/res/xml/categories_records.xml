@@ -21,6 +21,4 @@
     <record title="Продукты" is_outgo="1" icon="products" />
     <record title="Покупки" is_outgo="1" icon="purchase" />
     <record title="Коммунальные услуги" is_outgo="1" icon="services" />
-
-
 </categories>

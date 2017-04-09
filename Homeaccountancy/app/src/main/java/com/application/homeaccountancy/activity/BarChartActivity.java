@@ -72,6 +72,7 @@ public class BarChartActivity extends UsingDataBaseActivity {
         if(!item.isChecked())
             item.setChecked(true);
 
+        boolean isChangeState = true;
         switch(id){
             case R.id.range_day:
                 dateSelector.setChangeFieldInterval(Calendar.DAY_OF_YEAR);
@@ -89,9 +90,13 @@ public class BarChartActivity extends UsingDataBaseActivity {
                 dateSelector.setChangeFieldInterval(Calendar.YEAR);
                 changeFieldIteration = Calendar.MONTH;
                 break;
+            default:
+                isChangeState = false;
         }
-        dateSelector.resetState();
-        initializeGraphics();
+        if (isChangeState) {
+            dateSelector.resetState();
+            initializeGraphics();
+        }
 
         return super.onOptionsItemSelected(item);
     }

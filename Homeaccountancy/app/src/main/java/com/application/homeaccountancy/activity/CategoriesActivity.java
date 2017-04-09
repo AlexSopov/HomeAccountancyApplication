@@ -43,7 +43,6 @@ public class CategoriesActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
     }
 
-    /* FragmentPagerAdapter */
     private class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
         SectionsPagerAdapter(FragmentManager fm) {
@@ -52,19 +51,25 @@ public class CategoriesActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            FragmentCategories fragmentCategories = new FragmentCategories();
+            FragmentCategories fragmentCategories = null;
 
             switch (position) {
                 case 0:
-                    fragmentCategories.setQuery(FragmentCategories.getBaseQuery() +
-                            " WHERE " + AccountancyContract.Category.IS_OUTGO + " = 1");
+                    fragmentCategories = FragmentCategories.FragmentCategoriesFactory(
+                            FragmentCategories.getBaseQuery() +
+                            " WHERE " + AccountancyContract.Category.IS_OUTGO + " = 1"
+                    );
                     break;
                 case 1:
-                    fragmentCategories.setQuery(FragmentCategories.getBaseQuery() +
-                            " WHERE " + AccountancyContract.Category.IS_OUTGO + " = 0");
+                    fragmentCategories = FragmentCategories.FragmentCategoriesFactory(
+                            FragmentCategories.getBaseQuery() +
+                                    " WHERE " + AccountancyContract.Category.IS_OUTGO + " = 0"
+                    );
                     break;
                 default:
-                    fragmentCategories.setQuery(FragmentCategories.getBaseQuery());
+                    fragmentCategories = FragmentCategories.FragmentCategoriesFactory(
+                            FragmentCategories.getBaseQuery()
+                    );
             }
             return fragmentCategories;
         }

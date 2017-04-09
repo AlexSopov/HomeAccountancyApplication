@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity
         return dateSelector;
     }
 
-    /* FragmentPagerAdapter */
     private class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
         SectionsPagerAdapter(FragmentManager fm) {
@@ -116,21 +115,27 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            FragmentTransactions fragmentTransaction = new FragmentTransactions();
+            FragmentTransactions fragmentTransaction = null;
             switch (position) {
                 case 0:
-                    fragmentTransaction.setQuery(FragmentTransactions.getBaseQuery());
+                    fragmentTransaction = FragmentTransactions.FragmentTransactionsFactory(
+                            FragmentTransactions.getBaseQuery()
+                    );
                     break;
                 case 1:
-                    fragmentTransaction.setQuery(FragmentTransactions.getBaseQuery() +
-                            " WHERE is_outgo = 1");
+                    fragmentTransaction = FragmentTransactions.FragmentTransactionsFactory(
+                            FragmentTransactions.getBaseQuery() + " WHERE is_outgo = 1"
+                    );
                     break;
                 case 2:
-                    fragmentTransaction.setQuery(FragmentTransactions.getBaseQuery() +
-                            " WHERE is_outgo = 0");
+                    fragmentTransaction = FragmentTransactions.FragmentTransactionsFactory(
+                            FragmentTransactions.getBaseQuery() + " WHERE is_outgo = 0"
+                    );
                     break;
                 default:
-                    fragmentTransaction.setQuery(FragmentTransactions.getBaseQuery());
+                    fragmentTransaction = FragmentTransactions.FragmentTransactionsFactory(
+                            FragmentTransactions.getBaseQuery()
+                    );
             }
             return fragmentTransaction;
         }
