@@ -23,7 +23,8 @@ public class FragmentCategories extends UsingDataBaseListFragment {
 
     public static FragmentCategories FragmentCategoriesFactory(String query) {
         FragmentCategories fragmentCategories = new FragmentCategories();
-        fragmentCategories.setQuery(query);
+        fragmentCategories.setQuery(query +
+                " ORDER BY " + AccountancyContract.Category.C_TITLE + " ASC");
         return fragmentCategories;
     }
 

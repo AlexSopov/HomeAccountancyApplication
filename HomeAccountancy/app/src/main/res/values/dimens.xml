@@ -16,6 +16,6 @@
     <dimen name="important_text_size">16sp</dimen>
     <dimen name="linear_layout_bottom_margin">15dp</dimen>
 
-    <dimen name="text_size_title_transaction">18dp</dimen>
-    <dimen name="text_size_transaction">16dp</dimen>
+    <dimen name="text_size_title_transaction">18sp</dimen>
+    <dimen name="text_size_transaction">16sp</dimen>
 </resources>

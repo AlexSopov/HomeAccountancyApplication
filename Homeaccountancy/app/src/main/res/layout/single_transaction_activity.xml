@@ -70,7 +70,8 @@
                             android:id="@+id/transaction_time"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:textAlignment="textEnd"
+                            android:gravity="end"
+
                             android:layout_weight="1"
                             android:textColor="@color/primary"
                             android:textSize="@dimen/text_size_transaction"
@@ -108,11 +109,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal"
-                            android:textAlignment="viewEnd"
                             android:textColor="@color/primary"
                             android:layout_weight="1"
                             android:maxLength="6"
-                            android:hint="Сумма">
+                            android:hint="Сумма"
+                            android:gravity="end"
+                            android:textAlignment="textEnd">
                             <requestFocus/>
                         </EditText>
                         <TextView
@@ -145,7 +147,7 @@
                         android:orientation="horizontal">
 
                         <Spinner
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:textSize="@dimen/description_text_size"
@@ -180,7 +182,7 @@
                         android:orientation="horizontal">
 
                         <Spinner
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:id="@+id/transaction_account"
@@ -216,7 +218,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/primary"
-                        android:hint="Введите заметку"/>
+                        android:hint="Введите заметку"
+                        android:inputType="textCapSentences"
+                        android:theme="@android:style/Widget.Holo.EditText" />
 
                 </LinearLayout>
 

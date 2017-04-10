@@ -126,7 +126,6 @@ public class SingleCategoryActivity extends SingleEntityActivity {
                     new String[] {String.valueOf(logoSpinner.getSelectedItemId())});
             cursor.moveToFirst();
 
-
             ContentValues contentValues = new ContentValues();
             contentValues.put(AccountancyContract.Category.C_TITLE, title);
             contentValues.put(AccountancyContract.Category.IS_OUTGO,

@@ -57,7 +57,7 @@ public class CategoriesActivity extends AppCompatActivity {
                 case 0:
                     fragmentCategories = FragmentCategories.FragmentCategoriesFactory(
                             FragmentCategories.getBaseQuery() +
-                            " WHERE " + AccountancyContract.Category.IS_OUTGO + " = 1"
+                                    " WHERE " + AccountancyContract.Category.IS_OUTGO + " = 1"
                     );
                     break;
                 case 1:

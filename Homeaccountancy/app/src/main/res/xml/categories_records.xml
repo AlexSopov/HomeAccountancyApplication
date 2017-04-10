@@ -9,7 +9,6 @@
     <record title="Развлечения" is_outgo="1" icon="entertainment" />
     <record title="Фитнес" is_outgo="1" icon="fitness" />
     <record title="Еда" is_outgo="1" icon="food" />
-    <record title="Бензин" is_outgo="1" icon="fuel" />
     <record title="Дом" is_outgo="1" icon="house" />
     <record title="Путешествия" is_outgo="1" icon="journey" />
     <record title="Мультимедиа" is_outgo="1" icon="media" />
@@ -18,7 +17,6 @@
     <record title="Проценты" is_outgo="0" icon="percent" />
     <record title="Личное" is_outgo="1" icon="personal" />
     <record title="Телефон" is_outgo="1" icon="phone" />
-    <record title="Продукты" is_outgo="1" icon="products" />
     <record title="Покупки" is_outgo="1" icon="purchase" />
     <record title="Коммунальные услуги" is_outgo="1" icon="services" />
 </categories>

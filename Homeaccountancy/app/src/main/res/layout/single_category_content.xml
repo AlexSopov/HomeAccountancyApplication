@@ -38,9 +38,11 @@
                 android:layout_margin="10dp"
                 android:layout_gravity="center_vertical"
                 android:hint="Название категори"
-                android:selectAllOnFocus="true"
                 android:textSize="16sp"
-                android:textColor="@color/primary"/>
+                android:textColor="@color/primary"
+                android:maxLength="40"
+                android:inputType="textCapSentences"
+                android:maxLines="1" />
 
         </LinearLayout>
 
@@ -50,7 +52,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:layout_weight="1"

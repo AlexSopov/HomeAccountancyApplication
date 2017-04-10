@@ -3,16 +3,15 @@
     package="com.application.homeaccountancy">
 
     <application
-        android:allowBackup="true"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <!--Main activity-->
         <activity
             android:name=".Activity.MainActivity"
             android:label="Журнал"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +23,8 @@
         <activity
             android:name=".Activity.CategoriesActivity"
             android:label="Категории"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.application.homeaccountancy.Activity.MainActivity" />
@@ -32,7 +32,8 @@
         <activity
             android:name=".Activity.AccountsActivity"
             android:label="Счета"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.application.homeaccountancy.Activity.MainActivity" />
@@ -43,26 +44,30 @@
             android:name=".Activity.SingleTransactionActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize"
-            android:label="Платеж">
+            android:label="Платеж"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".Activity.SingleAccountActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize"
-            android:label="Счёт">
+            android:label="Счёт"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".Activity.SingleCategoryActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize"
-            android:label="Категория">
+            android:label="Категория"
+            android:screenOrientation="portrait">
         </activity>
 
         <!-- Chart activities-->
         <activity
             android:name=".Activity.PieCharActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:label="Круговая диаграмма">
+            android:label="Круговая диаграмма"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.application.homeaccountancy.Activity.MainActivity" />
@@ -70,7 +75,8 @@
         <activity
             android:name=".Activity.BarChartActivity"
             android:label="Столбчатая диаграмма"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.application.homeaccountancy.Activity.MainActivity" />
@@ -78,4 +84,3 @@
     </application>
 
 </manifest>
-    <!--android:parentActivityName=".activity.MainActivity"-->

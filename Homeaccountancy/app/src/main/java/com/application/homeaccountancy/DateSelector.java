@@ -27,6 +27,9 @@ public class DateSelector {
         this.changeFieldInterval = changeFieldInterval;
     }
     public void dateChange(int delta) {
+        if (calendarFrom.get(Calendar.YEAR) < 1970 || calendarTill.get(Calendar.YEAR) > 2070)
+            return;
+
         switch (changeFieldInterval) {
             case Calendar.DAY_OF_YEAR:
                 calendarTill.set(Calendar.DAY_OF_YEAR, calendarTill.get(Calendar.DAY_OF_YEAR) + delta);

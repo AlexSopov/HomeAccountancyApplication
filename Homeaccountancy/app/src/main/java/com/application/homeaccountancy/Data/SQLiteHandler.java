@@ -13,7 +13,7 @@ import org.xmlpull.v1.XmlPullParser;
 
 public class SQLiteHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "Accountancy9.db";
+    private static final String DATABASE_NAME = "Accountancy11.db";
     private Context context;
 
     public SQLiteHandler(Context context) {
@@ -57,6 +57,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         try {
             int eventType = xmlResourceParser.getEventType();
 
+            int i = 0;
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG && xmlResourceParser.getName().equals("record")) {
                     String title = xmlResourceParser.getAttributeValue(0);
@@ -72,7 +73,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                             resources.getIdentifier(icon, "drawable", context.getPackageName()));
 
                     db.insert(AccountancyContract.Category.TABLE_NAME, null, contentValuesCategories);
-                    db.insert(AccountancyContract.Images.TABLE_NAME, null, contentValuesImages);
+
+                    if (i++ != 0)
+                        db.insert(AccountancyContract.Images.TABLE_NAME, null, contentValuesImages);
                 }
                 eventType = xmlResourceParser.next();
             }

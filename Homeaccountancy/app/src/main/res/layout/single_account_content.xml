@@ -24,7 +24,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Название"
-            android:textColor="@color/primary"/>
+            android:textColor="@color/primary"
+            android:layout_marginBottom="@dimen/linear_layout_bottom_margin"
+            android:inputType="textCapSentences"
+            android:maxLength="40"
+            android:maxLines="1" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,13 +36,14 @@
             android:orientation="horizontal">
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:inputType="numberSigned"
                 android:id="@+id/start_balance"
                 android:layout_weight="1"
                 android:textColor="@color/primary"
-                android:hint="Начальный баланс" />
+                android:hint="Начальный баланс"
+                android:maxLength="6" />
 
             <TextView
                 android:layout_width="wrap_content"
