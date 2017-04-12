@@ -14,19 +14,26 @@ import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.R;
 import com.application.homeaccountancy.Utilities;
 
+// Класс, представляющий Счет
 public class SingleAccountActivity extends SingleEntityActivity {
+    // Переменные представления
     TextView titleTextView, startBalanceTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Инициализация контента
         setContentView(R.layout.single_account_activity);
 
+        // Инициализация тулбара
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         initializeViews();
 
+        // Если данное Activity было вызвано для изменения
+        // созданного счёта, то заполнить поля данными
         if (isEntityId()) {
             cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Account.TABLE_NAME +
                     " WHERE " + AccountancyContract.Account._ID + "=?", new String[] {String.valueOf(getEntityId())});
@@ -39,11 +46,16 @@ public class SingleAccountActivity extends SingleEntityActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Обработка нажатия на элементе из меню
         int id = item.getItemId();
         if(!item.isChecked())
             item.setChecked(true);
 
         if (id == R.id.delete) {
+            // Если нажат элемент "Удалить"
+
+            // Создать диалоговое окно для подтверждения действия
+            // и удалить элемент в случае необходимости
             AlertDialog.Builder dialog = new AlertDialog.Builder(SingleAccountActivity.this);
             dialog
                     .setTitle("Подтверждение действия")
@@ -67,6 +79,7 @@ public class SingleAccountActivity extends SingleEntityActivity {
     }
 
     private void initializeViews() {
+        // Инициализировать переменные представления
         titleTextView = (TextView) findViewById(R.id.account_title);
         startBalanceTextView = (TextView) findViewById(R.id.start_balance);
     }
@@ -75,7 +88,7 @@ public class SingleAccountActivity extends SingleEntityActivity {
         String title = titleTextView.getText().toString();
         String startBalanceText = startBalanceTextView.getText().toString();
 
-
+        // Валидация данных
         if (title.isEmpty()){
             Utilities.makeToast(this, "Название счёта не может быть пустым");
             return;
@@ -86,7 +99,8 @@ public class SingleAccountActivity extends SingleEntityActivity {
             return;
         }
 
-
+        // Если элемент изменялся - обновить его в базе данных
+        // Иначе - создать новый
         double startBalance = Double.parseDouble(startBalanceText);
         try {
             ContentValues contentValues = new ContentValues();

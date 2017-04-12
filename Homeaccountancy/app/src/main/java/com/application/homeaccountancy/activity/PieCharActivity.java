@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+// Класс Activity, содержащего круговую диаграмму
 public class PieCharActivity extends UsingDataBaseActivity {
     // region final int[] colors
     static final int[] colors = new int[] {Color.parseColor("#e53935"), Color.parseColor("#26C6DA"),  Color.parseColor("#FFCA28"),
@@ -38,23 +39,32 @@ public class PieCharActivity extends UsingDataBaseActivity {
             Color.parseColor("#29B6F6")};
     // endregion
 
+    // Строки запроса
     private String fromJoinSelector, whereSelector;
 
+    // Переменные представления
     private TextView categoryTextView, totalTextView, percentTextView;
     private Spinner categoriesSpinner;
+
+    // Объект для генерации временных периодов
     private DateSelector dateSelector;
 
+    // Элемент круговой диаграммы
     private PieChart pieChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Инициализация контента
         setContentView(R.layout.pie_char_activity);
 
+        // Инициализация тулбара
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Инициализация объекта для генерации временных периодов
         dateSelector = new DateSelector(this);
         dateSelector.setOnDecreaseClickListener(new View.OnClickListener() {
             @Override
@@ -69,12 +79,14 @@ public class PieCharActivity extends UsingDataBaseActivity {
             }
         });
 
+        // Инициализация переменных представления
         initializeViews();
-        initializeListeners();
-        initializeGraphics();
 
-        pieChart.setNoDataText("Не найдено данных для отображения.");
-        pieChart.setNoDataTextColor(Color.BLACK);
+        // Инициализация слушателей событий
+        initializeListeners();
+
+        // Инициализация диаграммы
+        initializeGraphics();
     }
 
     @Override
@@ -85,11 +97,16 @@ public class PieCharActivity extends UsingDataBaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Обработка нажатия по элементу в меню
+
         int id = item.getItemId();
         if(!item.isChecked())
             item.setChecked(true);
 
         boolean isChangeState = true;
+        // В зависимости от нажатого элемента - изменить переменную
+        // для итерации
+        // Изменить временной диапазон
         switch(id){
             case R.id.range_day:
                 dateSelector.setChangeFieldInterval(Calendar.DAY_OF_YEAR);
@@ -114,6 +131,7 @@ public class PieCharActivity extends UsingDataBaseActivity {
     }
 
     private void initializeViews() {
+        // Инициализация элемента диаграммы
         pieChart = (PieChart) findViewById(R.id.chart);
         pieChart.getLegend().setEnabled(false);;
         pieChart.setCenterTextSize(20);
@@ -121,19 +139,27 @@ public class PieCharActivity extends UsingDataBaseActivity {
         pieChart.getContentDescription();
         pieChart.getDescription().setEnabled(false);
         pieChart.setTransparentCircleRadius(35);
+        pieChart.setNoDataText("Не найдено данных для отображения.");
+        pieChart.setNoDataTextColor(Color.BLACK);
 
+        // Инициализация переменных представления
         categoryTextView = (TextView) findViewById(R.id.category);
         totalTextView = (TextView) findViewById(R.id.total);
         percentTextView = (TextView) findViewById(R.id.percent);
-
         categoriesSpinner = (Spinner) findViewById(R.id.spinner_category_type);
     }
     private void initializeGraphics() {
         int totalSum;
         final int totalSumEx;
 
+        // Инициализация строк запроса
         initializeStrings();
+
+        // Лист для хранения данных
         List<PieEntry> entries = new ArrayList<>();
+
+        // Запрос для получение суммы трат или пополнений
+        // За определенный переод времени
         String query = "SELECT SUM(" + AccountancyContract.Transaction.AMOUNT + ") " +
                 fromJoinSelector + whereSelector;
 
@@ -142,6 +168,8 @@ public class PieCharActivity extends UsingDataBaseActivity {
             totalSum = cursor.getInt(0);
         else return;
 
+        // Запрос для получения суммы трат/пополнений
+        // Разделенный по категориям
         query = "SELECT " + AccountancyContract.Category.C_TITLE +
                 AccountancyContract.COMMA + " SUM (" +
                 AccountancyContract.Transaction.AMOUNT + ") " +
@@ -150,6 +178,7 @@ public class PieCharActivity extends UsingDataBaseActivity {
 
         cursor = db.rawQuery(query, null);
 
+        // Считывание данных
         int currentSum;
         if (cursor.moveToFirst()) {
             do {
@@ -160,7 +189,7 @@ public class PieCharActivity extends UsingDataBaseActivity {
         }
         cursor.close();
 
-
+        // Инициализация графика
         PieDataSet pieDataSet = new PieDataSet(entries, "Entries");
         pieDataSet.setValueTextColor(Color.argb(180, 0, 0, 0));
         pieDataSet.setValueTextSize(14);
@@ -176,6 +205,7 @@ public class PieCharActivity extends UsingDataBaseActivity {
         pieChart.setCenterText("Итого:\n " + String.valueOf(totalSum));
 
         totalSumEx = totalSum;
+        // Вывод подробной информации при нажатии на элементе диаграммы
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
@@ -196,6 +226,7 @@ public class PieCharActivity extends UsingDataBaseActivity {
     private void initializeStrings() {
         int isOutgo = categoriesSpinner.getSelectedItemPosition() == 0 ? 1 : 0;
 
+        // Инициализация строк запроса
         String fromDate = dateSelector.getFromString();
         String tillDate = dateSelector.getTillString();
 
@@ -222,14 +253,17 @@ public class PieCharActivity extends UsingDataBaseActivity {
     }
 
     public void decreaseDate(View view) {
+        // Уменьшение временного периода
         dateSelector.dateChange(-1);
         initializeGraphics();
     }
     public void increaseDate(View view) {
+        // Увеличение временного периода
         dateSelector.dateChange(1);
         initializeGraphics();
     }
 
+    // Форматирование отрицательных значений
     private class NegativeValueFormatter implements IValueFormatter {
         @Override
         public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {

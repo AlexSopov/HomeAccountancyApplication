@@ -28,33 +28,47 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+// Класс, представляющий Платеж
 public class SingleTransactionActivity extends SingleEntityActivity {
+    // Переменные представления
     private TextView currentDateTextView, currentTimeTextView;
     private Spinner categoriesSpinner, accountsSpinner;
     private EditText transactionAmountEditText, noteEditTextEditText;
     private Button signButton;
 
+    // Слушатели выбора даты и времени
     private DatePickerDialog.OnDateSetListener onDateSetListener;
     private TimePickerDialog.OnTimeSetListener onTimeSetListener;
 
+    // Время платежа
     private Calendar dateTime;
+
+    // Отрицательная сумма
     private boolean isNegativeAmount;
+
+    // ID категории и счета платежа
     private long categoryID, accountID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Инициализация контента
         setContentView(R.layout.single_transaction_activity);
 
+        // Инициализация тулбара
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Инициализация элементов представлений и слушателей
         initializeViews();
         initializeListeners();
 
         isNegativeAmount = true;
         dateTime = Calendar.getInstance();
 
+        // Если данное Activity было вызвано для изменения
+        // созданной категории, то заполнить поля данными
         if (isEntityId()) {
             cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Transaction.TABLE_NAME +
                     " WHERE " + AccountancyContract.Transaction._ID + "=?", new String[] {String.valueOf(getEntityId())});
@@ -89,16 +103,23 @@ public class SingleTransactionActivity extends SingleEntityActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        // Инициализация выпадающих списков
         initializeSpinners();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Обработка нажатия на элементе из меню
         int id = item.getItemId();
         if(!item.isChecked())
             item.setChecked(true);
 
         if (id == R.id.delete) {
+            // Если нажат элемент "Удалить"
+
+            // Создать диалоговое окно для подтверждения действия
+            // и удалить элемент в случае необходимости
             AlertDialog.Builder dialog = new AlertDialog.Builder(SingleTransactionActivity.this);
             dialog
                     .setTitle("Подтверждение действия")
@@ -121,6 +142,7 @@ public class SingleTransactionActivity extends SingleEntityActivity {
     }
 
     private void initializeViews() {
+        // Инициализировать переменные представления
         categoriesSpinner = (Spinner)findViewById(R.id.transaction_category);
         accountsSpinner = (Spinner)findViewById(R.id.transaction_account);
         currentDateTextView = (TextView)findViewById(R.id.transaction_date);
@@ -130,6 +152,7 @@ public class SingleTransactionActivity extends SingleEntityActivity {
         signButton = (Button) findViewById(R.id.button_sign);
     }
     private void initializeSpinners() {
+        // Инициализировать выпадающие списки соответствующими данными
         SimpleCursorAdapter categoriesAdapter, accountsAdapter;
 
         cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
@@ -146,12 +169,15 @@ public class SingleTransactionActivity extends SingleEntityActivity {
         accountsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         accountsSpinner.setAdapter(accountsAdapter);
 
+        // Выбрать элементы, соответствующие платежу
+        // Если Activity было вызвано для изменения платежа
         if (isEntityId()) {
             Utilities.selectSpinnerItem(categoriesAdapter, categoriesSpinner, categoryID);
             Utilities.selectSpinnerItem(accountsAdapter, accountsSpinner, accountID);
         }
     }
     private void initializeListeners() {
+        // Инициализация слушателей
         onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 dateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -188,24 +214,28 @@ public class SingleTransactionActivity extends SingleEntityActivity {
     }
 
     public void setDate(View view) {
+        // Выбор даты
         new DatePickerDialog(this, onDateSetListener,
                 dateTime.get(Calendar.YEAR),
                 dateTime.get(Calendar.MONTH),
                 dateTime.get(Calendar.DAY_OF_MONTH)).show();
     }
     public void setTime(View view) {
+        // Выбор времени
         new TimePickerDialog(this, onTimeSetListener,
                 dateTime.get(Calendar.HOUR_OF_DAY),
                 dateTime.get(Calendar.MINUTE), true).show();
     }
 
     public void saveTransactionContinue(View view) {
+        // Сохранить платеж и создать новый
         if (executeSaving()) {
             Intent intent = new Intent(getApplicationContext(), SingleTransactionActivity.class);
             startActivity(intent);
         }
     }
     public void saveTransactionClose(View view) {
+        // Сохранить платеж и закрыть Activity
         executeSaving();
     }
 
@@ -217,6 +247,9 @@ public class SingleTransactionActivity extends SingleEntityActivity {
         return false;
     }
     public boolean executeDataBaseSaving() {
+        // Сохранение платежа
+
+        // Валидация данных
         if (!validateData())
             return false;
 
@@ -231,7 +264,8 @@ public class SingleTransactionActivity extends SingleEntityActivity {
         contentValues.put(AccountancyContract.Transaction.CATEGORY_ID, categoriesSpinner.getSelectedItemId());
         contentValues.put(AccountancyContract.Transaction.NOTE, noteEditTextEditText.getText().toString());
 
-
+        // Если элемент изменялся - обновить его в базе данных
+        // Иначе - создать новый
         if (isEntityId()) {
             db.update(AccountancyContract.Transaction.TABLE_NAME, contentValues,
                     AccountancyContract.Transaction._ID + "=?",
@@ -244,6 +278,7 @@ public class SingleTransactionActivity extends SingleEntityActivity {
         return true;
     }
     private boolean validateData() {
+        // Валидация данных
         if (transactionAmountEditText.getText().toString().isEmpty()) {
             Utilities.makeToast(this, "Поле сумма обязательно для заполнения");
             return false;
@@ -286,11 +321,12 @@ public class SingleTransactionActivity extends SingleEntityActivity {
     }
 
     public void addNewCategory(View view) {
+        // Добавить новую категорию
         Intent intent = new Intent(getApplicationContext(), SingleCategoryActivity.class);
         startActivity(intent);
     }
-
     public void addNewAccount(View view) {
+        // Добавить новый счет
         Intent intent = new Intent(getApplicationContext(), SingleAccountActivity.class);
         startActivity(intent);
     }

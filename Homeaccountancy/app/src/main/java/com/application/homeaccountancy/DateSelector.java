@@ -7,9 +7,16 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
+// Класс для генерации временных периодов
+// и вывода соответствующих данных
 public class DateSelector {
+    // Шаг периода времени
     private int changeFieldInterval;
+
+    // Даты начала и конца периода
     private Calendar calendarFrom, calendarTill;
+
+    // Переменные представления
     private TextView humanizeDateTextView, formatDateTextView;
     private ImageButton increaseDateImageButton, decreaseDateImageButton;
     private Activity activity;
@@ -17,9 +24,13 @@ public class DateSelector {
     public DateSelector(Activity activity) {
         this.activity = activity;
 
+        // Инициализация переменных представления
         initializeViews();
+
+        // Инициализация первоначального периода
         initializeStartDate();
 
+        // Вывод информации
         setDateTimeView();
     }
 
@@ -27,9 +38,7 @@ public class DateSelector {
         this.changeFieldInterval = changeFieldInterval;
     }
     public void dateChange(int delta) {
-        if (calendarFrom.get(Calendar.YEAR) < 1970 || calendarTill.get(Calendar.YEAR) > 2070)
-            return;
-
+        // Изменить период на delta шагов периода
         switch (changeFieldInterval) {
             case Calendar.DAY_OF_YEAR:
                 calendarTill.set(Calendar.DAY_OF_YEAR, calendarTill.get(Calendar.DAY_OF_YEAR) + delta);
@@ -59,9 +68,16 @@ public class DateSelector {
                 calendarFrom.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR));
                 break;
         }
+        if (calendarFrom.get(Calendar.YEAR) < 1970)
+            calendarFrom.set(Calendar.YEAR, 1970);
+
+        if (calendarTill.get(Calendar.YEAR) > 2070)
+            calendarTill.set(Calendar.YEAR, 2070);
+
         setDateTimeView();
     }
     public void resetState() {
+        // Установка диапазона, содержащего текущую дату
         calendarFrom = Calendar.getInstance();
         calendarTill = Calendar.getInstance();
         dateChange(0);
@@ -93,6 +109,7 @@ public class DateSelector {
         decreaseDateImageButton = (ImageButton) activity.findViewById(R.id.date_selector_decrease_date);
     }
     private void initializeStartDate() {
+        // Установка диапазона, содержащего текущую дату
         calendarTill = Calendar.getInstance();
         calendarTill.set(Calendar.DAY_OF_MONTH, calendarTill.getActualMaximum(Calendar.DAY_OF_MONTH));
 
@@ -103,6 +120,7 @@ public class DateSelector {
         changeFieldInterval = Calendar.MONTH;
     }
     private void setDateTimeView() {
+        // Вывод информации пользователю
         formatDateTextView.setText(String.format("%td.%tm.%tY - %td.%tm.%tY",
                 calendarFrom, calendarFrom, calendarFrom, calendarTill, calendarTill, calendarTill));
 

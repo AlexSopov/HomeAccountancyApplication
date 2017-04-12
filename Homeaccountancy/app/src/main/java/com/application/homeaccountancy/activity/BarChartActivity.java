@@ -24,22 +24,31 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+// Класс Activity, содержащего столбчатую диаграмму
 public class BarChartActivity extends UsingDataBaseActivity {
-    private String fromDate, tillDate, fromJoinSelector;
+    private String fromJoinSelector;
+
+    // Поле календаря, по которому производятся итерации
     private int changeFieldIteration;
+
+    // Объект для генерации временных периодов
     private DateSelector dateSelector;
 
+    // Элемент стобчатой диаграммы
     private BarChart barChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Инициализация контента
         setContentView(R.layout.bar_chart_activity);
 
+        // Инициализация тулбара
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Инициализация объекта для генерации временных периодов
         dateSelector = new DateSelector(this);
         dateSelector.setOnDecreaseClickListener(new View.OnClickListener() {
             @Override
@@ -55,24 +64,33 @@ public class BarChartActivity extends UsingDataBaseActivity {
         });
 
         changeFieldIteration = Calendar.DAY_OF_YEAR;
+
+        // Инициализация представления
         initializeViews();
+
+        // Инициализация графика
         initializeGraphics();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
+        // Меню для выбора шага временного периода
         getMenuInflater().inflate(R.menu.date_selector_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Обработка нажатия по элементу в меню
+
         int id = item.getItemId();
         if(!item.isChecked())
             item.setChecked(true);
 
         boolean isChangeState = true;
+        // В зависимости от нажатого элемента - изменить переменную
+        // для итерации
+        // Изменить временной диапазон
         switch(id){
             case R.id.range_day:
                 dateSelector.setChangeFieldInterval(Calendar.DAY_OF_YEAR);
@@ -99,29 +117,65 @@ public class BarChartActivity extends UsingDataBaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+}
 
     private void initializeViews() {
+        // Инициализация представления
+
+        // Инициализация элемента столбчатой диаграммы
         barChart = (BarChart) findViewById(R.id.chart);
+
+        // Убрать описание
         barChart.getDescription().setEnabled(false);
+
+        // Установка параметров отображения пустых данных
         barChart.setNoDataText("Не найдено данных для отображения.");
         barChart.setNoDataTextColor(Color.BLACK);
+
+        // Установить минимум для оси у
+        barChart.getAxisLeft().setAxisMinimum(0);
+
+        // Убрать правую ось
+        barChart.getAxisRight().setEnabled(false);
+
+        // Настройка вида графика
+        barChart.getXAxis().setAxisMinimum(0);
+        barChart.getXAxis().setDrawGridLines(false);
+        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        barChart.getXAxis().setCenterAxisLabels(true);
+        barChart.getXAxis().setLabelRotationAngle(30);
+        barChart.getXAxis().setGranularityEnabled(true);
+
+        // Убрать подсвечивание при нажатии на элементе графика
+        barChart.setHighlightPerDragEnabled(false);
+        barChart.setHighlightPerTapEnabled(false);
+
+        // Настройка легенды
+        barChart.getLegend().setXEntrySpace(20);
+        barChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+
+        // Убрать масштабирование по у
+        barChart.getViewPortHandler().setMaximumScaleY(1);
     }
     private void initializeStrings() {
-        fromDate = dateSelector.getFromString();
-        tillDate = dateSelector.getTillString();
+        // Инициализация строк запроса
 
+        // Часть запроса, содержащую блок выбора таблицы
+        // данных и соединения
         fromJoinSelector = " FROM " + AccountancyContract.Transaction.TABLE_NAME + " INNER JOIN " +
                 AccountancyContract.Category.TABLE_NAME + " ON " + AccountancyContract.Category.TABLE_NAME +
                 "." + AccountancyContract.Category._ID + " = " + AccountancyContract.Transaction.TABLE_NAME + "." +
                 AccountancyContract.Transaction.CATEGORY_ID;
     }
     private void initializeGraphics() {
+        // Инициализация строк запроса
         initializeStrings();
 
+        // Данные трат и пополнения соответственно
         List<BarEntry> outgoes = new ArrayList<>();
         List<BarEntry> incomes = new ArrayList<>();
 
+        // Инициализация начальной и конечной даты итераций
         Calendar currentCalendarFrom = (Calendar)dateSelector.getCalendarFrom().clone();
         Calendar currentCalendarTill = (Calendar)dateSelector.getCalendarFrom().clone();
         if (changeFieldIteration == Calendar.MONTH) {
@@ -131,9 +185,13 @@ public class BarChartActivity extends UsingDataBaseActivity {
 
         int index = 0;
         while (currentCalendarTill.compareTo(dateSelector.getCalendarTill()) <= 0) {
-            fromDate = String.format("%tY-%tm-%td 00:00", currentCalendarFrom, currentCalendarFrom, currentCalendarFrom);
-            tillDate = String.format("%tY-%tm-%td 23:59", currentCalendarTill, currentCalendarTill, currentCalendarTill);
+            // Инициализация строк временного диапазона
+            // для которого будут вычисляться данные на текущей итерации
+            String fromDate = String.format("%tY-%tm-%td 00:00", currentCalendarFrom, currentCalendarFrom, currentCalendarFrom);
+            String tillDate = String.format("%tY-%tm-%td 23:59", currentCalendarTill, currentCalendarTill, currentCalendarTill);
 
+            // Запрос на получение суммы платежей за определенный период времени
+            // Для трат или пополнений
             String query = "SELECT SUM (" +
                     AccountancyContract.Transaction.AMOUNT + ") " +
                     fromJoinSelector + " WHERE " + AccountancyContract.Transaction.DATE + " >= '" +
@@ -141,33 +199,36 @@ public class BarChartActivity extends UsingDataBaseActivity {
                     tillDate + "'" + " AND " + AccountancyContract.Category.IS_OUTGO +
                     " = %d" ;
 
-                cursor = db.rawQuery(String.format(query, 1), null);
-                cursor.moveToFirst();
-                outgoes.add(new BarEntry(index, Math.abs(cursor.getInt(0))));
+            // Нахождение суммы трат
+            cursor = db.rawQuery(String.format(query, 1), null);
+            cursor.moveToFirst();
+            outgoes.add(new BarEntry(index, Math.abs(cursor.getInt(0))));
+
+            // Нахождение суммы пополнений
+            cursor = db.rawQuery(String.format(query, 0), null);
+            cursor.moveToFirst();
+            incomes.add(new BarEntry(index, Math.abs(cursor.getInt(0))));
 
 
-                cursor = db.rawQuery(String.format(query, 0), null);
-                cursor.moveToFirst();
-                incomes.add(new BarEntry(index, Math.abs(cursor.getInt(0))));
+            // Переход к слеующему временному отрезку
+            index++;
+            if (changeFieldIteration == Calendar.DAY_OF_YEAR) {
+                currentCalendarFrom.set(Calendar.DAY_OF_YEAR, currentCalendarFrom.get(changeFieldIteration) + 1);
+                currentCalendarTill.set(Calendar.DAY_OF_YEAR, currentCalendarTill.get(changeFieldIteration) + 1);
+            }
+            else {
+                currentCalendarFrom.set(Calendar.DAY_OF_MONTH, currentCalendarFrom.getActualMinimum(Calendar.DAY_OF_MONTH));
+                currentCalendarFrom.set(Calendar.MONTH, currentCalendarFrom.get(Calendar.MONTH) + 1);
 
-                index++;
-                if (changeFieldIteration == Calendar.DAY_OF_YEAR) {
-                    currentCalendarFrom.set(Calendar.DAY_OF_YEAR, currentCalendarFrom.get(changeFieldIteration) + 1);
-                    currentCalendarTill.set(Calendar.DAY_OF_YEAR, currentCalendarTill.get(changeFieldIteration) + 1);
-                }
-                else {
-                    currentCalendarFrom.set(Calendar.DAY_OF_MONTH, currentCalendarFrom.getActualMinimum(Calendar.DAY_OF_MONTH));
-                    currentCalendarFrom.set(Calendar.MONTH, currentCalendarFrom.get(Calendar.MONTH) + 1);
-
-                    currentCalendarTill.set(Calendar.DAY_OF_MONTH, currentCalendarTill.getActualMinimum(Calendar.DAY_OF_MONTH));
-                    currentCalendarTill.set(Calendar.MONTH, currentCalendarTill.get(Calendar.MONTH) + 1);
-                    currentCalendarTill.set(Calendar.DAY_OF_MONTH, currentCalendarTill.getActualMaximum(Calendar.DAY_OF_MONTH));
-                }
+                currentCalendarTill.set(Calendar.DAY_OF_MONTH, currentCalendarTill.getActualMinimum(Calendar.DAY_OF_MONTH));
+                currentCalendarTill.set(Calendar.MONTH, currentCalendarTill.get(Calendar.MONTH) + 1);
+                currentCalendarTill.set(Calendar.DAY_OF_MONTH, currentCalendarTill.getActualMaximum(Calendar.DAY_OF_MONTH));
+            }
 
             cursor.close();
         }
 
-
+        // Установка данных графика
         BarDataSet barDataSetOutgoes = new BarDataSet(outgoes, "Траты");
         barDataSetOutgoes.setColor(Color.parseColor("#FFCA28"));
         BarDataSet barDataSetIncomes = new BarDataSet(incomes, "Пополнения");
@@ -183,43 +244,29 @@ public class BarChartActivity extends UsingDataBaseActivity {
 
         barChart.setData(data);
         barChart.groupBars(0, groupSpace, barSpace);
-
-        barChart.getAxisLeft().setAxisMinimum(0);
-        barChart.getAxisRight().setEnabled(false);
-
-        barChart.getXAxis().setAxisMinimum(0);
         barChart.getXAxis().setAxisMaximum(index);
-        barChart.getXAxis().setDrawGridLines(false);
-        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        barChart.getXAxis().setCenterAxisLabels(true);
-        barChart.getXAxis().setLabelRotationAngle(30);
 
+        // Формат подписи осей графика
         if (changeFieldIteration == Calendar.DAY_OF_YEAR)
             barChart.getXAxis().setValueFormatter(new DaysValueFormatter(dateSelector.getCalendarFrom()));
         else
             barChart.getXAxis().setValueFormatter(new MonthValueFormatter(dateSelector.getCalendarFrom()));
 
-        barChart.getXAxis().setGranularityEnabled(true);
-
-        barChart.setHighlightPerDragEnabled(false);
-        barChart.setHighlightPerTapEnabled(false);
-
-        barChart.getLegend().setXEntrySpace(20);
-        barChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-
-        barChart.getViewPortHandler().setMaximumScaleY(1);
         barChart.invalidate();
     }
 
     private void decreaseDate(View view) {
+        // Уменьшение временного периода
         dateSelector.dateChange(-1);
         initializeGraphics();
     }
     private void increaseDate(View view) {
+        // Увеличение временного периода
         dateSelector.dateChange(1);
         initializeGraphics();
     }
 
+    // Форматирование дней месяца
     private class DaysValueFormatter implements IAxisValueFormatter {
         String[] month = new String[] {"Янв.", "Фев.", "Мар.", "Апр.", "Май",
                 "Июн.", "Июл.", "Авг.", "Сен.", "Окт.", "Ноя.", "Дек."};
@@ -240,6 +287,8 @@ public class BarChartActivity extends UsingDataBaseActivity {
                     currentCalendar.get(Calendar.YEAR));
         }
     }
+
+    // Форматирование месяцев года
     private class MonthValueFormatter implements IAxisValueFormatter {
         String[] month = new String[] {"Январь", "Февраль", "Март", "Апрель", "Май",
                 "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};

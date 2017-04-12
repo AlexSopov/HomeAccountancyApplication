@@ -11,9 +11,10 @@ import com.application.homeaccountancy.R;
 
 import org.xmlpull.v1.XmlPullParser;
 
+// Вспомагательный класс для работы с базами данных
 public class SQLiteHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "Accountancy11.db";
+    private static final String DATABASE_NAME = "Home1.db";
     private Context context;
 
     public SQLiteHandler(Context context) {
@@ -27,6 +28,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.execSQL(AccountancyContract.SQLITE_CREATE_ACCOUNTS);
         db.execSQL(AccountancyContract.SQLITE_CREATE_TRANSACTIONS);
         db.execSQL(AccountancyContract.SQLITE_CREATE_IMAGES);
+        db.execSQL(AccountancyContract.SQLITE_CREATE_SMS);
 
         createCategories(db);
         createAccounts(db);
@@ -38,6 +40,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.execSQL(AccountancyContract.SQLITE_DELETE_ACCOUNTS);
         db.execSQL(AccountancyContract.SQLITE_DELETE_TRANSACTIONS);
         db.execSQL(AccountancyContract.SQLITE_DELETE_IMAGES);
+        db.execSQL(AccountancyContract.SQLITE_DELETE_SMS);
 
         onCreate(db);
     }
@@ -49,6 +52,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     }
 
     private void createCategories(SQLiteDatabase db) {
+        // Начальное добавление категорий
         ContentValues contentValuesCategories = new ContentValues();
         ContentValues contentValuesImages = new ContentValues();
         Resources resources = context.getResources();
@@ -87,7 +91,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         }
     }
     private void createAccounts(SQLiteDatabase db) {
-        ContentValues contentValues = new ContentValues();
+        // Начальное добавление счетов
+        ContentValues contentValues = new ContentValues( );
 
         contentValues.put(AccountancyContract.Account.A_TITLE, "Наличные");
         contentValues.put(AccountancyContract.Account.START_BALANCE, 0);

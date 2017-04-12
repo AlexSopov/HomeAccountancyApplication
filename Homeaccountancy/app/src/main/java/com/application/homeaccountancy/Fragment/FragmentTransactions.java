@@ -30,6 +30,8 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
     private SimpleCursorAdapter transactionsCursorAdapter;
     private DateSelector dateSelector;
 
+    // Фабричный метод для создания фрагмента со списком платежей
+    // Удовлетворяющих запросу query
     public static FragmentTransactions FragmentTransactionsFactory(String query) {
         FragmentTransactions fragmentTransactions = new FragmentTransactions();
         fragmentTransactions.setQuery(query);
@@ -43,6 +45,7 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
         setHasOptionsMenu(true);
         registerForContextMenu(getListView());
 
+        // Инициализация генератора времменых периодов
         dateSelector = ((MainActivity)getActivity()).getDateSelector();
         dateSelector.setOnDecreaseClickListener(new View.OnClickListener() {
             @Override
@@ -78,10 +81,15 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        // Обработка нажатия по элементу в меню
+
         if(!item.isChecked())
             item.setChecked(true);
 
         boolean isChangeState = true;
+        // В зависимости от нажатого элемента - изменить переменную
+        // для итерации
+        // Изменить временной диапазон
         switch(id){
             case R.id.range_day:
                 dateSelector.setChangeFieldInterval(Calendar.DAY_OF_YEAR);
@@ -101,6 +109,7 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
         if (isChangeState) {
             dateSelector.resetState();
             onResume();
+            updateCursors();
         }
 
         return super.onOptionsItemSelected(item);
@@ -119,14 +128,23 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
         if (!getUserVisibleHint())
             return false;
 
+        // Обработка нажатия на элементе из контекстного меню
+
+        // Id нажатого элемента
         final long id = ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).id;
         switch (item.getItemId()) {
             case R.id.change:
+                // Если нажата кнопка "Изменить"
+                // Вызвать Activity изменения категории и передать Id нажатого элемента
                 Intent intent = new Intent(getActivity().getApplicationContext(), SingleTransactionActivity.class);
                 intent.putExtra("id", id);
                 startActivity(intent);
                 return true;
             case R.id.delete:
+                // Если нажата кнопка "Удалить"
+
+                // Создать диалоговое окно для подтверждения действия
+                // и удалить элемент в случае необходимости
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                 dialog
                         .setTitle("Подтверждение действия")
@@ -202,6 +220,7 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
     }
 
     private void requeryCursor() {
+        // Обновление данных в курсоре
         cursor =  db.rawQuery(initializeConditions(query), null);
     }
     private String initializeConditions(String query) {
@@ -225,18 +244,21 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
     }
 
     private void decreaseDate(View view) {
+        // Уменьшение временного периода
         dateSelector.dateChange(-1);
         updateCursors();
 
         transactionsCursorAdapter.changeCursor(cursor);
     }
     private void increaseDate(View view) {
+        // Увеличение временного периода
         dateSelector.dateChange(1);
         updateCursors();
 
         transactionsCursorAdapter.changeCursor(cursor);
     }
     private void updateCursors() {
+        // Обновить данные во всех фрагментах, смежных с текущим
         List<Fragment> fragmentList = getFragmentManager().getFragments();
 
         for (int i = 0; i < fragmentList.size(); i++) {

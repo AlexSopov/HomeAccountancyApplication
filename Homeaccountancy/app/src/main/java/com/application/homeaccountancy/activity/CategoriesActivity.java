@@ -16,17 +16,24 @@ import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.Fragment.FragmentCategories;
 import com.application.homeaccountancy.R;
 
+// Класс описывающий Activity просмотра ктегорий
 public class CategoriesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Инициализация контента
         setContentView(R.layout.categories_activity);
 
+        // Инициализация тулбара
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Инициализация адаптера постраничного просмотра
         SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        // Кнопка добавления новой категории
         FloatingActionButton addNewCategory = (FloatingActionButton) findViewById(R.id.add_new_category);
         addNewCategory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +43,7 @@ public class CategoriesActivity extends AppCompatActivity {
             }
         });
 
+        // Элемент постраничного просмотра
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -43,6 +51,7 @@ public class CategoriesActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
     }
 
+    // Адаптер для получения фрагментов страниц
     private class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
         SectionsPagerAdapter(FragmentManager fm) {
@@ -51,6 +60,8 @@ public class CategoriesActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
+            // Генерация фрагметов, в котором определены данные
+            // отделно для категорий трат и пополнений
             FragmentCategories fragmentCategories = null;
 
             switch (position) {

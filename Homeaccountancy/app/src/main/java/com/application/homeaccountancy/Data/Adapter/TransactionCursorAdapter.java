@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.R;
 
-
+// Адаптер для вывода платежа
 public class TransactionCursorAdapter extends SimpleCursorAdapter {
     public TransactionCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
         super(context, layout, c, from, to, flags);

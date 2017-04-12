@@ -19,7 +19,9 @@ import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.R;
 import com.application.homeaccountancy.Utilities;
 
+// Класс, представляющий Ктегорию
 public class SingleCategoryActivity extends SingleEntityActivity {
+    // Переменные представления
     private TextView titleTextView;
     private RadioButton incomeCategoryRadioButton, outgoCategoryRadioButton;
     private Spinner logoSpinner;
@@ -27,11 +29,17 @@ public class SingleCategoryActivity extends SingleEntityActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Инициализация контента
         setContentView(R.layout.single_category_activity);
+
+        // Инициализация тулбара
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         initializeViews();
+
+        // Если данное Activity было вызвано для изменения
+        // созданной категории, то заполнить поля данными
         if (isEntityId()) {
             cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
                     " WHERE " + AccountancyContract.Category._ID + "=?", new String[] {String.valueOf(getEntityId())});
@@ -49,11 +57,16 @@ public class SingleCategoryActivity extends SingleEntityActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Обработка нажатия на элементе из меню
         int id = item.getItemId();
         if(!item.isChecked())
             item.setChecked(true);
 
         if (id == R.id.delete) {
+            // Если нажат элемент "Удалить"
+
+            // Создать диалоговое окно для подтверждения действия
+            // и удалить элемент в случае необходимости
             AlertDialog.Builder dialog = new AlertDialog.Builder(SingleCategoryActivity.this);
             dialog
                     .setTitle("Подтверждение действия")
@@ -77,6 +90,7 @@ public class SingleCategoryActivity extends SingleEntityActivity {
     }
 
     private void initializeViews() {
+        // Инициализировать переменные представления
         titleTextView = (TextView) findViewById(R.id.category_title);
         incomeCategoryRadioButton = (RadioButton) findViewById(R.id.category_income_rb);
         outgoCategoryRadioButton = (RadioButton) findViewById(R.id.category_outgo_rb);
@@ -114,12 +128,15 @@ public class SingleCategoryActivity extends SingleEntityActivity {
     public void saveCategory(View view) {
         String title = titleTextView.getText().toString();
 
+        // Валидация данных
         if (title.isEmpty()){
             Toast toast = Toast.makeText(this, "Название категории не может быть пустым",Toast.LENGTH_LONG);
             toast.show();
             return;
         }
 
+        // Если элемент изменялся - обновить его в базе данных
+        // Иначе - создать новый
         try {
             cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Images.TABLE_NAME +
                     " WHERE " + AccountancyContract.Images._ID + "=?",

@@ -2,6 +2,8 @@ package com.application.homeaccountancy.Data;
 
 import android.provider.BaseColumns;
 
+// Класс-контракт базы данных
+// Описаны основные поля таблиц и запросы на их создание и удаление
 public final class AccountancyContract {
 
     private static final String INTEGER_TYPE = " INTEGER";
@@ -46,6 +48,11 @@ public final class AccountancyContract {
         public static final String COLUMN_NAME_IMAGE = "image";
     }
 
+    public static class SMS implements BaseColumns {
+        public static final String TABLE_NAME = "SMS";
+        public static final String COLUMN_NAME_SMS_ID = "sms_id";
+    }
+
     static final String SQLITE_CREATE_TRANSACTIONS = CREATE_TABLE +
             Transaction.TABLE_NAME + " (" +
             Transaction._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA +
@@ -77,9 +84,15 @@ public final class AccountancyContract {
             Images._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA +
             Images.COLUMN_NAME_IMAGE + INTEGER_TYPE + NOT_NULL + ")";
 
+    static final String SQLITE_CREATE_SMS = CREATE_TABLE +
+            SMS.TABLE_NAME + " (" +
+            SMS._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA +
+            SMS.COLUMN_NAME_SMS_ID + INTEGER_TYPE + NOT_NULL + ")";
+
 
     static final String SQLITE_DELETE_TRANSACTIONS = DROP_TABLE + Transaction.TABLE_NAME;
     static final String SQLITE_DELETE_CATEGORIES = DROP_TABLE + Category.TABLE_NAME;
     static final String SQLITE_DELETE_ACCOUNTS = DROP_TABLE + Account.TABLE_NAME;
     static final String SQLITE_DELETE_IMAGES = DROP_TABLE + Images.TABLE_NAME;
+    static final String SQLITE_DELETE_SMS = DROP_TABLE + SMS.TABLE_NAME;
 }

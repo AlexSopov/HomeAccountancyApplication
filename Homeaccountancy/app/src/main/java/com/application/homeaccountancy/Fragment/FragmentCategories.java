@@ -21,6 +21,8 @@ public class FragmentCategories extends UsingDataBaseListFragment {
     private String query;
     private SimpleCursorAdapter categoriesCursorAdapter;
 
+    // Фабричный метод для создания фрагмента со списком категорий
+    // Удовлетворяющих запросу query
     public static FragmentCategories FragmentCategoriesFactory(String query) {
         FragmentCategories fragmentCategories = new FragmentCategories();
         fragmentCategories.setQuery(query +
@@ -34,6 +36,8 @@ public class FragmentCategories extends UsingDataBaseListFragment {
 
         setEmptyText(Html.fromHtml(getResources().getString(R.string.empty_text)));
 
+        // Зарегистрировать событие создания контекстного меню
+        // при долгом нажатии на элемент списка
         registerForContextMenu(getListView());
         initializeAdapter();
     }
@@ -51,14 +55,23 @@ public class FragmentCategories extends UsingDataBaseListFragment {
         if (!getUserVisibleHint())
             return false;
 
+        // Обработка нажатия на элементе из контекстного меню
+
+        // Id нажатого элемента
         final long id = ((AdapterView.AdapterContextMenuInfo) item.getMenuInfo()).id;
         switch (item.getItemId()) {
+            // Если нажата кнопка "Изменить"
+            // Вызвать Activity изменения категории и передать Id нажатого элемента
             case R.id.change:
                 Intent intent = new Intent(getActivity().getApplicationContext(), SingleCategoryActivity.class);
                 intent.putExtra("id", id);
                 startActivity(intent);
                 return true;
             case R.id.delete:
+                // Если нажата кнопка "Удалить"
+
+                // Создать диалоговое окно для подтверждения действия
+                // и удалить элемент в случае необходимости
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                 dialog
                         .setTitle("Подтверждение действия")
@@ -93,17 +106,22 @@ public class FragmentCategories extends UsingDataBaseListFragment {
     }
 
     private void initializeAdapter() {
+        // Поля для вывода данных
         String[] from = new String[] {
                 AccountancyContract.Category.C_TITLE,
                 AccountancyContract.Category.ICON
         };
 
+        // Элементы, куда будут выводиться данные
         int[] to = new int[] {
                 R.id.category_list_item_title,
                 R.id.category_list_item_icon
         };
 
+        // Обновление данных в курсоре
         requeryCursor();
+
+        // Инициализация адаптера
         categoriesCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),
                 R.layout.category_list_item, cursor, from, to, 0);
         setListAdapter(categoriesCursorAdapter);
@@ -117,6 +135,7 @@ public class FragmentCategories extends UsingDataBaseListFragment {
     }
 
     private void requeryCursor() {
+        // Обновление данных в курсоре
         cursor =  db.rawQuery(query, null);
     }
 }
