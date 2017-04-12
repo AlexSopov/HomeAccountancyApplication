@@ -29,6 +29,7 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
     private String query;
     private SimpleCursorAdapter transactionsCursorAdapter;
     private DateSelector dateSelector;
+    private static int selectedId;
 
     // Фабричный метод для создания фрагмента со списком платежей
     // Удовлетворяющих запросу query
@@ -76,17 +77,22 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.date_selector_menu, menu);
+
+        if (selectedId != 0)
+            menu.findItem(selectedId).setChecked(true);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
         // Обработка нажатия по элементу в меню
+        int id = item.getItemId();
+
+        if (id == 0)
+            return super.onOptionsItemSelected(item);
 
         if(!item.isChecked())
             item.setChecked(true);
 
-        boolean isChangeState = true;
         // В зависимости от нажатого элемента - изменить переменную
         // для итерации
         // Изменить временной диапазон
@@ -103,14 +109,11 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
             case R.id.range_year:
                 dateSelector.setChangeFieldInterval(Calendar.YEAR);
                 break;
-            default:
-                isChangeState = false;
         }
-        if (isChangeState) {
-            dateSelector.resetState();
-            onResume();
-            updateCursors();
-        }
+        dateSelector.resetState();
+        onResume();
+        updateCursors();
+        selectedId = id;
 
         return super.onOptionsItemSelected(item);
     }
@@ -158,6 +161,7 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
                                 );
                                 requeryCursor();
                                 transactionsCursorAdapter.changeCursor(cursor);
+                                updateCursors();
                             }
                         })
                         .setNegativeButton("Нет", null)

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<patterns>
+    <pattern pattern="pattern_1" account_pattern="account_pattern_1" amount_pattern="amount_pattern_1" />
+</patterns>

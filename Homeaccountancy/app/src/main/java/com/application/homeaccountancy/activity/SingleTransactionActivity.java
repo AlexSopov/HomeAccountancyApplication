@@ -90,7 +90,6 @@ public class SingleTransactionActivity extends SingleEntityActivity {
             }
             dateTime.setTime(time);
 
-
             if (amount >= 0)
                 signButton.performClick();
 

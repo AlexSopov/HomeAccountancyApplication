@@ -34,8 +34,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/categories_types"
-            android:textAlignment="center"
-            android:gravity="center"
             android:textColor="@color/main_text_color"
             android:textSize="@dimen/description_text_size"
             style="@style/Widget.AppCompat.Spinner.Underlined" />

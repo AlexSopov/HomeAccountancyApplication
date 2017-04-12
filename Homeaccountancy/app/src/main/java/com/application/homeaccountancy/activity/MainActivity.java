@@ -1,35 +1,27 @@
 package com.application.homeaccountancy.Activity;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
-import com.application.homeaccountancy.Data.AccountancyContract;
 import com.application.homeaccountancy.DateSelector;
 import com.application.homeaccountancy.Fragment.FragmentTransactions;
 import com.application.homeaccountancy.R;
-import com.application.homeaccountancy.Utilities;
-
-import java.util.Calendar;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.application.homeaccountancy.SMSParser.SMSParser;
 
 public class MainActivity extends UsingDataBaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -131,132 +123,22 @@ public class MainActivity extends UsingDataBaseActivity
         Cursor cursor = getContentResolver().query(Uri.parse("content://sms/inbox"),
                 null, null, null, null);
 
+        SMSParser smsParser = new SMSParser(getApplicationContext(), db);
         if (cursor != null && cursor.moveToFirst()) { // must check the result to prevent exception
             do {
-                // Получение текста и id смс
+                // Получение текста, даты и id смс
                 String smsMessage = cursor.getString(cursor.getColumnIndex("body"));
+                long time = cursor.getLong(cursor.getColumnIndex("date"));
                 long smsID = cursor.getLong(cursor.getColumnIndex("_id"));
 
-                // Проверка на ссответствие текста сообщения паттерну
-                Pattern pattern = Pattern.compile("Pattern");
-                Matcher matcher = pattern.matcher(smsMessage);
-
-                // Если тест совпадает - занести данные про платеж
-                //if (!matcher.matches()) continue;
-
-                // Проверка, обработано ли ранее данное смс
-                Cursor cursorSMS = db.rawQuery("SELECT * FROM " +
-                        AccountancyContract.SMS.TABLE_NAME +
-                        " WHERE " + AccountancyContract.SMS._ID + "=" + smsID, null);
-
-                if (cursorSMS.getCount() == 0) {
-                    // Получение данных платежа
-                    long accountID = getSMSAccountID(smsMessage);
-                    if (accountID <= 0) {
-                        cursorSMS.close();
-                        continue;
-                    }
-                    long categoryID = getSMSCategoryID(smsMessage);
-                    double amount = getSMSAmount(smsMessage);
-
-                    // Занести данные в базу данных
-                    ContentValues contentValuesTransaction = new ContentValues();
-                    contentValuesTransaction.put(AccountancyContract.Transaction.DATE, Utilities.getSQLiteTimeString(Calendar.getInstance()));
-                    contentValuesTransaction.put(AccountancyContract.Transaction.AMOUNT, amount);
-                    contentValuesTransaction.put(AccountancyContract.Transaction.ACCOUNT_ID, accountID);
-                    contentValuesTransaction.put(AccountancyContract.Transaction.CATEGORY_ID, categoryID);
-                    db.insert(AccountancyContract.Transaction.TABLE_NAME, null, contentValuesTransaction);
-
-                    // Пометить сообщение как проанализированное
-                    ContentValues contentValuesSMS = new ContentValues();
-                    contentValuesSMS.put(AccountancyContract.SMS.COLUMN_NAME_SMS_ID, smsID);
-                    db.insert(AccountancyContract.SMS.TABLE_NAME, null, contentValuesSMS);
-                }
-                cursorSMS.close();
-
-            } while (cursor.moveToNext());
+                // Обработка смс
+                smsParser.handleSMS(smsMessage, time, smsID);
+            }
+            while (cursor.moveToNext());
 
             cursor.close();
         }
     }
-    private long getSMSAccountID(String message) {
-        // Получение id счета из смс
-        long id = -1;
-        String smsAccount = getSMSAccount(message);
-        if (smsAccount.isEmpty())
-            return id;
-
-
-        Cursor accountCursor = db.rawQuery("SELECT " +
-                AccountancyContract.Account._ID + " FROM " +
-                AccountancyContract.Account.TABLE_NAME +
-                " WHERE " + AccountancyContract.Account.A_TITLE + "=" +
-                getSMSAccount(message), null);
-
-        if (accountCursor.moveToFirst())
-            id = accountCursor.getLong(cursor.getColumnIndex(AccountancyContract.Account._ID));
-
-        accountCursor.close();
-        return id;
-    }
-    private long getSMSCategoryID(String message) {
-        long id = -1;
-        double amount = getSMSAmount(message);
-
-        Cursor categoryCursor;
-        String categoryQuery = "SELECT " + AccountancyContract.Category._ID + " FROM " +
-                AccountancyContract.Category.TABLE_NAME + " WHERE " +
-                AccountancyContract.Category.C_TITLE + "=%s";
-
-        // Поиск "нулевых" категорий в зависимости от суммы платежа
-        if (amount >= 0)
-            categoryCursor = db.rawQuery(String.format(categoryQuery, "Прочие доходы"), null);
-        else
-            categoryCursor = db.rawQuery(String.format(categoryQuery, "Прочие затраты"), null);
-
-        // Если категория найдена - вернуть её id
-        // Иначе - создать новую категори
-        if (categoryCursor.moveToFirst())
-            id = cursor.getLong(cursor.getColumnIndex(AccountancyContract.Category._ID));
-        else {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(AccountancyContract.Category.ICON, R.drawable.others);
-
-            if (amount >= 0) {
-                contentValues.put(AccountancyContract.Category.C_TITLE, "Прочие затраты");
-                contentValues.put(AccountancyContract.Category.IS_OUTGO, 0);
-            }
-            else {
-                contentValues.put(AccountancyContract.Category.C_TITLE, "Прочие доходы");
-                contentValues.put(AccountancyContract.Category.IS_OUTGO, 1);
-            }
-            id = db.insert(AccountancyContract.Category.TABLE_NAME, null, contentValues);
-        }
-        categoryCursor.close();
-
-        return id;
-    }
-    private String getSMSAccount(String message) {
-        // Получение счёте из смс
-        Pattern pattern = Pattern.compile("pattern_account");
-        Matcher matcher = pattern.matcher(message);
-
-        if (matcher.find()) {
-            return matcher.group(0);
-        }
-        return "";
-    }
-    private double getSMSAmount(String message) {
-        // Получение суммы из смс
-        Pattern pattern = Pattern.compile("pattern_amount");
-        Matcher matcher = pattern.matcher(message);
-
-        if (matcher.find()) {
-            return Double.parseDouble(matcher.group(0));
-        }
-        return 0;
-    }
-
     public DateSelector getDateSelector() {
         return dateSelector;
     }
