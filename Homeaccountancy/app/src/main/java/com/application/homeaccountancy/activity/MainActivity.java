@@ -22,6 +22,7 @@ import com.application.homeaccountancy.DateSelector;
 import com.application.homeaccountancy.Fragment.FragmentTransactions;
 import com.application.homeaccountancy.R;
 import com.application.homeaccountancy.SMSParser.SMSParser;
+import com.application.homeaccountancy.Utilities;
 
 public class MainActivity extends UsingDataBaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -39,6 +40,7 @@ public class MainActivity extends UsingDataBaseActivity
         // Инициализация тулраба
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTitle("Журнал");
 
         // Инициализация объекта для генерации временных периодов
         dateSelector = new DateSelector(this);
@@ -124,19 +126,22 @@ public class MainActivity extends UsingDataBaseActivity
                 null, null, null, null);
 
         SMSParser smsParser = new SMSParser(getApplicationContext(), db);
-        if (cursor != null && cursor.moveToFirst()) { // must check the result to prevent exception
+        int count = 0;
+        if (cursor != null && cursor.moveToFirst()) {
             do {
                 // Получение текста, даты и id смс
                 String smsMessage = cursor.getString(cursor.getColumnIndex("body"));
                 long time = cursor.getLong(cursor.getColumnIndex("date"));
-                long smsID = cursor.getLong(cursor.getColumnIndex("_id"));
 
                 // Обработка смс
-                smsParser.handleSMS(smsMessage, time, smsID);
+                if (smsParser.handleSMS(smsMessage.trim(), time))
+                    count++;
             }
             while (cursor.moveToNext());
-
             cursor.close();
+
+            if (count > 0)
+                Utilities.makeToast(getApplicationContext(), String.format("Было добавлено %d платежей из смс", count));
         }
     }
     public DateSelector getDateSelector() {

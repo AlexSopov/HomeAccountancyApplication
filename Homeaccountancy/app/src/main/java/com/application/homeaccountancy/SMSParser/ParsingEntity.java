@@ -4,13 +4,13 @@ class ParsingEntity {
     private String pattern;
     private String accountPattern;
     private String amountPattern;
-    private String datePattern;
+    private String negativeFormatter;
 
-    ParsingEntity(String pattern, String accountPattern, String amountPattern) {
+    ParsingEntity(String pattern, String accountPattern, String amountPattern, String negativeFormatter) {
         this.pattern = pattern;
         this.accountPattern = accountPattern;
         this.amountPattern = amountPattern;
-        this.datePattern = datePattern;
+        this.negativeFormatter = negativeFormatter;
     }
 
     String getPattern() {
@@ -21,5 +21,8 @@ class ParsingEntity {
     }
     String getAmountPattern() {
         return amountPattern;
+    }
+    String getNegativeFormatter() {
+        return negativeFormatter;
     }
 }

@@ -11,10 +11,10 @@ import com.application.homeaccountancy.R;
 
 import org.xmlpull.v1.XmlPullParser;
 
-// Вспомагательный класс для работы с базами данных
+// Вспомагательный класс для работы с базой данных
 public class SQLiteHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "Home1.db";
+    private static final String DATABASE_NAME = "HomeAccountancyDB.db";
     private Context context;
 
     public SQLiteHandler(Context context) {
@@ -36,9 +36,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(AccountancyContract.SQLITE_DELETE_CATEGORIES);
-        db.execSQL(AccountancyContract.SQLITE_DELETE_ACCOUNTS);
         db.execSQL(AccountancyContract.SQLITE_DELETE_TRANSACTIONS);
+        db.execSQL(AccountancyContract.SQLITE_DELETE_ACCOUNTS);
+        db.execSQL(AccountancyContract.SQLITE_DELETE_CATEGORIES);
         db.execSQL(AccountancyContract.SQLITE_DELETE_IMAGES);
         db.execSQL(AccountancyContract.SQLITE_DELETE_SMS);
 

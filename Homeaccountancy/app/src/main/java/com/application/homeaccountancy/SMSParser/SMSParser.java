@@ -42,16 +42,16 @@ public class SMSParser {
         initializePatternEntities();
     }
 
-    public void handleSMS(String message, long time, long id) {
+    public boolean handleSMS(String message, long time) {
         // Если смс было ранне обработано - прекратить обработку
-        if (smsHandled(id))
-            return;
+        if (smsHandled(time))
+            return false;
 
         // Получение объекта, содержащего паттерны получение счета, категории и суммы,
         // который соответствуте данному смс
         ParsingEntity parsingEntity = getParsingEntity(message);
         if (parsingEntity == null)
-            return;
+            return false;
 
         // Получение данных платежа
         // Получение счета платежа
@@ -59,7 +59,7 @@ public class SMSParser {
 
         // Если не найден подходящий счет - прекратить обработку
         if (accountID <= 0)
-            return;
+            return false;
 
         // Получение категории платежа
         long categoryID = getSMSCategoryID(message, parsingEntity);
@@ -78,12 +78,15 @@ public class SMSParser {
         contentValuesTransaction.put(AccountancyContract.Transaction.AMOUNT, amount);
         contentValuesTransaction.put(AccountancyContract.Transaction.ACCOUNT_ID, accountID);
         contentValuesTransaction.put(AccountancyContract.Transaction.CATEGORY_ID, categoryID);
+        contentValuesTransaction.put(AccountancyContract.Transaction.NOTE, "");
         db.insert(AccountancyContract.Transaction.TABLE_NAME, null, contentValuesTransaction);
 
         // Пометить сообщение как проанализированное
         ContentValues contentValuesSMS = new ContentValues();
-        contentValuesSMS.put(AccountancyContract.SMS.COLUMN_NAME_SMS_ID, id);
+        contentValuesSMS.put(AccountancyContract.SMS.COLUMN_NAME_SMS_DATE, time);
         db.insert(AccountancyContract.SMS.TABLE_NAME, null, contentValuesSMS);
+
+        return true;
     }
 
     private void initializePatternEntities() {
@@ -100,8 +103,9 @@ public class SMSParser {
                     String pattern = xmlResourceParser.getAttributeValue(0);
                     String accountPattern = xmlResourceParser.getAttributeValue(1);
                     String amountPattern = xmlResourceParser.getAttributeValue(2);
+                    String negativeFormatter = xmlResourceParser.getAttributeValue(3);
 
-                    parsingEntities.add(new ParsingEntity(pattern, accountPattern, amountPattern));
+                    parsingEntities.add(new ParsingEntity(pattern, accountPattern, amountPattern, negativeFormatter));
                 }
                 eventType = xmlResourceParser.next();
             }
@@ -113,10 +117,10 @@ public class SMSParser {
         }
     }
 
-    private boolean smsHandled(long id) {
+    private boolean smsHandled(long time) {
         // Проверка, обработано ли ранее данное смс
         Cursor cursorSMS = db.rawQuery("SELECT * FROM " + AccountancyContract.SMS.TABLE_NAME +
-                " WHERE " + AccountancyContract.SMS._ID + "=" + id, null);
+                " WHERE " + AccountancyContract.SMS.COLUMN_NAME_SMS_DATE + "=" + time, null);
 
         boolean result = cursorSMS.getCount() != 0;
         cursorSMS.close();
@@ -149,7 +153,7 @@ public class SMSParser {
 
         Cursor accountCursor = db.rawQuery("SELECT " + AccountancyContract.Account._ID +
                 " FROM " + AccountancyContract.Account.TABLE_NAME +
-                " WHERE " + AccountancyContract.Account.A_TITLE + " LIKE %" + smsAccount + "%",
+                " WHERE " + AccountancyContract.Account.A_TITLE + " LIKE '%" + smsAccount + "%'",
                 null);
 
         if (accountCursor.moveToFirst())
@@ -160,7 +164,6 @@ public class SMSParser {
     }
     private long getSMSCategoryID(String message, ParsingEntity parsingEntity) {
         // Получение id категории из смс
-
         long id;
         double amount = getSMSAmount(message, parsingEntity);
 
@@ -171,9 +174,9 @@ public class SMSParser {
 
         // Поиск "нулевых" категорий в зависимости от суммы платежа
         if (amount >= 0)
-            categoryCursor = db.rawQuery(String.format(categoryQuery, "Прочие пополнения"), null);
+            categoryCursor = db.rawQuery(String.format(categoryQuery, "'Прочие пополнения'"), null);
         else
-            categoryCursor = db.rawQuery(String.format(categoryQuery, "Прочие траты"), null);
+            categoryCursor = db.rawQuery(String.format(categoryQuery, "'Прочие траты'"), null);
 
         // Если категория найдена - вернуть её id
         // Иначе - создать новую категори
@@ -184,11 +187,11 @@ public class SMSParser {
             contentValues.put(AccountancyContract.Category.ICON, R.drawable.others);
 
             if (amount >= 0) {
-                contentValues.put(AccountancyContract.Category.C_TITLE, "Прочие траты");
+                contentValues.put(AccountancyContract.Category.C_TITLE, "'Прочие пополнения'");
                 contentValues.put(AccountancyContract.Category.IS_OUTGO, 0);
             }
             else {
-                contentValues.put(AccountancyContract.Category.C_TITLE, "Прочие пополнения");
+                contentValues.put(AccountancyContract.Category.C_TITLE, "'Прочие траты'");
                 contentValues.put(AccountancyContract.Category.IS_OUTGO, 1);
             }
             id = db.insert(AccountancyContract.Category.TABLE_NAME, null, contentValues);
@@ -204,7 +207,11 @@ public class SMSParser {
         Matcher matcher = pattern.matcher(message);
 
         if (matcher.find()) {
-            return matcher.group(0);
+            String account = matcher.group(0);
+            if (account.length() >= 4)
+                return account.substring(account.length() - 4, account.length());
+            else
+                return account;
         }
         return "";
     }
@@ -214,8 +221,20 @@ public class SMSParser {
         Matcher matcher = pattern.matcher(message);
 
         if (matcher.find()) {
-            return Double.parseDouble(matcher.group(0).replace(',', '.'));
+            double amount = Double.parseDouble(matcher.group(0).
+                    replaceAll(" ", "").replace(',', '.'));
+            amount *= getSMSAmountSign(message, parsingEntity);
+            return amount;
         }
         return 0;
+    }
+    private int getSMSAmountSign(String message, ParsingEntity parsingEntity) {
+        Pattern pattern = Pattern.compile(parsingEntity.getNegativeFormatter());
+        Matcher matcher = pattern.matcher(message);
+
+        if (matcher.find()) {
+            return -1;
+        }
+        return 1;
     }
 }

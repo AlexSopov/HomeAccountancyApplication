@@ -50,7 +50,7 @@ public final class AccountancyContract {
 
     public static class SMS implements BaseColumns {
         public static final String TABLE_NAME = "SMS";
-        public static final String COLUMN_NAME_SMS_ID = "sms_id";
+        public static final String COLUMN_NAME_SMS_DATE = "sms_date";
     }
 
     static final String SQLITE_CREATE_TRANSACTIONS = CREATE_TABLE +
@@ -87,7 +87,7 @@ public final class AccountancyContract {
     static final String SQLITE_CREATE_SMS = CREATE_TABLE +
             SMS.TABLE_NAME + " (" +
             SMS._ID + INTEGER_PRIMARY_KEY_AUTOINCREMENT + COMMA +
-            SMS.COLUMN_NAME_SMS_ID + INTEGER_TYPE + NOT_NULL + ")";
+            SMS.COLUMN_NAME_SMS_DATE + INTEGER_TYPE + NOT_NULL + ")";
 
 
     static final String SQLITE_DELETE_TRANSACTIONS = DROP_TABLE + Transaction.TABLE_NAME;

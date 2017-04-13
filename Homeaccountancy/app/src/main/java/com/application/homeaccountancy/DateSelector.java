@@ -39,6 +39,10 @@ public class DateSelector {
     }
     public void dateChange(int delta) {
         // Изменить период на delta шагов периода
+
+        if (calendarFrom.get(Calendar.YEAR) + delta < 1970 || calendarTill.get(Calendar.YEAR) + delta > 2070)
+            return;
+
         switch (changeFieldInterval) {
             case Calendar.DAY_OF_YEAR:
                 calendarTill.set(Calendar.DAY_OF_YEAR, calendarTill.get(Calendar.DAY_OF_YEAR) + delta);
@@ -68,12 +72,6 @@ public class DateSelector {
                 calendarFrom.set(Calendar.YEAR, calendarTill.get(Calendar.YEAR));
                 break;
         }
-        if (calendarFrom.get(Calendar.YEAR) < 1970)
-            calendarFrom.set(Calendar.YEAR, 1970);
-
-        if (calendarTill.get(Calendar.YEAR) > 2070)
-            calendarTill.set(Calendar.YEAR, 2070);
-
         setDateTimeView();
     }
     public void resetState() {

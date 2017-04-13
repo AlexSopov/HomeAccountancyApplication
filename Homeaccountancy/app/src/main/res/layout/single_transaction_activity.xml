@@ -220,7 +220,7 @@
                         android:textColor="@color/primary"
                         android:hint="Введите заметку"
                         android:inputType="textCapSentences"
-                        android:theme="@android:style/Widget.Holo.EditText" />
+                        android:singleLine="false" />
 
                 </LinearLayout>
 

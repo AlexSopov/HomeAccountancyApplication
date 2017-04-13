@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <patterns>
-    <pattern pattern="pattern_1" account_pattern="account_pattern_1" amount_pattern="amount_pattern_1" />
+    <pattern
+        pattern="^\\w+ (\\d|x)+\\d{4} (Pokupka|Zachislenie) .+ Summa \\d+\\.\\d+ .+$"
+        account_pattern="(\\d|x)+\\d{4}"
+        amount_pattern="\\d+\\.\\d+"
+        negative_formatter="Pokupka" />
 </patterns>
