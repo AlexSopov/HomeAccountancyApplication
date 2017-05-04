@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -49,6 +50,9 @@ public class SingleTransactionActivity extends SingleEntityActivity {
     // ID категории и счета платежа
     private long categoryID, accountID;
 
+    // Категория платежа (трата/пополнение)
+    private int categoryType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,8 +68,14 @@ public class SingleTransactionActivity extends SingleEntityActivity {
         initializeViews();
         initializeListeners();
 
-        isNegativeAmount = true;
         dateTime = Calendar.getInstance();
+        isNegativeAmount = true;
+
+        // Получение типа платежа
+        categoryType = getCategoryType();
+        if (categoryType == 0)
+            signButton.callOnClick();
+
 
         // Если данное Activity было вызвано для изменения
         // созданной категории, то заполнить поля данными
@@ -90,15 +100,11 @@ public class SingleTransactionActivity extends SingleEntityActivity {
             }
             dateTime.setTime(time);
 
-            if (amount >= 0)
-                signButton.performClick();
-
             transactionAmountEditText.setText(String.valueOf(Math.abs(amount)));
             noteEditTextEditText.setText(note);
         }
         setInitialDateTime();
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -155,6 +161,7 @@ public class SingleTransactionActivity extends SingleEntityActivity {
         SimpleCursorAdapter categoriesAdapter, accountsAdapter;
 
         cursor = db.rawQuery("SELECT * FROM " + AccountancyContract.Category.TABLE_NAME +
+                " WHERE " + AccountancyContract.Category.IS_OUTGO + "=" + categoryType +
                 " ORDER BY " + AccountancyContract.Category.IS_OUTGO + " DESC" + AccountancyContract.COMMA +
                 AccountancyContract.Category.C_TITLE + " ASC", null);
         categoriesAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, cursor,
@@ -328,5 +335,25 @@ public class SingleTransactionActivity extends SingleEntityActivity {
         // Добавить новый счет
         Intent intent = new Intent(getApplicationContext(), SingleAccountActivity.class);
         startActivity(intent);
+    }
+
+    private int getCategoryType() {
+        if (isEntityId()) {
+            cursor = db.rawQuery("SELECT " + AccountancyContract.Category.IS_OUTGO + " FROM " + AccountancyContract.Transaction.TABLE_NAME +
+                    " INNER JOIN " + AccountancyContract.Category.TABLE_NAME + " ON " +
+                    AccountancyContract.Transaction.CATEGORY_ID + " = " + AccountancyContract.Category.TABLE_NAME + "." + AccountancyContract.Category._ID +
+                    " WHERE " + AccountancyContract.Transaction.TABLE_NAME + "." + AccountancyContract.Transaction._ID + "=?",
+                    new String[] {String.valueOf(getEntityId())});
+            cursor.moveToFirst();
+
+            return cursor.getInt(cursor.getColumnIndex(AccountancyContract.Category.IS_OUTGO));
+        }
+        else {
+            Bundle extras = getIntent().getExtras();
+            if (extras != null && extras.containsKey("category")) {
+                return extras.getInt("category");
+            }
+        }
+        return -1;
     }
 }

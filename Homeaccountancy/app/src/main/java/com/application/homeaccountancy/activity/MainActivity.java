@@ -1,5 +1,6 @@
 package com.application.homeaccountancy.Activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,11 +10,13 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,20 +65,34 @@ public class MainActivity extends UsingDataBaseActivity
         SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Элемент постраничного просмотра
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
+        final ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
 
         // Кнопка для добавления нового платежа
         FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.add_new_transaction);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            // В зависимости от страницы просмотра журнала
+            // При добавлении новой запии определить категорию платежа
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SingleTransactionActivity.class);
-                startActivity(intent);
+                final int[] category = new int[1];
+                switch (mViewPager.getCurrentItem()) {
+                    case 1:
+                        intent.putExtra("category", 1);
+                        startActivity(intent);
+                        break;
+                    case 2:
+                        intent.putExtra("category", 0);
+                        startActivity(intent);
+                        break;
+                    case 0:
+                    default:
+                        getCategoryTypeFromDialog(intent).show();
+                }
             }
         });
-        floatingActionButton.setVerticalFadingEdgeEnabled(true);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -202,5 +219,18 @@ public class MainActivity extends UsingDataBaseActivity
             }
             return null;
         }
+    }
+
+    private AlertDialog getCategoryTypeFromDialog(final Intent intent) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Выберите тип платежа");
+        builder.setItems(new String[]{"Пополнение", "Трата"}, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                intent.putExtra("category", which);
+                startActivity(intent);
+            }
+        });
+        return builder.create();
     }
 }

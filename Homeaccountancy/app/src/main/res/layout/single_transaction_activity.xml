@@ -108,13 +108,13 @@
                             android:id="@+id/transaction_sum"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:inputType="numberDecimal"
                             android:textColor="@color/primary"
                             android:layout_weight="1"
                             android:maxLength="6"
                             android:hint="Сумма"
                             android:gravity="end"
-                            android:textAlignment="textEnd">
+                            android:textAlignment="textEnd"
+                            android:inputType="numberDecimal|phone">
                             <requestFocus/>
                         </EditText>
                         <TextView
