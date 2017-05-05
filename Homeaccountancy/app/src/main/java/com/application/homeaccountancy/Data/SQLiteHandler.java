@@ -13,8 +13,8 @@ import org.xmlpull.v1.XmlPullParser;
 
 // Вспомагательный класс для работы с базой данных
 public class SQLiteHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 7;
-    private static final String DATABASE_NAME = "HomeAccountancyDB.db";
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "HomeAccountancyDB_.db";
     private Context context;
 
     public SQLiteHandler(Context context) {

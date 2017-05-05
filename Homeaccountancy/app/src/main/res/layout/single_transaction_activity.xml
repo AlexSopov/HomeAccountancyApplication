@@ -110,20 +110,20 @@
                             android:layout_height="wrap_content"
                             android:textColor="@color/primary"
                             android:layout_weight="1"
-                            android:maxLength="6"
+                            android:maxLength="15"
                             android:hint="Сумма"
                             android:gravity="end"
                             android:textAlignment="textEnd"
-                            android:inputType="numberDecimal|phone">
+                            android:inputType="number">
                             <requestFocus/>
                         </EditText>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="руб."
-                            android:textColor="@color/main_text_color"
-                            android:textSize="@dimen/text_size_transaction"
-                            android:gravity="center"/>
+                        <ImageButton
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:onClick="callCalculatorForResult"
+                            app:srcCompat="@drawable/calculator"
+                            android:background="@android:color/transparent"
+                            android:id="@+id/btn_call_calculator" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -154,12 +154,14 @@
                             android:textColor="@color/main_text_color"
                             android:id="@+id/transaction_category"
                             style="@style/Widget.AppCompat.Spinner.Underlined" />
+
                         <ImageButton
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:onClick="addNewCategory"
                             app:srcCompat="@drawable/ic_edit"
-                            android:background="@android:color/transparent" />
+                            android:background="@android:color/transparent"
+                            android:id="@+id/imageButton2" />
 
                     </LinearLayout>
                 </LinearLayout>

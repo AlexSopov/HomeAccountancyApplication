@@ -146,6 +146,17 @@ public class SingleTransactionActivity extends SingleEntityActivity {
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data == null || !data.hasExtra("result"))
+            return;
+
+        double amount = data.getDoubleExtra("result", 0);
+        transactionAmountEditText.setText(String.valueOf(Math.abs(amount)));
+    }
+
     private void initializeViews() {
         // Инициализировать переменные представления
         categoriesSpinner = (Spinner)findViewById(R.id.transaction_category);
@@ -355,5 +366,18 @@ public class SingleTransactionActivity extends SingleEntityActivity {
             }
         }
         return -1;
+    }
+
+    public void callCalculatorForResult(View view) {
+        Intent intent = new Intent(getApplicationContext(), CalculatorActivity.class);
+
+        String amount = "";
+        if (!transactionAmountEditText.getText().toString().isEmpty()) {
+            amount = isNegativeAmount ? "-" : "";
+            amount += transactionAmountEditText.getText().toString();
+        }
+
+        intent.putExtra("result", amount);
+        startActivityForResult(intent, 0);
     }
 }

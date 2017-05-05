@@ -52,4 +52,5 @@
         <item>Траты</item>
         <item>Пополнения</item>
     </string-array>
+    <string name="title_activity_calculator">CalculatorActivity</string>
 </resources>
