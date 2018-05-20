@@ -58,10 +58,9 @@ public class SingleAccountActivity extends SingleEntityActivity {
             // и удалить элемент в случае необходимости
             AlertDialog.Builder dialog = new AlertDialog.Builder(SingleAccountActivity.this);
             dialog
-                    .setTitle("Подтверждение действия")
-                    .setMessage("Вы действительно хотите удалить счёт? Все записи данного " +
-                            "счёта будут стерты.")
-                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    .setTitle("Confirm the action")
+                    .setMessage("Do you really want to delete account? All relative transaction will be deleted.")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             db.delete(AccountancyContract.Account.TABLE_NAME,
@@ -71,7 +70,7 @@ public class SingleAccountActivity extends SingleEntityActivity {
                             finish();
                         }
                     })
-                    .setNegativeButton("Нет", null)
+                    .setNegativeButton("No", null)
                     .create();
             dialog.show();
         }
@@ -90,12 +89,12 @@ public class SingleAccountActivity extends SingleEntityActivity {
 
         // Валидация данных
         if (title.isEmpty()){
-            Utilities.makeToast(this, "Название счёта не может быть пустым");
+            Utilities.makeToast(this, "Account name can not be empty");
             return;
         }
 
         if (startBalanceText.isEmpty()){
-            Utilities.makeToast(this, "Необхоимо ввести начальный баланс счёта");
+            Utilities.makeToast(this, "Start balance is required.");
             return;
         }
 
@@ -118,7 +117,7 @@ public class SingleAccountActivity extends SingleEntityActivity {
             }
         }
         catch (SQLiteConstraintException exception) {
-            Utilities.makeToast(this, "Счёт с таким именем уже существует");
+            Utilities.makeToast(this, "Account with the same name already exists.");
         }
     }
 }

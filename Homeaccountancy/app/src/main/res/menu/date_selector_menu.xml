@@ -9,14 +9,14 @@
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/range_day"
-                    android:title="День" />
+                    android:title="Day" />
                 <item android:id="@+id/range_week"
-                    android:title="Неделя" />
+                    android:title="Week" />
                 <item android:id="@+id/range_month"
-                    android:title="Месяц"
+                    android:title="Month"
                     android:checked="true" />
                 <item android:id="@+id/range_year"
-                    android:title="Год" />
+                    android:title="Year" />
             </group>
         </menu>
     </item>

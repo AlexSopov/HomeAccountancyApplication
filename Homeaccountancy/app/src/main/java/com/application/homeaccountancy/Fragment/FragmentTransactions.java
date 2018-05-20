@@ -150,9 +150,9 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
                 // и удалить элемент в случае необходимости
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                 dialog
-                        .setTitle("Подтверждение действия")
-                        .setMessage("Вы действительно хотите удалить запись?")
-                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                        .setTitle("Confirm action")
+                        .setMessage("Do you really want to delete transaction?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 db.delete(AccountancyContract.Transaction.TABLE_NAME,
@@ -164,7 +164,7 @@ public class FragmentTransactions extends UsingDataBaseListFragment {
                                 updateCursors();
                             }
                         })
-                        .setNegativeButton("Нет", null)
+                        .setNegativeButton("No", null)
                         .create();
                 dialog.show();
                 return true;

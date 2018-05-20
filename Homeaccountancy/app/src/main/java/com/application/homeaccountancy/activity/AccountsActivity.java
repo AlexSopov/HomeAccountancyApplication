@@ -96,10 +96,9 @@ public class AccountsActivity extends UsingDataBaseActivity {
                 // и удалить элемент в случае необходимости
                 AlertDialog.Builder dialog = new AlertDialog.Builder(AccountsActivity.this);
                 dialog
-                        .setTitle("Подтверждение действия")
-                        .setMessage("Вы действительно хотите удалить счёт? Все записи данного " +
-                                "счёта будут стерты.")
-                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                        .setTitle("Confirm the action")
+                        .setMessage("Do you really want to delete an account? All relative transactions will be deleted.")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 db.delete(AccountancyContract.Account.TABLE_NAME,
@@ -111,7 +110,7 @@ public class AccountsActivity extends UsingDataBaseActivity {
                                 accountsCursorAdapter.changeCursor(cursor);
                             }
                         })
-                        .setNegativeButton("Нет", null)
+                        .setNegativeButton("No", null)
                         .create();
                 dialog.show();
                 return true;

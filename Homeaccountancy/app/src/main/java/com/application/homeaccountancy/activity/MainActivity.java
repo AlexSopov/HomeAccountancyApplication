@@ -10,7 +10,6 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -43,13 +42,13 @@ public class MainActivity extends UsingDataBaseActivity
         // Инициализация тулраба
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Журнал");
+        setTitle("Personal journal");
 
         // Инициализация объекта для генерации временных периодов
         dateSelector = new DateSelector(this);
 
         // Чтение данных из смc
-        initializeDataFromSMS();
+        //initializeDataFromSMS();
 
         // Инициализация бокового меню
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -158,7 +157,7 @@ public class MainActivity extends UsingDataBaseActivity
             cursor.close();
 
             if (count > 0)
-                Utilities.makeToast(getApplicationContext(), String.format("Было добавлено %d платежей из смс", count));
+                Utilities.makeToast(getApplicationContext(), String.format("%d transactions were added from SMS", count));
         }
     }
     public DateSelector getDateSelector() {
@@ -211,11 +210,11 @@ public class MainActivity extends UsingDataBaseActivity
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Все";
+                    return "All";
                 case 1:
-                    return "Траты";
+                    return "Outgoes";
                 case 2:
-                    return "Пополнения";
+                    return "Incomes";
             }
             return null;
         }
@@ -223,8 +222,8 @@ public class MainActivity extends UsingDataBaseActivity
 
     private AlertDialog getCategoryTypeFromDialog(final Intent intent) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Выберите тип платежа");
-        builder.setItems(new String[]{"Пополнение", "Трата"}, new DialogInterface.OnClickListener() {
+        builder.setTitle("Select the transaction type");
+        builder.setItems(new String[]{"Income", "Outgo"}, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 intent.putExtra("category", which);

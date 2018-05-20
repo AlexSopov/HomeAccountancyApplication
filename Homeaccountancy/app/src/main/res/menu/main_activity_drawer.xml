@@ -5,41 +5,28 @@
         <item
             android:id="@+id/menu_transactions"
             android:icon="@drawable/ic_history"
-            android:title="Журнал" />
+            android:title="Personal journal" />
         <item
             android:id="@+id/menu_accounts"
             android:icon="@drawable/ic_account"
-            android:title="Счета" />
+            android:title="Accounts" />
         <item
             android:id="@+id/menu_categories"
             android:icon="@drawable/ic_category"
-            android:title="Категории" />
-        <item android:title="Диаграммы">
+            android:title="Categories" />
+        <item android:title="Statistic">
             <menu>
                 <item
                     android:id="@+id/menu_pie_graphic"
                     android:icon="@drawable/ic_pie_chart"
-                    android:title="Круговая" />
+                    android:title="Pie chart" />
                 <item
                     android:id="@+id/menu_bar_graphic"
                     android:icon="@drawable/ic_bar_chart"
-                    android:title="Столбчатая" />
+                    android:title="Bar chart" />
             </menu>
         </item>
 
     </group>
-
-    <!--<item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>-->
 
 </menu>

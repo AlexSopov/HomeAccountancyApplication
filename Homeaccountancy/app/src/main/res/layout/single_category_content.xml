@@ -25,7 +25,7 @@
 
             <Spinner
                 android:id="@+id/logo_spinner"
-                android:layout_width="80dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical">
             </Spinner>
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_gravity="center_vertical"
-                android:hint="Название категори"
+                android:hint="Category name"
                 android:textSize="16sp"
                 android:textColor="@color/primary"
                 android:maxLength="40"
@@ -56,7 +56,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:layout_weight="1"
-                android:text="Тип категории"
+                android:text="Category type"
                 android:textColor="@color/main_text_color"
 
                 android:textSize="@dimen/description_text_size"/>
@@ -71,14 +71,14 @@
                     android:layout_height="match_parent">
 
                     <RadioButton
-                        android:text="Траты"
+                        android:text="Outgo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/category_outgo_rb"
                         android:checked="true"
                         android:textColor="@color/main_text_color"/>
                     <RadioButton
-                        android:text="Пополнения"
+                        android:text="Income"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/category_income_rb"
@@ -97,7 +97,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:text="Сохранить"
+        android:text="Save"
         android:onClick="saveCategory"
         android:background="?attr/colorControlHighlight"
         android:textColor="@color/main_text_color" />

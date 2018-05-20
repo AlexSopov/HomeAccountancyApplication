@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.application.homeaccountancy">
 
-    <uses-permission android:name="android.permission.READ_SMS" />
+    <!--<uses-permission android:name="android.permission.READ_SMS" />-->
 
     <application
         android:allowBackup="true"
@@ -25,7 +25,7 @@
         <!-- Data activities -->
         <activity
             android:name=".Activity.CategoriesActivity"
-            android:label="Категории"
+            android:label="Categories"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -34,7 +34,7 @@
         </activity>
         <activity
             android:name=".Activity.AccountsActivity"
-            android:label="Счета"
+            android:label="Accounts"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -45,19 +45,19 @@
         <!-- Single data activities -->
         <activity
             android:name=".Activity.SingleTransactionActivity"
-            android:label="Платеж"
+            android:label="Transaction"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".Activity.SingleAccountActivity"
-            android:label="Счёт"
+            android:label="Account"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".Activity.SingleCategoryActivity"
-            android:label="Категория"
+            android:label="Category"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize"></activity>
@@ -65,7 +65,7 @@
         <!-- Chart activities -->
         <activity
             android:name=".Activity.PieCharActivity"
-            android:label="Круговая диаграмма"
+            android:label="Pie chart"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -74,7 +74,7 @@
         </activity>
         <activity
             android:name=".Activity.BarChartActivity"
-            android:label="Столбчатая диаграмма"
+            android:label="Bar chart"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

@@ -38,7 +38,7 @@ public class AccountCursorAdapter extends SimpleCursorAdapter {
         else
             balanceTextView.setTextColor(Color.parseColor("#F44336"));
 
-        balanceTextView.setText(String.format("%.2f %s", currentBalance, "руб."));
-        startTextView.setText(String.format("Начальный баланс: %.2f %s", start, "руб."));
+        balanceTextView.setText(String.format("%.2f %s", currentBalance, "$"));
+        startTextView.setText(String.format("Start balance: %.2f %s", start, "$"));
     }
 }

@@ -23,7 +23,7 @@
             android:id="@+id/account_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Название"
+            android:hint="Title"
             android:textColor="@color/primary"
             android:layout_marginBottom="@dimen/linear_layout_bottom_margin"
             android:inputType="textCapSentences"
@@ -42,14 +42,14 @@
                 android:id="@+id/start_balance"
                 android:layout_weight="1"
                 android:textColor="@color/primary"
-                android:hint="Начальный баланс"
+                android:hint="Start balance"
                 android:maxLength="6" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="руб."/>
+                android:text="$"/>
 
 
         </LinearLayout>
@@ -60,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:text="Сохранить"
+        android:text="Save"
         android:onClick="saveAccount"
         android:background="?attr/colorControlHighlight"
         android:textColor="@color/main_text_color" />

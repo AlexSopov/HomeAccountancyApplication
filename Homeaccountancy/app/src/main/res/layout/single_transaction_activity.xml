@@ -50,7 +50,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Дата и время"
+                        android:text="Date and time"
                         android:textSize="@dimen/text_size_title_transaction"
                         android:textColor="@color/main_text_color"/>
                     <LinearLayout
@@ -90,7 +90,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Сумма платежа"
+                        android:text="Amount of transaction"
                         android:textSize="@dimen/text_size_title_transaction"
                         android:textColor="@color/main_text_color"/>
                     <LinearLayout
@@ -111,7 +111,7 @@
                             android:textColor="@color/primary"
                             android:layout_weight="1"
                             android:maxLength="15"
-                            android:hint="Сумма"
+                            android:hint="Amount"
                             android:gravity="end"
                             android:textAlignment="textEnd"
                             android:inputType="number">
@@ -137,7 +137,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Категория"
+                        android:text="Category"
                         android:textSize="@dimen/text_size_title_transaction"
                         android:textColor="@color/main_text_color"/>
 
@@ -175,7 +175,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Счёт"
+                        android:text="Account"
                         android:textSize="@dimen/text_size_title_transaction"
                         android:textColor="@color/main_text_color"/>
                     <LinearLayout
@@ -212,7 +212,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Заметка"
+                        android:text="Note"
                         android:textSize="@dimen/text_size_title_transaction"
                         android:textColor="@color/main_text_color"/>
                     <EditText
@@ -220,7 +220,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/primary"
-                        android:hint="Введите заметку"
+                        android:hint="Enter the note"
                         android:inputType="textCapSentences"
                         android:singleLine="false" />
 
@@ -237,14 +237,14 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Сохранить и новый"
+                android:text="Save and new"
                 android:background="?attr/colorControlHighlight"
                 android:onClick="saveTransactionContinue" />
             <Button
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Сохранить"
+                android:text="Save"
                 android:layout_marginLeft="1dp"
                 android:background="?attr/colorControlHighlight"
                 android:onClick="saveTransactionClose"/>

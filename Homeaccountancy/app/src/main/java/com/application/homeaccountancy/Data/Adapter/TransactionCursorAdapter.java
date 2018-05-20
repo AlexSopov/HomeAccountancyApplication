@@ -35,7 +35,7 @@ public class TransactionCursorAdapter extends SimpleCursorAdapter {
             amountTextView.setTextColor(Color.parseColor("#4CAF50"));
         else
             amountTextView.setTextColor(Color.parseColor("#F44336"));
-        amountTextView.setText(String.format("%.2f %s", amount, "руб."));
+        amountTextView.setText(String.format("%.2f %s", amount, "$"));
 
         if (note.isEmpty())
             noteTextView.setVisibility(View.GONE);

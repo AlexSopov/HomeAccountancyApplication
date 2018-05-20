@@ -130,7 +130,7 @@ public class DateSelector {
                         calendarFrom.get(Calendar.YEAR)));
                 break;
             case Calendar.WEEK_OF_YEAR:
-                humanizeDateTextView.setText(String.format("%d неделя %d",
+                humanizeDateTextView.setText(String.format("%d week %d",
                         calendarFrom.get(Calendar.WEEK_OF_YEAR),
                         calendarFrom.get(Calendar.YEAR)));
                 break;
@@ -140,7 +140,7 @@ public class DateSelector {
                         calendarFrom.get(Calendar.YEAR)));
                 break;
             case Calendar.YEAR:
-                humanizeDateTextView.setText(String.format("%d год",
+                humanizeDateTextView.setText(String.format("%d year",
                         calendarFrom.get(Calendar.YEAR)));
                 break;
         }

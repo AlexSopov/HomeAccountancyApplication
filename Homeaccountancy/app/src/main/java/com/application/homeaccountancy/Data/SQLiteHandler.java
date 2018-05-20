@@ -14,7 +14,7 @@ import org.xmlpull.v1.XmlPullParser;
 // Вспомагательный класс для работы с базой данных
 public class SQLiteHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "HomeAccountancyDB_.db";
+    private static final String DATABASE_NAME = "HomeAccountancyDB_4.db";
     private Context context;
 
     public SQLiteHandler(Context context) {
@@ -64,9 +64,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             int i = 0;
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG && xmlResourceParser.getName().equals("record")) {
-                    String title = xmlResourceParser.getAttributeValue(0);
+                    String title = xmlResourceParser.getAttributeValue(2);
                     int isOutgo = xmlResourceParser.getAttributeIntValue(1, 1);
-                    String icon = xmlResourceParser.getAttributeValue(2);
+                    String icon = xmlResourceParser.getAttributeValue(0);
 
                     contentValuesCategories.put(AccountancyContract.Category.C_TITLE, title);
                     contentValuesCategories.put(AccountancyContract.Category.IS_OUTGO, isOutgo);

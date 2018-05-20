@@ -74,10 +74,9 @@ public class FragmentCategories extends UsingDataBaseListFragment {
                 // и удалить элемент в случае необходимости
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                 dialog
-                        .setTitle("Подтверждение действия")
-                        .setMessage("Вы действительно хотите удалить категорию? Все записи данной " +
-                                "категории будут стерты.")
-                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                        .setTitle("Confirm Action")
+                        .setMessage("Do you really want to delete categoty? All relative transactions will be deleted." )
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 db.delete(AccountancyContract.Category.TABLE_NAME,
@@ -89,7 +88,7 @@ public class FragmentCategories extends UsingDataBaseListFragment {
                                 categoriesCursorAdapter.notifyDataSetChanged();
                             }
                         })
-                        .setNegativeButton("Нет", null)
+                        .setNegativeButton("No", null)
                         .create();
                 dialog.show();
                 return true;

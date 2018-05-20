@@ -94,9 +94,9 @@ public class CategoriesActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Траты";
+                    return "Outgo";
                 case 1:
-                    return "Пополнения";
+                    return "Income";
             }
             return null;
         }

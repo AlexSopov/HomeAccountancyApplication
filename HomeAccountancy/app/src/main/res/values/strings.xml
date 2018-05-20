@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Домашняя бухгалтерия</string>
+    <string name="app_name">Home accountancy</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -7,50 +7,50 @@
 
     <string name="empty_text">
         <![CDATA[
-            Не найдено записей.<br>
-            Для добавления новой записи нажмите кнопку
-            <b>Добавить новую запись</b>
+            No transactions found.<br>
+            To add new transaction press
+            <b>Add new transaction</b> button.
         ]]>
     </string>
     <string name="empty_text_char">
         <![CDATA[
-            Не найдено данных для отображения.<br>
-            Добавьте новые<b>Записи</b>, или измените
-            <b>Условия отображения</b>
+            No data found to be displayed.<br>
+            Add new <b>transactions</b>, or change
+            <b>Filter settings</b>
         ]]>
     </string>
 
     <string-array name="humanizeMonthSingle">
-        <item>Январь</item>
-        <item>Февраль</item>
-        <item>Март</item>
-        <item>Апрель</item>
-        <item>Май</item>
-        <item>Июнь</item>
-        <item>Июль</item>
-        <item>Август</item>
-        <item>Сентябрь</item>
-        <item>Октябрь</item>
-        <item>Ноябрь</item>
-        <item>Декабрь</item>
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
     </string-array>
     <string-array name="humanizeMonthPersonable">
-        <item>Января</item>
-        <item>Февраля</item>
-        <item>Марта</item>
-        <item>Апреля</item>
-        <item>Мая</item>
-        <item>Июня</item>
-        <item>Июля</item>
-        <item>Августа</item>
-        <item>Сентября</item>
-        <item>Октября</item>
-        <item>Ноября</item>
-        <item>Декабря</item>
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
     </string-array>
     <string-array name="categories_types">
-        <item>Траты</item>
-        <item>Пополнения</item>
+        <item>Outgoes</item>
+        <item>Incomes</item>
     </string-array>
     <string name="title_activity_calculator">CalculatorActivity</string>
 </resources>

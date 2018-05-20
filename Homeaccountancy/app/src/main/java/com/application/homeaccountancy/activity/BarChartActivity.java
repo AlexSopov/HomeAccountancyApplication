@@ -129,7 +129,7 @@ public class BarChartActivity extends UsingDataBaseActivity {
         barChart.getDescription().setEnabled(false);
 
         // Установка параметров отображения пустых данных
-        barChart.setNoDataText("Не найдено данных для отображения.");
+        barChart.setNoDataText("No data found to be displayed.");
         barChart.setNoDataTextColor(Color.BLACK);
 
         // Установить минимум для оси у
@@ -229,9 +229,9 @@ public class BarChartActivity extends UsingDataBaseActivity {
         }
 
         // Установка данных графика
-        BarDataSet barDataSetOutgoes = new BarDataSet(outgoes, "Траты");
+        BarDataSet barDataSetOutgoes = new BarDataSet(outgoes, "Outgo");
         barDataSetOutgoes.setColor(Color.parseColor("#FFCA28"));
-        BarDataSet barDataSetIncomes = new BarDataSet(incomes, "Пополнения");
+        BarDataSet barDataSetIncomes = new BarDataSet(incomes, "Income");
         barDataSetIncomes.setColor(Color.parseColor("#66BB6A"));
 
         float groupSpace = 0.1f;
@@ -268,8 +268,8 @@ public class BarChartActivity extends UsingDataBaseActivity {
 
     // Форматирование дней месяца
     private class DaysValueFormatter implements IAxisValueFormatter {
-        String[] month = new String[] {"Янв.", "Фев.", "Мар.", "Апр.", "Май",
-                "Июн.", "Июл.", "Авг.", "Сен.", "Окт.", "Ноя.", "Дек."};
+        String[] month = new String[] {"Jan.", "Feb.", "Mar.", "Apr.", "May",
+                "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."};
 
         Calendar startDate;
         DaysValueFormatter(Calendar calendar) {
@@ -290,8 +290,8 @@ public class BarChartActivity extends UsingDataBaseActivity {
 
     // Форматирование месяцев года
     private class MonthValueFormatter implements IAxisValueFormatter {
-        String[] month = new String[] {"Январь", "Февраль", "Март", "Апрель", "Май",
-                "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
+        String[] month = new String[] {"January", "February", "March", "April", "May",
+                "June", "July", "August", "September", "October", "November", "December"};
 
         Calendar startDate;
         MonthValueFormatter(Calendar calendar) {

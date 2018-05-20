@@ -139,7 +139,7 @@ public class PieCharActivity extends UsingDataBaseActivity {
         pieChart.getContentDescription();
         pieChart.getDescription().setEnabled(false);
         pieChart.setTransparentCircleRadius(35);
-        pieChart.setNoDataText("Не найдено данных для отображения.");
+        pieChart.setNoDataText("No data found to be displayed.");
         pieChart.setNoDataTextColor(Color.BLACK);
 
         // Инициализация переменных представления
@@ -202,7 +202,7 @@ public class PieCharActivity extends UsingDataBaseActivity {
 
         PieData pieData = new PieData(pieDataSet);
         pieChart.setData(pieData);
-        pieChart.setCenterText("Итого:\n " + String.valueOf(totalSum));
+        pieChart.setCenterText("Total:\n " + String.valueOf(totalSum));
 
         totalSumEx = totalSum;
         // Вывод подробной информации при нажатии на элементе диаграммы
@@ -210,15 +210,15 @@ public class PieCharActivity extends UsingDataBaseActivity {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
                 categoryTextView.setText(((PieEntry)e).getLabel());
-                totalTextView.setText("Сумма: " + String.valueOf(e.getY()) + " руб.");
-                percentTextView.setText(String.format("Процент: %.2f%%", Math.abs((e.getY() * 100) / totalSumEx)));
+                totalTextView.setText("Amount: " + String.valueOf(e.getY()) + " $");
+                percentTextView.setText(String.format("Percents: %.2f%%", Math.abs((e.getY() * 100) / totalSumEx)));
             }
 
             @Override
             public void onNothingSelected() {
-                categoryTextView.setText("Ничего не выбрано");
-                totalTextView.setText("Сумма: не определено");
-                percentTextView.setText("Процент: не определено");
+                categoryTextView.setText("Nothing selected");
+                totalTextView.setText("Amount: not defined");
+                percentTextView.setText("Percents: not defined");
             }
         });
         pieChart.invalidate();

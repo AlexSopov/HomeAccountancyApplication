@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <categories>
-    <record title="Прочие траты" is_outgo="1" icon="others" />
-    <record title="Прочие пополнения" is_outgo="0" icon="others" />
-    <record title="Автомобиль" is_outgo="1" icon="auto" />
-    <record title="Бизнес" is_outgo="0" icon="business" />
-    <record title="Долги" is_outgo="1" icon="debt" />
-    <record title="Развлечения" is_outgo="1" icon="entertainment" />
-    <record title="Фитнес" is_outgo="1" icon="fitness" />
-    <record title="Еда" is_outgo="1" icon="food" />
-    <record title="Дом" is_outgo="1" icon="house" />
-    <record title="Путешествия" is_outgo="1" icon="journey" />
-    <record title="Мультимедиа" is_outgo="1" icon="media" />
-    <record title="Медицина" is_outgo="1" icon="medicine" />
-    <record title="Зарплата" is_outgo="0" icon="money" />
-    <record title="Проценты" is_outgo="0" icon="percent" />
-    <record title="Личное" is_outgo="1" icon="personal" />
-    <record title="Телефон" is_outgo="1" icon="phone" />
-    <record title="Покупки" is_outgo="1" icon="purchase" />
-    <record title="Коммунальные услуги" is_outgo="1" icon="services" />
+    <record title="Other outcomes" is_outgo="1" icon="others" />
+    <record title="Other incomes" is_outgo="0" icon="others" />
+    <record title="Auto" is_outgo="1" icon="auto" />
+    <record title="Business" is_outgo="0" icon="business" />
+    <record title="Debts" is_outgo="1" icon="debt" />
+    <record title="Entertainment" is_outgo="1" icon="entertainment" />
+    <record title="Fitness" is_outgo="1" icon="fitness" />
+    <record title="Food" is_outgo="1" icon="food" />
+    <record title="House" is_outgo="1" icon="house" />
+    <record title="Trips" is_outgo="1" icon="journey" />
+    <record title="Multimedia" is_outgo="1" icon="media" />
+    <record title="Medicine" is_outgo="1" icon="medicine" />
+    <record title="Salary" is_outgo="0" icon="money" />
+    <record title="Percents" is_outgo="0" icon="percent" />
+    <record title="Personal" is_outgo="1" icon="personal" />
+    <record title="Phone" is_outgo="1" icon="phone" />
+    <record title="Shopping" is_outgo="1" icon="purchase" />
+    <record title="Public services" is_outgo="1" icon="services" />
 </categories>

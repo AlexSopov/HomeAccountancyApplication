@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Категория:"
+            android:text="Category:"
             android:textColor="@color/main_text_color"
             android:textSize="@dimen/description_text_size"/>
 
@@ -57,7 +57,7 @@
             android:id="@+id/category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ничего не выбрано"
+            android:text="Nothiing selected"
             android:gravity="center_horizontal"
             android:textAlignment="center"
             android:textSize="18sp"
@@ -68,7 +68,7 @@
             android:id="@+id/total"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Сумма: не определено"
+            android:text="Amount: not defined"
             android:gravity="center_horizontal"
             android:textSize="@dimen/description_text_size"
             android:textColor="@color/main_text_color"
@@ -78,7 +78,7 @@
             android:id="@+id/percent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Процент: не определено"
+            android:text="Percents: not defined"
             android:gravity="center_horizontal"
             android:textSize="@dimen/description_text_size"
             android:textColor="@color/main_text_color"
